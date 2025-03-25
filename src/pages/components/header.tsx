@@ -52,7 +52,7 @@ export default function Header({menuType, buttonVisible}:HeaderProps) {
       </div>
 
       {/* Botão de Login e Menu Sanduíche em telas menores */}
-      { menuType==="full" && (<div className="flex items-center gap-4 h-full">
+      { buttonVisible && (<div className="flex items-center gap-4 h-full">
         <div className="md:hidden">
           <button onClick={() => setMenuOpen(!menuOpen)} className="text-white">
             {menuOpen ? <X size={28} /> : <Menu size={28} />}
