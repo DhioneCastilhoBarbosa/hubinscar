@@ -3,13 +3,14 @@ import ImgStation from "../../../../assets/station.svg";
 
 export default function Home() {
   return (
-    <div className="home flex flex-col items-center justify-center w-full md:h-full ">
-      <div className="flex md:flex-row flex-col-reverse items-center justify-start w-full md:h-screen relative">
+    <div className="home flex flex-col items-center justify-center w-full md:h-full">
+      <div className="flex flex-col-reverse md:flex-row items-center justify-start w-full md:h-screen relative">
+        
         {/* Texto e botão */}
         <div className="flex flex-col md:items-start items-center justify-center md:gap-16 gap-8 max-w-full p-8 md:pl-36 md:h-screen z-10 mt-12 md:mt-0">
           <motion.div
-            initial={{ opacity: 0}}
-            animate={{ opacity: 1}}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
             className="flex flex-col"
           >
@@ -26,20 +27,23 @@ export default function Home() {
             </button>
           </div>
         </div>
-
+  
         {/* Imagem de fundo */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
-          className="absolute top-0 left-0 w-full h-full md:h-screen mt-16"
+          className="w-full h-[35vh] md:h-screen relative md:absolute top-0 left-0 mt-16"
         >
           <img
             src={ImgStation}
-            className="w-full object-cover md:block"
+            className="md:w-full h-full object-cover"
           />
         </motion.div>
+  
       </div>
     </div>
   );
+  
+  
 }

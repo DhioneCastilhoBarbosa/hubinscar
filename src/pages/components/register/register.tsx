@@ -112,7 +112,7 @@ export default function Register() {
             <input
               id="nome"
               type="text"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-92 max-w-lg"
+              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite seu nome"
             />
           </div>
@@ -122,7 +122,7 @@ export default function Register() {
             <input
               id="nome"
               type="text"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-92 max-w-lg"
+              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite sua razão social"
             />
           </div>
@@ -134,7 +134,7 @@ export default function Register() {
             <input
               id="cpf"
               type="text"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-52 max-w-lg"
+              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-52 max-w-lg"
               placeholder="xxx.xxx.xxx-xx"
             />
           </div>
@@ -144,7 +144,7 @@ export default function Register() {
             <input
               id="CNPJ"
               type="text"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-52 max-w-lg"
+              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-52 max-w-lg"
               placeholder="xx.xxx.xxx/xxxx-xx"
             />
           </div>
@@ -156,7 +156,7 @@ export default function Register() {
             <input
               id="dataNascimento"
               type="date"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-52 max-w-lg"
+              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-52 max-w-lg"
              
             />
           </div>
@@ -171,7 +171,7 @@ export default function Register() {
             <input
               id="nome"
               type="text"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-92 max-w-lg"
+              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="xxxxx-xxx"
             />
           </div>
@@ -181,7 +181,7 @@ export default function Register() {
             <input
               id="nome"
               type="text"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-92 max-w-lg"
+              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite seu endereço"
             />
           </div>
@@ -191,7 +191,7 @@ export default function Register() {
             <input
               id="nome"
               type="text"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-92 max-w-lg"
+              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite o número"
             />
           </div>
@@ -201,7 +201,7 @@ export default function Register() {
             <input
               id="nome"
               type="text"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-92 max-w-lg"
+              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite o complemento"
             />
           </div>
@@ -211,7 +211,7 @@ export default function Register() {
             <input
               id="nome"
               type="text"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-92 max-w-lg"
+              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite o bairro"
             />
           </div>
@@ -220,7 +220,7 @@ export default function Register() {
             <input
               id="nome"
               type="text"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-92 max-w-lg"
+              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite a cidade"
             />
           </div>
@@ -230,7 +230,7 @@ export default function Register() {
             <input
               id="nome"
               type="text"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-92 max-w-lg"
+              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite o estado"
             />
           </div>
@@ -240,7 +240,7 @@ export default function Register() {
             <input
               id="nome"
               type="text"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-92 max-w-lg"
+              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite o ponto de referência"
             />
           </div>

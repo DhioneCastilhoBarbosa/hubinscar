@@ -12,7 +12,7 @@ export default function Service() {
           <img src={ImgManService} alt="homem fazendo instalação em um quadro eletrico" />
         </div>
         <div className='flex flex-col items-center justify-center md:mr-16'>
-          <span className='font-extrabold text-7xl text-black md:mt-16 mt-4'>Nossos serviços</span>
+          <span className='font-extrabold md:text-7xl text-3xl text-black md:mt-16 mt-4'>Nossos serviços</span>
           <div className='flex md:flex-row flex-col items-center justify-center md:gap-8'>
             <motion.div
              whileHover={{ scale: 1.1 }}
