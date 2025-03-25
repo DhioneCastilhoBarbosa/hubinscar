@@ -39,7 +39,7 @@ export default function Register() {
         </div>
                 
         {/* Tipo de conta */}
-        <div className="flex flex-row items-center justify-center gap-2 w-full ml-28">
+        <div className="flex flex-row items-center justify-center gap-2 w-full md:ml-28">
           <p className="w-32">Tipo de conta:</p>
           <div className="flex flex-row gap-2 flex-1">
             <div className="flex flex-row gap-1">
@@ -70,7 +70,7 @@ export default function Register() {
         </div>
 
         {/* Tipo de Pessoa */}
-        <div className="flex flex-row items-center justify-center gap-2 w-full ml-28">
+        <div className="flex flex-row items-center justify-center gap-2 w-full md:ml-28">
           <p className="w-32">Tipo de Pessoa:</p>
           <div className="flex flex-row gap-2 flex-1">
             <div className="flex flex-row gap-1">
