@@ -28,8 +28,8 @@ export default function Installation() {
       </div>
       <div className='flex flex-col items-center justify-center w-full md:px-16 px-2 md:mt-[-3rem] mt-[-1rem]'>
         <div className='flex flex-col items-center justify-center bg-gray-500 w-full mx-16 rounded-lg gap-10 py-8'>
-          <div>
-            <p className='text-2xl font-semibold'>Vantagens de ser um instalador parceiro</p>
+          <div >
+            <p className='text-2xl font-semibold text-center'>Vantagens de ser um instalador parceiro</p>
           </div>
           <div className=' flex md:flex-row flex-col md:items-baseline items-center md:justify-around  justify-center w-full md:px-16 gap-10 md:gap-0'>
             <div className='flex flex-col items-center justify-center'>
