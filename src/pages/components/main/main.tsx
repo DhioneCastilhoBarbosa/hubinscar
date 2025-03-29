@@ -1,6 +1,7 @@
 
 import { About } from "./components/about";
 import Home from "./components/home";
+import Installation from "./components/installation";
 import Service from "./components/service";
 
 export default function Main() {
@@ -9,6 +10,7 @@ export default function Main() {
       <Home/>
       <About/>
       <Service />
+      <Installation/>
     </div>
   );
 }

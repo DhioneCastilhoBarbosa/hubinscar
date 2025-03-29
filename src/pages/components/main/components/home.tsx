@@ -22,7 +22,7 @@ export default function Home() {
             </h1>
           </motion.div>
           <div>
-            <button className="bg-white text-black w-52 h-10 rounded-lg hover:cursor-pointer hover:bg-gray-200">
+            <button className="bg-sky-600 text-white w-56 h-12 rounded-lg hover:cursor-pointer hover:bg-sky-500">
               Quero contratar
             </button>
           </div>

@@ -8,7 +8,7 @@ import Register from "./pages/components/register/register";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <AuthLayout menuType="full" buttonVisible={true}/>,
+    element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={true}/>,
     children: [
       {
         path: "/",
@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
 
   {
     path: "/",
-    element: <AuthLayout menuType="home" buttonVisible={true}/>,
+    element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={false}/>,
     children: [
       {
         path: "/register",

@@ -7,9 +7,10 @@ import {useNavigate} from "react-router-dom";
 interface HeaderProps {
   menuType?: "home" | "full";
   buttonVisible?: boolean;
+  menuVisible?: boolean;
 }
 
-export default function Header({menuType, buttonVisible}:HeaderProps) {
+export default function Header({menuType, buttonVisible, menuVisible}:HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -25,6 +26,7 @@ export default function Header({menuType, buttonVisible}:HeaderProps) {
     { name: "Inicio", to: "home" },
     { name: "Sobre", to: "about" },
     { name: "Serviços", to: "service" },
+    { name: "Instalador", to: "installer" },
     { name: "Contato", to: "contact" },
   ];
 
@@ -49,15 +51,18 @@ export default function Header({menuType, buttonVisible}:HeaderProps) {
             </li>
           ))}
         </ul>
+        
       </div>
 
       {/* Botão de Login e Menu Sanduíche em telas menores */}
-      { buttonVisible && (<div className="flex items-center gap-4 h-full">
+      <div className="flex items-center gap-4 h-full">
+        {menuVisible && (
         <div className="md:hidden">
           <button onClick={() => setMenuOpen(!menuOpen)} className="text-white">
             {menuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
-        </div>
+        </div>)}
+
         {buttonVisible && (
         <button 
           className="bg-white text-black w-24 h-full md:h-8 md:rounded-lg hover:bg-gray-200 hover:cursor-pointer md:mr-4"
@@ -66,7 +71,7 @@ export default function Header({menuType, buttonVisible}:HeaderProps) {
         </button>
         )}
       </div>
-      )}
+      
 
       {/* Menu Sanduíche */}
       {menuOpen && (

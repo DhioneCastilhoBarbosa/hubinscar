@@ -6,11 +6,12 @@ import ImgMaintenance from '../../../../assets/Under maintenance.svg'
 
 export default function Service() {
   return(
-    <div className='service flex flex-col items-center justify-center w-full md:h-screen'>
+    <div className=' flex flex-col items-center justify-center w-full md:h-screen'>
       <div className='flex md:flex-row flex-col-reverse items-center justify-center w-full bg-gray-300 pb-16 gap-24 md:h-screen'>
-        <div className='md:mt-[-30px] md:relative md:ml-16  hidden md:block opacity-70'>
-          <img src={ImgManService} alt="homem fazendo instalação em um quadro eletrico" />
-        </div>
+      <div className='service hidden md:block md:relative md:left-0 lg:top-[-4rem] xl:top-[-6rem] '>
+          <img src={ImgManService} alt="homem fazendo instalação em um quadro eletrico"  
+          className=' w-[24rem] max-w-[24rem] h-auto'/>
+      </div>
         <div className='flex flex-col items-center justify-center md:mr-16'>
           <span className='font-extrabold md:text-7xl text-3xl text-black md:mt-16 mt-4'>Nossos serviços</span>
           <div className='flex md:flex-row flex-col items-center justify-center md:gap-8'>
@@ -38,7 +39,7 @@ export default function Service() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-start w-[95%] bg-white md:h-1/2 rounded-b-lg">
+      <div className="flex flex-col items-center justify-start w-[95%] bg-white md:h-1/2 rounded-b-lg pb-32">
         <div className='mt-16'>
           <span className='text-black font-extrabold text-4xl'>Como funciona?</span>
         </div>
@@ -72,7 +73,7 @@ export default function Service() {
               <span className='bg-gray-600 px-3 py-1 rounded-full'>4</span>
               <span className='font-medium text-lg'>Pagamento</span>
             </div>
-            <span className='text-gray-500'>Realize o pagamento para que o serviço seja confirmado.</span>
+            <span className='text-gray-500'>Realize o pagamento para que o serviço seja confirmado. Fique tranquilo após a realização do pagamento, o valor ficará retido e só será repassado para instalador após a confirmação da realização do serviço ou por até 30 dias.</span>
           </div>
 
           <div className='w-64'>
@@ -80,7 +81,7 @@ export default function Service() {
               <span className='bg-gray-600 px-3 py-1 rounded-full'>5</span>
               <span className='font-medium text-lg'>Execução do serviço</span>
             </div>
-            <span className='text-gray-500'>Após o pagamento o instalador vai até o local na data combinada para realizar o serviço</span>
+            <span className='text-gray-500'>Após o pagamento o instalador vai até o local na data combinada para realizar o serviço.</span>
           </div>
 
        </div>
