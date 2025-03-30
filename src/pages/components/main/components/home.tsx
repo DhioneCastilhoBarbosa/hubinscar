@@ -1,7 +1,13 @@
 import { motion } from "framer-motion";
 import ImgStation from "../../../../assets/station.svg";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
+  function handleClickNeedContract(){
+    navigate("/budget");
+  }
+
   return (
     <div className="home flex flex-col items-center justify-center w-full md:h-full">
       <div className="flex flex-col-reverse md:flex-row items-center justify-start w-full md:h-screen relative">
@@ -22,7 +28,10 @@ export default function Home() {
             </h1>
           </motion.div>
           <div>
-            <button className="bg-sky-600 text-white w-56 h-12 rounded-lg hover:cursor-pointer hover:bg-sky-500">
+            <button 
+            className="bg-sky-600 text-white w-56 h-12 rounded-lg hover:cursor-pointer hover:bg-sky-500"
+            onClick={handleClickNeedContract}
+            >
               Quero contratar
             </button>
           </div>

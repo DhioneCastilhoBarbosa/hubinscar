@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 
-export default function Register() {
-  const [tipoConta, setTipoConta] = useState("cliente");
+export default function RegisterClient() {
   const [tipoPessoa, setTipoPessoa] = useState("pf");
 
   return (
@@ -38,37 +37,7 @@ export default function Register() {
           </div>
         </div>
                 
-        {/* Tipo de conta */}
-        <div className="flex flex-row items-center justify-center gap-2 w-full md:ml-28">
-          <p className="w-32">Tipo de conta:</p>
-          <div className="flex flex-row gap-2 flex-1">
-            <div className="flex flex-row gap-1">
-              <input
-                type="radio"
-                id="cliente"
-                name="tipoConta"
-                value="cliente"
-                checked = {tipoConta === "cliente"}
-                onChange={(e) => setTipoConta(e.target.value)}
-                className="accent-black"
-              />
-              <label htmlFor="cliente">Cliente</label>
-            </div>
-            <div className="flex flex-row gap-1">
-              <input
-                type="radio"
-                id="instalador"
-                name="tipoConta"
-                value="instalador"
-                checked = {tipoConta === "instalador"}
-                onChange={(e) => setTipoConta(e.target.value)}
-                className="accent-black"
-              />
-              <label htmlFor="instalador">Instalador</label>
-            </div>
-          </div>
-        </div>
-
+       
         {/* Tipo de Pessoa */}
         <div className="flex flex-row items-center justify-center gap-2 w-full md:ml-28">
           <p className="w-32">Tipo de Pessoa:</p>

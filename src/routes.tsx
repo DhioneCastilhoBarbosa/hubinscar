@@ -2,13 +2,14 @@ import { createBrowserRouter } from "react-router-dom";
 import { AuthLayout } from "./pages/_layouts/auth";
 import Main from "./pages/components/main/main";
 import SignIn from "./pages/components/Sigin/signIn";
-import Register from "./pages/components/register/register";
+import Budget from "./pages/components/budget/budget";
+import RegisterClient from "./pages/components/register/register";
 
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={true}/>,
+    element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={true}/>,
     children: [
       {
         path: "/",
@@ -19,7 +20,7 @@ export const router = createBrowserRouter([
 
   {
     path: "/",
-    element: <AuthLayout menuType="home" buttonVisible={false}/>,
+    element: <AuthLayout menuType="home" buttonVisible={false} headModel={true}/>,
     children: [
       {
         path: "/signin",
@@ -30,11 +31,22 @@ export const router = createBrowserRouter([
 
   {
     path: "/",
-    element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={false}/>,
+    element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={false} headModel={false}/>,
     children: [
       {
         path: "/register",
-        element: <Register/>
+        element: <RegisterClient/>
+      }
+    ]
+  },
+
+  {
+    path: "/",
+    element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={false} headModel={false}/>,
+    children: [
+      {
+        path: "/budget",
+        element: <Budget/>
       }
     ]
   },

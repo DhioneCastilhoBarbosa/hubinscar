@@ -7,8 +7,8 @@ import ImgDolar from '../../../../assets/dolar.svg'
 export default function Installation() {
   return (
     <div className="flex flex-col items-center justify-center w-full md:h-full">
-      <div className=" flex md:flex-row flex-col justify-center items-center w-full px-10 ">
-        <div className=" flex flex-col md:items-start items-center justify-center md:mr-36 md:mt-36 mt-8">
+      <div className=" flex flex-col md:flex-row justify-center items-center w-full px-10 ">
+        <div className=" flex flex-col items-center md:items-start  justify-center md:mr-36 md:mt-36 mt-8">
           <p className="font-extrabold md:text-5xl text-2xl">Que tal garantir uma renda extra?</p>
           <p className="font-extrabold md:text-4xl text-md mt-2 md:mt-6">Faça seu cadastro e comece</p>
           <p className="font-extrabold md:text-4xl text-md">essa parceria com a gente!</p>
@@ -26,12 +26,12 @@ export default function Installation() {
           />
         </div>
       </div>
-      <div className='flex flex-col items-center justify-center w-full md:px-16 px-2 md:mt-[-3rem] mt-[-1rem]'>
+      <div className='flex flex-col items-center justify-center w-full px-2 md:px-16 md:mt-[-3rem] mt-[-1rem]'>
         <div className='flex flex-col items-center justify-center bg-gray-500 w-full mx-16 rounded-lg gap-10 py-8'>
-          <div >
+          <div>
             <p className='text-2xl font-semibold text-center'>Vantagens de ser um instalador parceiro</p>
           </div>
-          <div className=' flex md:flex-row flex-col md:items-baseline items-center md:justify-around  justify-center w-full md:px-16 gap-10 md:gap-0'>
+          <div className=' flex md:flex-row flex-col items-center md:items-baseline  justify-center md:justify-around  w-full md:px-16 gap-10 md:gap-0'>
             <div className='flex flex-col items-center justify-center'>
               <img src={ImgCloudSpeak}  className="mb-4" alt="" />
               <p className='text-2xl font-semibold mb-4'>Divulgação</p>
