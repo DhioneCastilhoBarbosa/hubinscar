@@ -31,7 +31,7 @@ export const router = createBrowserRouter([
 
   {
     path: "/",
-    element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={false} headModel={false}/>,
+    element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false}/>,
     children: [
       {
         path: "/register",
@@ -42,7 +42,7 @@ export const router = createBrowserRouter([
 
   {
     path: "/",
-    element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={false} headModel={false}/>,
+    element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false}/>,
     children: [
       {
         path: "/budget",

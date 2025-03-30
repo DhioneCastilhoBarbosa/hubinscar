@@ -80,14 +80,13 @@ export default function HeaderNavPages({menuType, buttonVisible, menuVisible}:He
       {menuOpen && (
         <ul className="absolute top-16 left-0 w-full bg-gray-300 flex flex-col items-center gap-6 py-6 font-light text-black md:hidden z-10">
           {filteredMenu && filteredMenu.map((item) => (
-            <li
-              key={item.to}
-              className="w-full text-center hover:bg-gray-500 hover:text-white cursor-pointer py-2"
+            <li 
+            key={item.to} 
+            className="hover:text-gray-400 cursor-pointer" 
+            onClick={() => handleGoTo(item.to)}
             >
-              <Link to={item.to} smooth={true} duration={1000}>
-                {item.name}
-              </Link>
-            </li>
+            {item.name}
+          </li>
           ))}
         </ul>
       )}
