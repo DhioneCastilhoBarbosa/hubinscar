@@ -1,7 +1,7 @@
 
 import ImgWhatsApp from '../../assets/whatsApp.svg'
 import ImgFacebook from '../../assets/facebook.svg'
-import ImgInstagram from '../../assets/instagram.svg'
+import ImgInstagram from '../../assets/Instagram.svg'
 
 export default function Footer() {
 
