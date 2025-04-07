@@ -4,6 +4,8 @@ import Main from "./pages/components/main/main";
 import SignIn from "./pages/components/Sigin/signIn";
 import Budget from "./pages/components/budget/budget";
 import RegisterClient from "./pages/components/register/register";
+import Partners from "./pages/components/partners/partners";
+import RegisterPart from "./pages/components/register/registerInstaller";
 
 
 export const router = createBrowserRouter([
@@ -12,44 +14,63 @@ export const router = createBrowserRouter([
     element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={true}/>,
     children: [
       {
-        path: "/",
+        path: "",
         element: <Main />
       }
     ]
   },
 
   {
-    path: "/",
+    path: "/signin",
     element: <AuthLayout menuType="home" buttonVisible={false} headModel={true}/>,
     children: [
       {
-        path: "/signin",
+        path: "",
         element: <SignIn/>
       }
     ]
   },
 
   {
-    path: "/",
+    path: "/register",
     element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false}/>,
     children: [
       {
-        path: "/register",
+        path: "",
         element: <RegisterClient/>
       }
     ]
   },
 
   {
-    path: "/",
+    path: "/budget",
     element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false}/>,
     children: [
       {
-        path: "/budget",
+        path: "",
         element: <Budget/>
       }
     ]
   },
 
-
-])
+  {
+    path: "/parceiros",
+    element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false}/>,
+    children: [
+      {
+        path: "",
+        element: <Partners/>
+      }
+    ]
+  },
+  {
+    path: "/cadastro-parceiro",
+    element: <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false}/>,
+    children: [
+      {
+        path: "",
+        element: <RegisterPart/>
+      }
+    ]
+  },
+]);

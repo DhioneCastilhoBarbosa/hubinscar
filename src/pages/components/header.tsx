@@ -26,7 +26,7 @@ export default function Header({menuType, buttonVisible, menuVisible}:HeaderProp
     { name: "Inicio", to: "home" },
     { name: "Sobre", to: "about" },
     { name: "Serviços", to: "service" },
-    { name: "Instalador", to: "installer" },
+    { name: "Parceiro", to: "installer" },
     { name: "Contato", to: "contact" },
   ];
 

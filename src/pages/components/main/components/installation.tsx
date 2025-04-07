@@ -2,18 +2,25 @@ import ImgMamInstallation from '../../../../assets/manInstallation.svg'
 import ImgCloudSpeak from '../../../../assets/cloudspeak.svg'
 import ImgGroupUser from '../../../../assets/Maskgroup.svg'
 import ImgDolar from '../../../../assets/dolar.svg'
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Installation() {
+
+  const navigate = useNavigate();
+  function handleClickNeedPatner(){
+    navigate("/parceiros");
+  }
   return (
-    <div className="flex flex-col items-center justify-center w-full md:h-full">
+    <div className="flex flex-col items-center justify-center w-full md:h-full ">
       <div className=" flex flex-col md:flex-row justify-center items-center w-full px-10 ">
         <div className=" flex flex-col items-center md:items-start  justify-center md:mr-36 md:mt-36 mt-8">
           <p className="font-extrabold md:text-5xl text-2xl">Que tal garantir uma renda extra?</p>
           <p className="font-extrabold md:text-4xl text-md mt-2 md:mt-6">Faça seu cadastro e comece</p>
           <p className="font-extrabold md:text-4xl text-md">essa parceria com a gente!</p>
           <button 
-          className="bg-sky-600 text-white w-56 h-12 rounded-lg hover:cursor-pointer hover:bg-sky-500 md:mt-16 md:ml-8 mt-8"
+           className="bg-sky-600 text-white w-56 h-12 rounded-lg hover:cursor-pointer hover:bg-sky-500 md:mt-16 md:ml-8 mt-8"
+            onClick={handleClickNeedPatner}
           >
                 Quero ser um intalador
           </button>

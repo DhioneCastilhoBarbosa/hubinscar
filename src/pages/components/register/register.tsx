@@ -1,8 +1,12 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function RegisterClient() {
   const [tipoPessoa, setTipoPessoa] = useState("pf");
+
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
 
   return (
     <div className="flex flex-col items-center justify-center w-full bg-gray-200 min-h-screen pt-24 text-black px-6 ">

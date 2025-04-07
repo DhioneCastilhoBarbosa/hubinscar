@@ -5,9 +5,14 @@ import { Table } from './components/table/table'
 import { TableRow } from './components/table/table-row'
 import { TableCell } from './components/table/table-cell'
 import { IconButton } from './components/icon-button'
+import { useEffect } from 'react'
 
 
 export default function Budget() {
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+    
   return (
     <div className="flex flex-col items-center justify-start w-full bg-gray-200 min-h-screen text-black">
       <motion.div
