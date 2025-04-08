@@ -12,7 +12,7 @@ export default function Installation() {
     navigate("/parceiros");
   }
   return (
-    <div className="flex flex-col items-center justify-center w-full md:h-full ">
+    <div className="flex flex-col items-center justify-center w-full md:h-full md:mb-8">
       <div className=" flex flex-col md:flex-row justify-center items-center w-full px-10 ">
         <div className=" flex flex-col items-center md:items-start  justify-center md:mr-36 md:mt-36 mt-8">
           <p className="font-extrabold md:text-5xl text-2xl">Que tal garantir uma renda extra?</p>
