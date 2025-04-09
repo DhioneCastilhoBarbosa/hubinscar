@@ -16,7 +16,10 @@ export default function Main() {
       <About/>
       <Service />
       <Installation/>
-      <Footer/>
+      <div className="w-full mt-auto md:mt-44">
+       <Footer/>
+      </div>
+      
     </div>
   );
 }

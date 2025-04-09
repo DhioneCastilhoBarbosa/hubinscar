@@ -21,9 +21,13 @@ export default function Footer() {
   function handleClicLogin(){
     navigate("/signin");
   }
+
+  function handleClickContact(){
+    navigate("/contato");
+  }
   
   return(
-    <div className="flex flex-col md:flex-row items-center md:items-start justify-between w-full min-h-44 md:mt-44 mt-4 px-6 md:px-16 py-8 gap-8 bg-stone-900 text-white absolute opacity-40">
+    <div className="flex flex-col md:flex-row items-center md:items-start justify-between w-full min-h-44  mt-4 px-6 md:px-16 py-8 gap-8 bg-stone-900 text-white absolute opacity-40">
 
   {/* Logo e redes sociais */}
   <div className='flex flex-col items-center md:items-start justify-center gap-4 text-center md:text-left'>
@@ -39,7 +43,7 @@ export default function Footer() {
   <div className='text-sm font-light text-center md:text-left'>
     <p className='font-bold mb-2'>Empresa</p>
     <p className='cursor-pointer' onClick={handleClicAbout}>Sobre nós</p>
-    <p className='cursor-pointer'>Contato</p>
+    <p className='cursor-pointer' onClick={handleClickContact}>Contato</p>
     <p className='cursor-pointer'>Política de privacidade</p>
   </div>
 

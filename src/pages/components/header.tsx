@@ -17,6 +17,9 @@ export default function Header({menuType, buttonVisible, menuVisible}:HeaderProp
   function handleLogin() {
     navigate("/signin");
   }
+  function handleContact() {
+    navigate("/contato");
+  }
 
   function handleGoToHome() {
     navigate("/");
@@ -27,7 +30,6 @@ export default function Header({menuType, buttonVisible, menuVisible}:HeaderProp
     { name: "Sobre", to: "about" },
     { name: "Serviços", to: "service" },
     { name: "Parceiro", to: "installer" },
-    { name: "Contato", to: "contact" },
   ];
 
   // Filtra os itens do menu com base na prop menuType
@@ -50,6 +52,12 @@ export default function Header({menuType, buttonVisible, menuVisible}:HeaderProp
               </Link>
             </li>
           ))}
+          {filteredMenu&&
+          <li className="hover:text-gray-400 cursor-pointer"
+            onClick={handleContact}
+          >
+            Contato
+          </li>}
         </ul>
         
       </div>

@@ -6,6 +6,7 @@ import { TableRow } from './components/table/table-row'
 import { TableCell } from './components/table/table-cell'
 import { IconButton } from './components/icon-button'
 import { useEffect } from 'react'
+import Footer from '../footer'
 
 
 export default function Budget() {
@@ -46,7 +47,7 @@ export default function Budget() {
         </div>
       </motion.div>
 
-      <div className="w-full h-full bg-gray-200 px-4 mt-2 mb-8 overflow-x-auto">
+      <div className="w-full h-full bg-gray-200 px-4 mt-2 mb-4 overflow-x-auto ">
         <Table className="w-full min-w-max bg-white">
           <thead>
             <tr className="border-b border-gray-100">
@@ -105,6 +106,11 @@ export default function Budget() {
           </tbody>
         </Table>
       </div>
+
+      <div className="w-full mt-auto">
+         <Footer/>
+      </div>
+      
     </div>
   )
 }

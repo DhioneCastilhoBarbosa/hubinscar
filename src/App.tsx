@@ -7,6 +7,7 @@ import RegisterClient from './pages/components/register/register'
 import Partners from './pages/components/partners/partners'
 import RegisterPart from './pages/components/register/registerInstaller'
 import { AuthLayout } from './pages/_layouts/auth'
+import Contact from './pages/components/contact/contact'
 
 export default function App() {
   return (
@@ -64,6 +65,15 @@ export default function App() {
           }
         >
           <Route index element={<RegisterPart />} />
+        </Route>
+
+        <Route
+          path="/contato"
+          element={
+            <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false} />
+          }
+        >
+          <Route index element={<Contact/>} />
         </Route>
       </Routes>
     </BrowserRouter>
