@@ -94,6 +94,14 @@ export default function Header({menuType, buttonVisible, menuVisible}:HeaderProp
               </Link>
             </li>
           ))}
+          {filteredMenu && (
+          <li
+            className="w-full text-center hover:bg-gray-500 hover:text-white cursor-pointer py-2"
+            onClick={handleContact}
+          >
+            Contato
+          </li>
+)}
         </ul>
       )}
     </div>
