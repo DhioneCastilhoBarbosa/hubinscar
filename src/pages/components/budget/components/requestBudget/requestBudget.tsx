@@ -17,17 +17,28 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
       const fileArray = Array.from(selectedFiles);
   
       const newFiles = fileArray
-        .filter(newFile => !files.some(f => f.file.name === newFile.name))
-        .map(file => ({
-          file,
-          preview: URL.createObjectURL(file),
-        }));
+        .map(file => {
+          // Cria um novo arquivo com timestamp no nome
+          const uniqueFile = new File([file], `${Date.now()}-${file.name}`, {
+            type: file.type,
+          });
+  
+          return {
+            file: uniqueFile,
+            preview: URL.createObjectURL(uniqueFile),
+          };
+        })
+        // Filtra apenas os que ainda não foram adicionados
+        .filter(newFile =>
+          !files.some(f => f.file.name === newFile.file.name)
+        );
   
       setFiles(prev => [...prev, ...newFiles]);
   
       if (inputRef.current) inputRef.current.value = '';
     }
   };
+  
   
 
   const handleRemove = (name: string) => {
@@ -92,7 +103,8 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
                   id="upload"
                   type="file"
                   accept="image/*"
-                  multiple
+                  capture="environment"
+                  multiple = {false}
                   ref={inputRef}
                   onClick={() => {
                     if (inputRef.current) inputRef.current.value = '';
@@ -100,6 +112,7 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
                   onChange={handleFileChange}
                   className="hidden"
                 />
+
 
 
                 {files.length > 0 && (
