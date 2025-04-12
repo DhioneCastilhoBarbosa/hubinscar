@@ -38,11 +38,11 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
         <div className="fixed inset-0 bg-black/70 " aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
           
-        <Dialog.Panel className="bg-white max-h-screen overflow-y-auto rounded-2xl p-6 w-full max-w-3xl shadow-lg md:mt-16 mt-36 pb-[calc(4rem+env(safe-area-inset-bottom))]">
+        <Dialog.Panel className="bg-white max-h-screen overflow-y-auto rounded-2xl p-6 w-full max-w-3xl shadow-lg md:mt-16 mt-36 pb-[calc(5rem+env(safe-area-inset-bottom))]">
 
             <Dialog.Title className="text-2xl font-bold mb-4 text-black">Solicitar Orçamento</Dialog.Title>
 
-            <form className="space-y-4 text-black pb-[calc(4rem+env(safe-area-inset-bottom))]">
+            <form className="space-y-4 text-black pb-[calc(5rem+env(safe-area-inset-bottom))]">
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <input type="text" placeholder="Nome" className="rounded px-3 py-2 outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black" />
