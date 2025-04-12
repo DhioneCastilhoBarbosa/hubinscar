@@ -94,9 +94,13 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
                   accept="image/*"
                   multiple
                   ref={inputRef}
+                  onClick={() => {
+                    if (inputRef.current) inputRef.current.value = '';
+                  }}
                   onChange={handleFileChange}
                   className="hidden"
                 />
+
 
                 {files.length > 0 && (
                   <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
