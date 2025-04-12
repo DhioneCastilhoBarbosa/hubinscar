@@ -7,38 +7,48 @@ interface Props {
 }
 
 export default function RequestQuoteModal({isOpen, onClose}:Props) {
-
-  const [files, setFiles] = useState<File[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [files, setFiles] = useState<{ file: File; preview: string }[]>([]);
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
     if (selectedFiles) {
       const fileArray = Array.from(selectedFiles);
-
-      // Evita duplicatas
-      const uniqueFiles = fileArray.filter(
-        newFile => !files.some(file => file.name === newFile.name)
-      );
-
-      setFiles(prev => [...prev, ...uniqueFiles]);
-
-      // Limpa o input para permitir re-selecionar o mesmo arquivo depois
+  
+      const newFiles = fileArray
+        .filter(newFile => !files.some(f => f.file.name === newFile.name))
+        .map(file => ({
+          file,
+          preview: URL.createObjectURL(file),
+        }));
+  
+      setFiles(prev => [...prev, ...newFiles]);
+  
       if (inputRef.current) inputRef.current.value = '';
     }
   };
+  
 
   const handleRemove = (name: string) => {
-    setFiles(prev => prev.filter(file => file.name !== name));
+    setFiles(prev => {
+      const toRemove = prev.find(f => f.file.name === name);
+      if (toRemove) {
+        URL.revokeObjectURL(toRemove.preview); // limpa da memória
+      }
+      return prev.filter(f => f.file.name !== name);
+    });
   };
+  
+
   
 
   return (
       <Dialog open={isOpen} onClose={onClose} className="relative z-50">
         <div className="fixed inset-0 bg-black/70 " aria-hidden="true" />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
+        <div className="fixed inset-0 flex items-center justify-center p-4 ">
           
-        <Dialog.Panel className="bg-white max-h-screen overflow-y-auto rounded-2xl p-6 w-full max-w-3xl shadow-lg md:mt-16 mt-36 pb-[calc(5rem+env(safe-area-inset-bottom))]">
+        <Dialog.Panel className="bg-white max-h-screen overflow-y-auto  p-6 w-full max-w-3xl shadow-lg md:mt-16 mt-36 pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-0">
 
             <Dialog.Title className="text-2xl font-bold mb-4 text-black">Solicitar Orçamento</Dialog.Title>
 
@@ -89,20 +99,30 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
                 />
 
                 {files.length > 0 && (
-                  <ul className="mt-2 text-sm text-gray-700 space-y-1">
-                    {files.map((file, index) => (
-                      <li key={index} className="flex items-center justify-between bg-gray-100 px-3 py-2 rounded">
-                        <span className="truncate max-w-[200px]">{file.name}</span>
-                        <button
-                          onClick={() => handleRemove(file.name)}
-                          className="text-red-500 hover:text-red-700 text-sm ml-2 pl-3 pb-36"
-                        >
-                          Remover
-                        </button>
+                  <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {files.map(({ file, preview }, index) => (
+                      <li key={index} className="relative border rounded-lg overflow-hidden shadow">
+                        <img
+                          src={preview}
+                          alt={file.name}
+                          className="w-full h-40 object-cover"
+                        />
+                        <div className="absolute top-1 right-1">
+                          <button
+                            type="button"
+                            onClick={() => handleRemove(file.name)}
+                            className="bg-red-600 text-white text-xs px-2 py-1 rounded hover:bg-red-700"
+                          >
+                            Remover
+                          </button>
+                        </div>
+                        <div className="p-2 text-sm truncate">{file.name}</div>
                       </li>
                     ))}
                   </ul>
                 )}
+
+
               </div>
 
               <div>
