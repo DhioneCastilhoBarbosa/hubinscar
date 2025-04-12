@@ -35,10 +35,10 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
 
   return (
       <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-        <div className="fixed inset-0 bg-black/70" aria-hidden="true" />
+        <div className="fixed inset-0 bg-black/70 " aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
           
-          <Dialog.Panel className="bg-white max-h-screen overflow-y-auto rounded-2xl p-6 w-full max-w-3xl shadow-lg">
+          <Dialog.Panel className="bg-white max-h-screen overflow-y-auto rounded-2xl p-6 w-full max-w-3xl shadow-lg md:mt-16 mt-36">
             <Dialog.Title className="text-2xl font-bold mb-4 text-black">Solicitar Orçamento</Dialog.Title>
 
             <form className="space-y-4 text-black">
@@ -94,7 +94,7 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
                         <span className="truncate max-w-[200px]">{file.name}</span>
                         <button
                           onClick={() => handleRemove(file.name)}
-                          className="text-red-500 hover:text-red-700 text-sm ml-2 pl-3"
+                          className="text-red-500 hover:text-red-700 text-sm ml-2 pl-3 pb-36"
                         >
                           Remover
                         </button>
