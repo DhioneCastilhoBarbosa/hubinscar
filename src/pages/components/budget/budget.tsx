@@ -5,17 +5,24 @@ import { Table } from './components/table/table'
 import { TableRow } from './components/table/table-row'
 import { TableCell } from './components/table/table-cell'
 import { IconButton } from './components/icon-button'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Footer from '../footer'
+import RequestQuoteModal from './components/requestBudget/requestBudget'
 
 
 export default function Budget() {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleOpenModal = () => {
+    setIsOpen(true);
+  };
     useEffect(() => {
       window.scrollTo(0, 0);
     }, []);
     
   return (
+    <>
     <div className="flex flex-col items-center justify-start w-full bg-gray-200 min-h-screen text-black">
+      
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -96,7 +103,9 @@ export default function Budget() {
                 </TableCell>
                 <TableCell className="text-gray-800 flex-1">
                   <div className="w-full flex flex-row items-center justify-center gap-2">
-                    <button className="bg-sky-600 text-white w-44 h-8 rounded-lg hover:cursor-pointer hover:bg-sky-500">
+                    <button className="bg-sky-600 text-white w-44 h-8 rounded-lg hover:cursor-pointer hover:bg-sky-500"
+                    onClick={handleOpenModal}
+                    >
                       Solicitar orçamento
                     </button>
                   </div>
@@ -112,5 +121,7 @@ export default function Budget() {
       </div>
       
     </div>
+    <RequestQuoteModal isOpen={isOpen} onClose={() => setIsOpen(false)}/>
+    </>
   )
 }
