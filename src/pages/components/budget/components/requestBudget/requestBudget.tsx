@@ -104,7 +104,7 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
                   type="file"
                   accept="image/*"
                   capture="environment"
-                  multiple = {false}
+                  multiple
                   ref={inputRef}
                   onClick={() => {
                     if (inputRef.current) inputRef.current.value = '';
