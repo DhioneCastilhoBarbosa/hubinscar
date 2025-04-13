@@ -94,10 +94,13 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
 
                 <label
                   htmlFor="upload"
+                  role="button"
+                  tabIndex={0}
                   className="cursor-pointer bg-sky-500 text-white px-4 py-2 rounded hover:bg-sky-600 inline-block"
                 >
                   Selecionar imagem(s)
                 </label>
+
 
                 <input
                   id="upload"
@@ -112,8 +115,6 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
                   onChange={handleFileChange}
                   className="hidden"
                 />
-
-
 
                 {files.length > 0 && (
                   <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
