@@ -106,7 +106,6 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
                   id="upload"
                   type="file"
                   accept="image/*"
-                  capture="environment"
                   multiple
                   ref={inputRef}
                   onClick={() => {
