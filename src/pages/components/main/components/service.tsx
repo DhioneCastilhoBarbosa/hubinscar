@@ -6,7 +6,7 @@ import ImgMaintenance from '../../../../assets/Under maintenance.svg'
 
 export default function Service() {
   return(
-    <div className=' flex flex-col items-center justify-center w-full md:h-screen'>
+    <div className='flex flex-col items-center justify-center w-full md:h-screen'>
       <div className='flex md:flex-row flex-col-reverse items-center justify-center w-full bg-gray-300 pb-16 gap-24 md:h-screen'>
       <div className='service hidden md:block md:relative md:left-0 lg:top-[-4rem] xl:top-[-6rem] '>
           <img src={ImgManService} alt="homem fazendo instalação em um quadro eletrico"  

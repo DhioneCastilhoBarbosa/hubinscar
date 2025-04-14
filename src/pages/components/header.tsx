@@ -93,7 +93,10 @@ export default function Header({menuType, buttonVisible, menuVisible}:HeaderProp
                   to={item.to}
                   smooth={true}
                   duration={1000}
-                  onClick={() => setMenuOpen(false)}
+                  offset={-80} // Ajusta se você tiver um header fixo de 80px
+                  onClick={() => {
+                    setTimeout(() => setMenuOpen(false), 600); // um pouquinho maior que `duration`
+                  }}
                   className="block w-full h-full"
                 >
                   {item.name}
