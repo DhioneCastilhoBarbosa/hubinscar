@@ -78,11 +78,11 @@ export default function HeaderNavPages({menuType, buttonVisible, menuVisible}:He
 
       {/* Menu Sanduíche */}
       {menuOpen && (
-        <ul className="absolute top-16 left-0 w-full bg-gray-300 flex flex-col items-center gap-6 py-6 font-light text-black md:hidden z-10">
+        <ul className="fixed top-20 left-1/2 transform -translate-x-1/2 w-11/12 max-w-sm bg-black/90 backdrop-blur-md rounded-xl shadow-lg flex flex-col items-center gap-6 py-6 font-light text-white md:hidden z-50 transition-all duration-300">
           {filteredMenu && filteredMenu.map((item) => (
             <li 
             key={item.to} 
-            className="hover:text-gray-400 cursor-pointer" 
+            className="w-full text-center hover:bg-white/10 hover:text-white cursor-pointer py-3 rounded-md transition-all duration-200" 
             onClick={() => handleGoTo(item.to)}
             >
             {item.name}

@@ -83,27 +83,39 @@ export default function Header({menuType, buttonVisible, menuVisible}:HeaderProp
 
       {/* Menu Sanduíche */}
       {menuOpen && (
-        <ul className="absolute top-16 left-0 w-full bg-gray-300 flex flex-col items-center gap-6 py-6 font-light text-black md:hidden z-10">
-          {filteredMenu && filteredMenu.map((item) => (
-            <li
-              key={item.to}
-              className="w-full text-center hover:bg-gray-500 hover:text-white cursor-pointer py-2"
-            >
-              <Link to={item.to} smooth={true} duration={1000}>
-                {item.name}
-              </Link>
-            </li>
-          ))}
-          {filteredMenu && (
-          <li
-            className="w-full text-center hover:bg-gray-500 hover:text-white cursor-pointer py-2"
-            onClick={handleContact}
-          >
-            Contato
-          </li>
-)}
-        </ul>
-      )}
+          <ul className="fixed top-20 left-1/2 transform -translate-x-1/2 w-11/12 max-w-sm bg-black/90 backdrop-blur-md rounded-xl shadow-lg flex flex-col items-center gap-6 py-6 font-light text-white md:hidden z-50 transition-all duration-300">
+            {filteredMenu && filteredMenu.map((item) => (
+              <li
+                key={item.to}
+                className="w-full text-center py-3 rounded-md hover:bg-white/10 transition-all duration-200"
+              >
+                <Link
+                  to={item.to}
+                  smooth={true}
+                  duration={1000}
+                  onClick={() => setMenuOpen(false)}
+                  className="block w-full h-full"
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+            {filteredMenu && (
+              <li
+                className="w-full text-center py-3 rounded-md hover:bg-white/10 transition-all duration-200"
+                onClick={() => {
+                  handleContact();
+                  setMenuOpen(false);
+                }}
+              >
+                <span className="block w-full h-full cursor-pointer">Contato</span>
+              </li>
+            )}
+          </ul>
+        )}
+
+
+
     </div>
   );
 }
