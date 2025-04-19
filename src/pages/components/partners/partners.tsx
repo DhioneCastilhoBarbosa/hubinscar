@@ -32,7 +32,7 @@ export default function Partners() {
 
           <div className="flex flex-col items-center md:items-start justify-center w-full max-w-md text-center md:text-left px-2">
             <h1 className="text-3xl md:text-5xl font-extrabold mb-4">
-              Como funciona a Hubinstcar?
+              Como funciona a EletriHub?
             </h1>
             <div className="font-normal text-base md:text-lg">
               <p>A HubInstCar conecta instaladores de carregadores</p>

@@ -8,6 +8,8 @@ import Partners from './pages/components/partners/partners'
 import RegisterPart from './pages/components/register/registerInstaller'
 import { AuthLayout } from './pages/_layouts/auth'
 import Contact from './pages/components/contact/contact'
+import Dashboard from './pages/components/dashboard/dashboard'
+import { AppLayout } from './pages/_layouts/app'
 
 export default function App() {
   return (
@@ -75,6 +77,16 @@ export default function App() {
         >
           <Route index element={<Contact/>} />
         </Route>
+
+        <Route
+          path="/dashboard"
+          element={
+            <AppLayout />
+          }
+        >
+          <Route index element={<Dashboard/>} />
+        </Route>
+
       </Routes>
     </BrowserRouter>
   )

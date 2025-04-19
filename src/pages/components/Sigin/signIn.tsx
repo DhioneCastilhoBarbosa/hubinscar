@@ -11,6 +11,10 @@ export default function SignIn() {
     navigate("/register");
   }
 
+  function handleNavigateToDashboard() {
+    navigate("/dashboard");
+  }
+
   return (
     <div className='flex flex-col items-center justify-center w-full bg-gray-200 h-screen px-2'>
       <motion.div 
@@ -68,7 +72,9 @@ export default function SignIn() {
       Esqueceu a senha?
     </p>
 
-    <button className="bg-black text-white w-72 h-10 rounded-lg hover:bg-gray-700 hover:cursor-pointer">
+    <button className="bg-black text-white w-72 h-10 rounded-lg hover:bg-gray-700 hover:cursor-pointer"
+    onClick={handleNavigateToDashboard} // Navega para o dashboard ao clicar
+    >
       Entrar
     </button>
   </form>

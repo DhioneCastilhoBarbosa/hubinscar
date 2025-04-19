@@ -12,10 +12,13 @@
   "dependencies": {
     "@headlessui/react": "^2.2.1",
     "@tailwindcss/vite": "^4.0.14",
+    "axios": "^1.8.4",
     "framer-motion": "^12.5.0",
     "lucide-react": "^0.483.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-input-mask": "^2.0.4",
+    "react-input-mask-next": "^3.0.0-alpha.12",
     "react-router-dom": "^7.4.0",
     "react-scroll": "^1.9.3",
     "tailwind-merge": "^3.0.2"
@@ -24,6 +27,7 @@
     "@eslint/js": "^9.21.0",
     "@types/react": "^19.0.11",
     "@types/react-dom": "^19.0.4",
+    "@types/react-input-mask": "^3.0.6",
     "@types/react-scroll": "^1.8.10",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.21.0",

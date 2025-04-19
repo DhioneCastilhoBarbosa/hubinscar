@@ -14,7 +14,7 @@ export function About() {
         Prazer, somos 
         <p className="font-extrabold italic">
           <span className="font-normal not-italic">a </span> 
-          Hubinstcar
+          EletriHub
         </p>
       </h1>
       <div className="flex flex-col justify-center gap-4 p-4 md:w-[500px]  md:font-medium md:text-2xl">
