@@ -26,6 +26,14 @@ export default function Footer() {
     navigate('/contato');
   }
 
+  function handleClickPrivacy() {
+    navigate('/politica-de-privacidade')
+  }
+
+  function handleClickTerms() {
+    navigate('/termos-de-uso')
+  }
+
   return (
     <div className="flex flex-col md:flex-row items-center md:items-start justify-between w-full min-h-44 px-6 md:px-16 py-8 gap-8 bg-stone-900 text-white">
       {/* Logo e redes sociais */}
@@ -47,7 +55,8 @@ export default function Footer() {
         <p className="cursor-pointer" onClick={handleClickContact}>
           Contato
         </p>
-        <p className="cursor-pointer">Política de privacidade</p>
+        <p className="cursor-pointer" onClick={handleClickPrivacy}>Política de privacidade</p>
+        <p className="cursor-pointer" onClick={handleClickTerms}>Termos de Uso</p>
       </div>
 
       {/* Serviços */}

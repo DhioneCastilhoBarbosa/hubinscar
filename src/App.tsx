@@ -10,6 +10,8 @@ import { AuthLayout } from './pages/_layouts/auth'
 import Contact from './pages/components/contact/contact'
 import Dashboard from './pages/components/dashboard/dashboard'
 import { AppLayout } from './pages/_layouts/app'
+import PoliticaDePrivacidade from './pages/components/politicadePrivacidade/PoliticaDePrivacidade'
+import TermosDeUso from './pages/components/termoDeUso/TermoDeUso'
 
 export default function App() {
   return (
@@ -86,7 +88,25 @@ export default function App() {
         >
           <Route index element={<Dashboard/>} />
         </Route>
+        
+        <Route
+          path="/politica-de-privacidade"
+          element={
+            <AuthLayout menuType="home" buttonVisible={false} headModel={true} />
+          }
+        >
+          <Route index element={<PoliticaDePrivacidade/>} />
+        </Route>
 
+        <Route
+          path="/termos-de-uso"
+          element={
+            <AuthLayout menuType="home" buttonVisible={false} headModel={true} />
+          }
+        >
+          <Route index element={<TermosDeUso/>} />
+        </Route>
+        
       </Routes>
     </BrowserRouter>
   )
