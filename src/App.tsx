@@ -12,6 +12,7 @@ import Dashboard from './pages/components/dashboard/dashboard'
 import { AppLayout } from './pages/_layouts/app'
 import PoliticaDePrivacidade from './pages/components/politicadePrivacidade/PoliticaDePrivacidade'
 import TermosDeUso from './pages/components/termoDeUso/TermoDeUso'
+import CookieBanner from './pages/components/cookieBanner/CookieBanner'
 
 export default function App() {
   return (
@@ -106,8 +107,8 @@ export default function App() {
         >
           <Route index element={<TermosDeUso/>} />
         </Route>
-        
       </Routes>
+      <CookieBanner/>
     </BrowserRouter>
   )
 }

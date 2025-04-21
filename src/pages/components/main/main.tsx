@@ -6,6 +6,7 @@ import Home from "./components/home";
 import Installation from "./components/installation";
 import Service from "./components/service";
 
+
 export default function Main() {
     useEffect(() => {
       window.scrollTo(0, 0);
@@ -19,7 +20,6 @@ export default function Main() {
       <div className="w-full mt-auto md:mt-44">
        <Footer/>
       </div>
-      
     </div>
   );
 }

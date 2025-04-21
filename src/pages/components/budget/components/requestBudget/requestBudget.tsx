@@ -9,7 +9,7 @@ interface Props {
 export default function RequestQuoteModal({isOpen, onClose}:Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<{ file: File; preview: string }[]>([]);
-
+  const [aceite, setAceite] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
@@ -51,6 +51,15 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
     });
   };
   
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!aceite) {
+      alert("Você deve aceitar os termos para continuar.");
+      return;
+    }
+    // lógica de cadastro
+    alert("Cadastro enviado com sucesso!");
+  };
 
   
 
@@ -63,7 +72,10 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
 
             <Dialog.Title className="text-2xl font-bold mb-4 text-black">Solicitar Orçamento</Dialog.Title>
 
-            <form className="space-y-4 text-black pb-[calc(5rem+env(safe-area-inset-bottom))]">
+            <form 
+              className="space-y-4 text-black pb-[calc(5rem+env(safe-area-inset-bottom))]"
+              onSubmit={handleSubmit} 
+            >
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <input type="text" placeholder="Nome" className="rounded px-3 py-2 outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black" />
@@ -195,7 +207,26 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
                 <textarea className="w-full  rounded outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black px-3 py-2" rows={3} />
               </div>
 
-             
+              <div>
+          <label className="flex items-start space-x-2 text-sm text-gray-700">
+              <input
+                type="checkbox"
+                checked={aceite}
+                onChange={(e) => setAceite(e.target.checked)}
+                className="mt-1"
+              />
+              <span>
+                Li e concordo com os{" "}
+                <a href="/termos-de-uso" className="underline text-blue-600" target="_blank" rel="noopener noreferrer">
+                  Termos de Uso
+                </a>{" "}
+                e a{" "}
+                <a href="/politica-de-privacidade" className="underline text-blue-600" target="_blank" rel="noopener noreferrer">
+                  Política de Privacidade
+                </a>.
+              </span>
+            </label>
+          </div>
 
               <div className="flex justify-end gap-2 mt-6">
                 <button
@@ -207,7 +238,8 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded bg-gray-900 text-white hover:bg-gray-700 transition"
+                  className="px-4 py-2 rounded bg-gray-900 text-white hover:bg-gray-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  disabled={!aceite}
                 >
                   Enviar Solicitação
                 </button>

@@ -4,11 +4,22 @@ import { useNavigate } from "react-router-dom";
 
 export default function RegisterPart() {
   const [tipoPessoa, setTipoPessoa] = useState("pf");
+  const [aceite, setAceite] = useState(false);
 
   const navigate = useNavigate();
   function handleClicClient(){
     navigate("/register");
   }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!aceite) {
+      alert("Você deve aceitar os termos para continuar.");
+      return;
+    }
+    // lógica de cadastro
+    alert("Cadastro enviado com sucesso!");
+  };
 
     useEffect(() => {
       window.scrollTo(0, 0);
@@ -20,6 +31,7 @@ export default function RegisterPart() {
       initial={{ opacity: 0, y: 0 }}
       animate={{ opacity: 1, y: 20 }}
       transition={{ duration: 1 }}
+      onSubmit={handleSubmit} 
       >
         <h1 className="text-black self-start font-semibold text-2xl">Cadastro do Instalador</h1> {/* Alinhado à esquerda */}
         <p className="text-sm self-start mb-8">Para cadastrar como instalador parceiro click <strong className="cursor-pointer" onClick={handleClicClient}>aqui</strong></p>
@@ -221,8 +233,34 @@ export default function RegisterPart() {
             />
           </div>
 
+          <div>
+          <label className="flex items-start space-x-2 text-sm text-gray-700">
+              <input
+                type="checkbox"
+                checked={aceite}
+                onChange={(e) => setAceite(e.target.checked)}
+                className="mt-1"
+              />
+              <span>
+                Li e concordo com os{" "}
+                <a href="/termos-de-uso" className="underline text-blue-600" target="_blank" rel="noopener noreferrer">
+                  Termos de Uso
+                </a>{" "}
+                e a{" "}
+                <a href="/politica-de-privacidade" className="underline text-blue-600" target="_blank" rel="noopener noreferrer">
+                  Política de Privacidade
+                </a>.
+              </span>
+            </label>
+          </div>
+
           <div className="flex flex-row items-center justify-center w-full mt-8">
-            <button className="bg-black text-white  py-1 rounded-lg w-52  hover:bg-gray-700 hover:cursor-pointer">Cadastrar</button>
+            <button 
+            className="bg-black text-white  py-1 rounded-lg w-52  hover:bg-gray-700 hover:cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
+            disabled={!aceite}
+            >
+              Cadastrar
+            </button>
           </div>
          
         </div>
