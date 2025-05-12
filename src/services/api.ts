@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://api.eletrihub.com', // Substitua pela URL da sua API
+  baseURL: 'https://api.eletrihub.com', // Substitua pela URL da sua API
 })
 
 api.interceptors.request.use((config) => {
