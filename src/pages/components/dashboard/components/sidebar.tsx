@@ -5,7 +5,8 @@ import {
   Settings,
   User,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../../../../services/api";
 
 interface SidebarProps {
   onSelectMenuItem: (item: string) => void;
@@ -14,6 +15,11 @@ interface SidebarProps {
 
 export default function Sidebar({onSelectMenuItem}: SidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState({
+    name: "",
+    avatar: "",
+    
+  });
 
   const menuItems = [
     
@@ -22,11 +28,29 @@ export default function Sidebar({onSelectMenuItem}: SidebarProps) {
     { icon: <User className="w-5 h-5" />, label: "Minha Conta" },
   ];
 
-  const user = {
-    name: "João Silva",
-    avatar:
-      "https://i.pravatar.cc/300?img=12", // imagem de exemplo (pode trocar)
-  };
+  
+
+  useEffect(() => {
+    const ID = localStorage.getItem("ID")
+    if (!ID) return
+
+    const fetchUser = async () => {
+      try {
+        const response = await api.get(`/user/list?id=${ID}`)
+        const data = response.data[0] // supondo que a API retorna um array com 1 item
+        setUser({
+          name: data.username,
+         
+          avatar: `https://api-user-service.eletrihub.com/${data.photo}`, // ou use data.avatar se tiver
+        })
+       
+      } catch (err) {
+        console.error("Erro ao buscar dados do usuário", err)
+      }
+    }
+
+    fetchUser()
+  }, [])
 
   return (
     <div

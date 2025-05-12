@@ -8,5 +8,16 @@ export default defineConfig({
     outDir: 'dist' // <- garante que o build vai pra pasta usada no static.json
   },
 
+   // 🔧 PROXY PARA DESENVOLVIMENTO LOCAL (EVITA ERRO DE CORS)
+  // ❗ REMOVER ESTE BLOCO ANTES DE SUBIR PARA PRODUÇÃO
+  /*server: {
+    proxy: {
+      '/user': {
+        target: 'http://api.eletrihub.com',
+        changeOrigin: true,
+      },
+    },
+  }*/
+
   
 })

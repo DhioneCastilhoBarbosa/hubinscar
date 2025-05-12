@@ -1,46 +1,68 @@
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
+import api from "../../../../services/api" // importando instancia axios com token
 
 export default function UserProfile() {
-  const [activeTab, setActiveTab] = useState<"perfil" | "endereco" | "senha" | "excluir" >("perfil");
+  const [activeTab, setActiveTab] = useState<"perfil" | "senha" | "excluir">("perfil")
 
   const [user, setUser] = useState({
-    name: "Mauricio Antônio",
-    email: "mauricioantonio@gmail.com",
-    phone: "48 9999-9999",
+    name: "",
+    email: "",
+    phone: "",
     photo: "https://i.pravatar.cc/150?img=12",
-  });
+  })
 
   const [address, setAddress] = useState({
     cep: "",
     rua: "",
     numero: "",
     complemento: "",
+    reference: "",
     bairro: "",
     cidade: "",
     estado: "",
-  });
+  })
 
   const [password, setPassword] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
-  });
+  })
 
   const [passwordVisibility, setPasswordVisibility] = useState({
     currentPassword: false,
     newPassword: false,
     confirmPassword: false,
-  });
+  })
 
-  const togglePasswordVisibility = (field: "currentPassword" | "newPassword" | "confirmPassword") => {
-    setPasswordVisibility({
-      ...passwordVisibility,
-      [field]: !passwordVisibility[field],
-    });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    const ID = localStorage.getItem("ID");
+    if (!ID || !fileInputRef.current?.files?.[0]) return;
+  
+    const formData = new FormData();
+    formData.append("id", ID);
+    formData.append("name", user.name);
+    formData.append("email", user.email);
+    formData.append("phone", user.phone);
+    formData.append("photo", fileInputRef.current.files[0]); // imagem real
+  
+    try {
+      await api.put("/user/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      alert("Perfil atualizado com sucesso!");
+    } catch (err) {
+      console.error("Erro ao atualizar perfil:", err);
+    }
   };
+  
 
+  
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (password.newPassword === password.confirmPassword) {
@@ -50,48 +72,78 @@ export default function UserProfile() {
     }
   };
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const togglePasswordVisibility = (field: "currentPassword" | "newPassword" | "confirmPassword") => {
+    setPasswordVisibility(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }))
+  }
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setUser({ ...user, photo: imageUrl });
+      const imageUrl = URL.createObjectURL(file)
+      setUser(prev => ({ ...prev, photo: imageUrl }))
     }
-  };
+  }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Dados salvos:", user);
-  };
-
-  const handleAddressSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Endereço salvo:", address);
-  };
-
-  // Função para buscar o endereço pelo CEP
   const fetchAddressByCep = useCallback(async (cep: string) => {
     if (cep.length === 8) {
       try {
-        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const data = await response.json();
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        const data = await response.json()
         if (!data.erro) {
-          setAddress((prevAddress) => ({
-            ...prevAddress,
+          setAddress(prev => ({
+            ...prev,
             rua: data.logradouro || "",
             bairro: data.bairro || "",
             cidade: data.localidade || "",
             estado: data.uf || "",
-          }));
-        } else {
-          alert("CEP não encontrado");
+          }))
         }
-      } catch (error) {
-        alert("Erro ao buscar o CEP: " + error);
+      } catch {
+        alert("Erro ao buscar o CEP")
       }
     }
-  }, []);
+  }, [])
+
+  // >>>> CAPTURA USUÁRIO DA API <<<<
+  useEffect(() => {
+    const ID = localStorage.getItem("ID")
+    if (!ID) return
+
+    const fetchUser = async () => {
+      try {
+        const response = await api.get(`/user/list?id=${ID}`)
+        const data = response.data[0] // supondo que a API retorna um array com 1 item
+        console.log("Dados do usuário:", data)
+        setUser({
+          name: data.username,
+          email: data.email,
+          phone: data.phone,
+          photo: `https://api-user-service.eletrihub.com/${data.photo}`, // ou use data.avatar se tiver
+        })
+        setAddress({
+          cep: data.cep || "",
+          rua: data.street || "",
+          numero: data.number || "",
+          complemento: data.complement || "",
+          reference: data.reference || "",
+          bairro: data.neighborhood || "",
+          cidade: data.city || "",
+          estado: data.state || "",
+        })
+      } catch (err) {
+        console.error("Erro ao buscar dados do usuário", err)
+      }
+    }
+
+    fetchUser()
+  }, [])
+
 
   // UseEffect para atualizar os campos quando o CEP mudar
   useEffect(() => {
@@ -117,14 +169,7 @@ export default function UserProfile() {
           >
             Perfil
           </li>
-          <li
-            className={`cursor-pointer ${
-              activeTab === "endereco" ? "text-black font-bold" : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("endereco")}
-          >
-            Endereço
-          </li>
+          
           <li
             className={`cursor-pointer ${
               activeTab === "senha" ? "text-black font-bold" : "text-gray-500"
@@ -201,26 +246,10 @@ export default function UserProfile() {
                   className="w-full px-4 py-2 border border-black rounded-md"
                 />
               </div>
-              <div className="pt-2 flex lg:justify-end justify-center">
-                <button
-                  type="submit"
-                  className="bg-black text-white px-6 py-2 rounded-md cursor-pointer w-full lg:w-44"
-                >
-                  Salvar
-                </button>
-              </div>
-            </form>
-          </motion.div>
-        )}
-
-        {activeTab === "endereco" && (
-          <motion.div
-          initial={{ opacity: 0}}
-          animate={{ opacity: 1}}
-          transition={{ duration: 1 }}
-          >
-          <form className="space-y-5" onSubmit={handleAddressSubmit}>
-            <div className="w-32">
+              <hr className="my-8 border-gray-300" />
+              <h2 className="text-lg font-semibold mb-4">Endereço</h2>
+              
+              <div className="w-32">
               <label className="block text-sm mb-1">CEP</label>
               <input
                 type="text"
@@ -292,7 +321,7 @@ export default function UserProfile() {
               <label className="block text-sm mb-1">Ponto de referência(opcional)</label>
               <input
                 type="text"
-                value={address.complemento}
+                value={address.reference}
                 onChange={(e) => setAddress({ ...address, complemento: e.target.value })}
                 className="w-full px-4 py-2 border border-black rounded-md"
               />
@@ -305,9 +334,11 @@ export default function UserProfile() {
                 Salvar
               </button>
             </div>
-          </form>
+            </form>
           </motion.div>
         )}
+
+        
 
         {activeTab === "senha" && (
               <motion.div
@@ -316,27 +347,7 @@ export default function UserProfile() {
               transition={{ duration: 1 }}
               >
                   <form onSubmit={handlePasswordSubmit} className="space-y-5 flex flex-col items-center">
-                    <div className="w-full lg:w-96">
-                      <label className="block text-sm mb-1">Senha Atual</label>
-                      <div className="relative">
-                        <input
-                          type={passwordVisibility.currentPassword ? "text" : "password"}
-                          value={password.currentPassword}
-                          onChange={(e) =>
-                            setPassword({ ...password, currentPassword: e.target.value })
-                          }
-                          className="w-full px-4 py-2 border border-black rounded-md"
-                          placeholder="Digite sua senha atual"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => togglePasswordVisibility("currentPassword")}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                        >
-                          {passwordVisibility.currentPassword ? <EyeOff /> : <Eye />}
-                        </button>
-                      </div>
-                    </div>
+                   
 
                     <div className="w-full lg:w-96">
                       <label className="block text-sm mb-1">Nova Senha</label>
@@ -384,7 +395,7 @@ export default function UserProfile() {
 
                     
                   </form>
-                  <div className="pt-2 flex justify-center lg:justify-end mt-8">
+                  <div className="pt-2 flex justify-center lg:justify-center mt-8">
                   <button
                     type="submit"
                     className="bg-black text-white px-6 py-2 rounded-md cursor-pointer w-full lg:w-44"
