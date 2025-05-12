@@ -14,101 +14,108 @@ import PoliticaDePrivacidade from './pages/components/politicadePrivacidade/Poli
 import TermosDeUso from './pages/components/termoDeUso/TermoDeUso'
 import CookieBanner from './pages/components/cookieBanner/CookieBanner'
 
+import { AuthProvider } from './contexts/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
+
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={true} />
-          }
-        >
-          <Route index element={<Main />} />
-        </Route>
+      <AuthProvider>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={true} />
+            }
+          >
+            <Route index element={<Main />} />
+          </Route>
 
-        <Route
-          path="/signin"
-          element={
-            <AuthLayout menuType="home" buttonVisible={false} headModel={true} />
-          }
-        >
-          <Route index element={<SignIn />} />
-        </Route>
+          <Route
+            path="/signin"
+            element={
+              <AuthLayout menuType="home" buttonVisible={false} headModel={true} />
+            }
+          >
+            <Route index element={<SignIn />} />
+          </Route>
 
-        <Route
-          path="/register"
-          element={
-            <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false} />
-          }
-        >
-          <Route index element={<RegisterClient />} />
-        </Route>
+          <Route
+            path="/register"
+            element={
+              <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false} />
+            }
+          >
+            <Route index element={<RegisterClient />} />
+          </Route>
 
-        <Route
-          path="/budget"
-          element={
-            <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false} />
-          }
-        >
-          <Route index element={<Budget />} />
-        </Route>
+          <Route
+            path="/budget"
+            element={
+              <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false} />
+            }
+          >
+            <Route index element={<Budget />} />
+          </Route>
 
-        <Route
-          path="/parceiros"
-          element={
-            <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false} />
-          }
-        >
-          <Route index element={<Partners />} />
-        </Route>
+          <Route
+            path="/parceiros"
+            element={
+              <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false} />
+            }
+          >
+            <Route index element={<Partners />} />
+          </Route>
 
-        <Route
-          path="/cadastro-parceiro"
-          element={
-            <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false} />
-          }
-        >
-          <Route index element={<RegisterPart />} />
-        </Route>
+          <Route
+            path="/cadastro-parceiro"
+            element={
+              <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false} />
+            }
+          >
+            <Route index element={<RegisterPart />} />
+          </Route>
 
-        <Route
-          path="/contato"
-          element={
-            <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false} />
-          }
-        >
-          <Route index element={<Contact/>} />
-        </Route>
+          <Route
+            path="/contato"
+            element={
+              <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false} />
+            }
+          >
+            <Route index element={<Contact />} />
+          </Route>
 
-        <Route
-          path="/dashboard"
-          element={
-            <AppLayout />
-          }
-        >
-          <Route index element={<Dashboard/>} />
-        </Route>
-        
-        <Route
-          path="/politica-de-privacidade"
-          element={
-            <AuthLayout menuType="home" buttonVisible={false} headModel={true} />
-          }
-        >
-          <Route index element={<PoliticaDePrivacidade/>} />
-        </Route>
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Dashboard />} />
+          </Route>
 
-        <Route
-          path="/termos-de-uso"
-          element={
-            <AuthLayout menuType="home" buttonVisible={false} headModel={true} />
-          }
-        >
-          <Route index element={<TermosDeUso/>} />
-        </Route>
-      </Routes>
-      <CookieBanner/>
+          <Route
+            path="/politica-de-privacidade"
+            element={
+              <AuthLayout menuType="home" buttonVisible={false} headModel={true} />
+            }
+          >
+            <Route index element={<PoliticaDePrivacidade />} />
+          </Route>
+
+          <Route
+            path="/termos-de-uso"
+            element={
+              <AuthLayout menuType="home" buttonVisible={false} headModel={true} />
+            }
+          >
+            <Route index element={<TermosDeUso />} />
+          </Route>
+        </Routes>
+        <CookieBanner />
+      </AuthProvider>
     </BrowserRouter>
   )
 }

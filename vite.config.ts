@@ -6,5 +6,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
     outDir: 'dist' // <- garante que o build vai pra pasta usada no static.json
-  }
+  },
+
+  
 })

@@ -57,7 +57,7 @@ export default function Service() {
               <span className='bg-gray-600 px-3 py-1 rounded-full'>2</span>
               <span className='font-medium text-lg'>Escolha o instalador</span>
             </div>
-            <span className='text-gray-500'>Escolha um istalador da sua região.</span>
+            <span className='text-gray-500'>Escolha um instalador da sua região.</span>
           </div>
 
           <div className='w-60'>
