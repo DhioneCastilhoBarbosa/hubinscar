@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import ImgLogo from "../../../../assets/LOGO BRANCA.png";
 
 export default function HeaderDashboard() {
   const navigate = useNavigate();
@@ -15,7 +16,8 @@ export default function HeaderDashboard() {
         onClick={() => navigate("/")}
         className="text-2xl font-bold cursor-pointer"
       >
-        LOGO
+        <img src={ImgLogo} alt="Logo" className="w-25 h-12" />
+        
       </div>
 
       {/* Botão de sair */}

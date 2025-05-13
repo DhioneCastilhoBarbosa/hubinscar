@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link } from "react-scroll";
 import { useNavigate } from "react-router-dom";
+import ImgLogo from "../../assets/LOGO BRANCA.png"
 
 interface HeaderProps {
   menuType?: "home" | "full";
@@ -65,7 +66,7 @@ export default function Header({ menuType, buttonVisible, menuVisible }: HeaderP
           className="font-bold text-2xl text-white md:ml-4 cursor-pointer"
           onClick={handleGoToHome}
         >
-          LOGO
+          <img src={ImgLogo} alt="Logo" className="w-32 h-10" />
         </div>
         <ul className="hidden md:flex md:flex-row md:gap-8 font-light text-white">
           {filteredMenu &&

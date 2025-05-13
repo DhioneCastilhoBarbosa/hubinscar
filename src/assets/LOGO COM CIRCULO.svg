@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Camada_1" data-name="Camada 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 103.7 103.7">
+  <defs>
+    <style>
+      .cls-1 {
+        font-family: OPTIBankGothic-Light, 'OPTIBankGothic Light';
+        font-size: 44.45px;
+        font-weight: 300;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <circle class="cls-2" cx="51.85" cy="51.85" r="51.85"/>
+  <text class="cls-1" transform="translate(15.46 69.38)"><tspan x="0" y="0">EH</tspan></text>
+</svg>

@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import api from "../../../../services/api";
+import ImgAvatar from "../../../../assets/avatar.jpeg"
 
 interface SidebarProps {
   onSelectMenuItem: (item: string) => void;
@@ -41,7 +42,7 @@ export default function Sidebar({onSelectMenuItem}: SidebarProps) {
         setUser({
           name: data.username,
          
-          avatar: `https://api-user-service.eletrihub.com/${data.photo}`, // ou use data.avatar se tiver
+          avatar: data.photo, // ou use data.avatar se tiver
         })
        
       } catch (err) {
@@ -85,7 +86,7 @@ export default function Sidebar({onSelectMenuItem}: SidebarProps) {
       {/* Rodapé com o usuário */}
       <div className="p-4 border-t border-gray-700 flex items-center gap-3">
         <img
-          src={user.avatar}
+          src={user.avatar ? user.avatar : ImgAvatar}
           alt="Avatar"
           className={`rounded-full object-cover transition-all duration-300 ${
             isOpen ? "w-10 h-10" : "w-8 h-8 mx-auto"

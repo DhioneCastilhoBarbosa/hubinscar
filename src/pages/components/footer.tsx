@@ -2,6 +2,7 @@ import ImgWhatsApp from '../../assets/whatsApp.svg';
 import ImgFacebook from '../../assets/facebook.svg';
 import ImgInstagram from '../../assets/Instagram.svg';
 import { useNavigate } from 'react-router-dom';
+import ImgLogo from "../../assets/LOGO BRANCA.png"
 
 export default function Footer() {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ export default function Footer() {
     <div className="flex flex-col md:flex-row items-center md:items-start justify-between w-full min-h-44 px-6 md:px-16 py-8 gap-8 bg-stone-900 text-white">
       {/* Logo e redes sociais */}
       <div className="flex flex-col items-center md:items-start justify-center gap-4 text-center md:text-left">
-        <h1 className="text-4xl font-extrabold">LOGO</h1>
+        <img src={ImgLogo} alt="Logo" className="w-25 h-12 mb-4" />
         <div className="flex flex-row items-center justify-center gap-4">
           <img src={ImgFacebook} alt="Facebook" className="w-6 h-6" />
           <img src={ImgInstagram} alt="Instagram" className="w-6 h-6" />

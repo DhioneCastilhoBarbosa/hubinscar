@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
 import { useEffect, useState, useCallback, useRef } from "react";
 import api from "../../../../services/api" // importando instancia axios com token
+import ImgAvatar from "../../../../assets/avatar.jpeg"
+import { toast } from "sonner";
 
 export default function UserProfile() {
   const [activeTab, setActiveTab] = useState<"perfil" | "senha" | "excluir">("perfil")
@@ -10,6 +12,7 @@ export default function UserProfile() {
     name: "",
     email: "",
     phone: "",
+    cpf: "",
     photo: "https://i.pravatar.cc/150?img=12",
   })
 
@@ -63,14 +66,36 @@ export default function UserProfile() {
   
 
   
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password.newPassword === password.confirmPassword) {
-      console.log("Senha alterada com sucesso");
-    } else {
-      alert("As senhas novas não coincidem");
+  
+    const ID = localStorage.getItem("ID");
+  
+    if (!ID) {
+     
+      toast.error("ID do usuário não encontrado.");
+      return;
+    }
+  
+    if (password.newPassword !== password.confirmPassword) {
+      toast.error("As senhas novas não coincidem.");
+      
+      return;
+    }
+  
+    try {
+      await api.put(`/user/${ID}/password`, {
+        new_password: password.newPassword,
+      });
+  
+      toast.success("Senha atualizada com sucesso!");
+      setPassword({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    } catch (error) {
+      console.error("Erro ao atualizar senha:", error);
+      toast.error("Erro ao atualizar a senha.");
     }
   };
+  
 
 
   const togglePasswordVisibility = (field: "currentPassword" | "newPassword" | "confirmPassword") => {
@@ -82,13 +107,37 @@ export default function UserProfile() {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const imageUrl = URL.createObjectURL(file)
-      setUser(prev => ({ ...prev, photo: imageUrl }))
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+  
+    const ID = localStorage.getItem("ID");
+    if (!ID) {
+      alert("ID do usuário não encontrado.");
+      return;
     }
-  }
+  
+    // Atualiza preview localmente
+    const imageUrl = URL.createObjectURL(file);
+    setUser((prev) => ({ ...prev, photo: imageUrl }));
+  
+    // Envia para a API
+    const formData = new FormData();
+    formData.append("photo", file);
+  
+    try {
+      await api.put(`/user/${ID}/photo`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      toast.success("Foto atualizada com sucesso");
+    } catch (error) {
+      console.error("Erro ao enviar foto:", error);
+      toast.error("Erro ao atualizar a foto.");
+    }
+  };
+  
 
   const fetchAddressByCep = useCallback(async (cep: string) => {
     if (cep.length === 8) {
@@ -105,7 +154,7 @@ export default function UserProfile() {
           }))
         }
       } catch {
-        alert("Erro ao buscar o CEP")
+        toast.error("Erro ao buscar o CEP")
       }
     }
   }, [])
@@ -119,12 +168,13 @@ export default function UserProfile() {
       try {
         const response = await api.get(`/user/list?id=${ID}`)
         const data = response.data[0] // supondo que a API retorna um array com 1 item
-        console.log("Dados do usuário:", data)
+        //console.log("Dados do usuário:", data)
         setUser({
           name: data.username,
           email: data.email,
           phone: data.phone,
-          photo: `https://api-user-service.eletrihub.com/${data.photo}`, // ou use data.avatar se tiver
+          cpf: data.cpf,
+          photo: data.photo ? data.photo : ImgAvatar, // ou use data.avatar se tiver
         })
         setAddress({
           cep: data.cep || "",
@@ -153,7 +203,7 @@ export default function UserProfile() {
   }, [address.cep, fetchAddressByCep]);
 
   return (
-    <motion.div className="bg-white rounded-2xl w-full max-w-5xl px-4 py-6 sm:px-6 flex flex-col lg:flex-row lg:mt-0 lg:h-4/5"
+    <motion.div className="bg-white rounded-2xl w-full max-w-5xl px-4 py-6 sm:px-6 flex flex-col lg:flex-row lg:mt-0 lg:h-[90vh] overflow-y-auto"
       initial={{ opacity: 0}}
       animate={{ opacity: 1}}
       transition={{ duration: 1 }}
@@ -234,7 +284,8 @@ export default function UserProfile() {
                   type="email"
                   value={user.email}
                   onChange={(e) => setUser({ ...user, email: e.target.value })}
-                  className="w-full px-4 py-2 border border-black rounded-md"
+                  className="w-full px-4 py-2 border border-black rounded-md bg-zinc-200"
+                  disabled
                 />
               </div>
               <div>
@@ -244,6 +295,16 @@ export default function UserProfile() {
                   value={user.phone}
                   onChange={(e) => setUser({ ...user, phone: e.target.value })}
                   className="w-full px-4 py-2 border border-black rounded-md"
+                />
+              </div>
+              <div>
+                <label className="block text-sm mb-1">CPF</label>
+                <input
+                  type="text"
+                  value={user.cpf}
+                  onChange={(e) => setUser({ ...user, cpf: e.target.value })}
+                  className="w-full px-4 py-2 border border-black rounded-md bg-zinc-200"
+                  disabled
                 />
               </div>
               <hr className="my-8 border-gray-300" />
@@ -398,6 +459,7 @@ export default function UserProfile() {
                   <div className="pt-2 flex justify-center lg:justify-center mt-8">
                   <button
                     type="submit"
+                    onClick={handlePasswordSubmit}
                     className="bg-black text-white px-6 py-2 rounded-md cursor-pointer w-full lg:w-44"
                   >
                     Salvar
