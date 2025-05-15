@@ -79,7 +79,7 @@ export default function App() {
           <Route
             path="/contato"
             element={
-              <AuthLayout menuType="full" buttonVisible={true} menuVisible={true} headModel={false} />
+              <AuthLayout menuType="full" buttonVisible={false} menuVisible={true} headModel={false} />
             }
           >
             <Route index element={<Contact />} />
@@ -99,7 +99,8 @@ export default function App() {
           <Route
             path="/politica-de-privacidade"
             element={
-              <AuthLayout menuType="home" buttonVisible={false} headModel={true} />
+              
+              <AuthLayout menuType="full" buttonVisible={false} menuVisible={true} headModel={false} />
             }
           >
             <Route index element={<PoliticaDePrivacidade />} />
@@ -108,7 +109,7 @@ export default function App() {
           <Route
             path="/termos-de-uso"
             element={
-              <AuthLayout menuType="home" buttonVisible={false} headModel={true} />
+              <AuthLayout menuType="full" buttonVisible={false} menuVisible={true} headModel={false} />
             }
           >
             <Route index element={<TermosDeUso />} />
