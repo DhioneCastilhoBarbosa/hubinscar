@@ -13,7 +13,7 @@ export default function UserProfile() {
     email: "",
     phone: "",
     cpf: "",
-    photo: "https://i.pravatar.cc/150?img=12",
+    photo: ImgAvatar,
   })
 
   const [address, setAddress] = useState({
@@ -203,7 +203,7 @@ export default function UserProfile() {
   }, [address.cep, fetchAddressByCep]);
 
   return (
-    <motion.div className="bg-white rounded-2xl w-full max-w-5xl px-4 py-6 sm:px-6 flex flex-col lg:flex-row lg:mt-0 lg:h-[90vh] overflow-y-auto"
+    <motion.div className="bg-white rounded-2xl w-full max-w-5xl px-4 py-6 sm:px-6 flex flex-col lg:flex-row lg:mt-16 lg:h-[90vh]"
       initial={{ opacity: 0}}
       animate={{ opacity: 1}}
       transition={{ duration: 1 }}
@@ -237,12 +237,13 @@ export default function UserProfile() {
       </div>
 
       {/* Conteúdo */}
-      <div className="flex-1 pl-6 mt-6 lg:mt-0 w-full flex flex-col justify-center">
+      <div className="flex-1 pl-6 mt-6 lg:mt-0 w-full flex flex-col justify-center items-center  overflow-y-auto">
         {activeTab === "perfil" && (
           <motion.div
           initial={{ opacity: 0}}
           animate={{ opacity: 1}}
           transition={{ duration: 1 }}
+          className=" flex flex-col h-full"
           >
             <div className="flex items-center space-x-4 mb-6">
               <img
