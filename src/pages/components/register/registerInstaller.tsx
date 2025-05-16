@@ -1,25 +1,100 @@
+import { Eye, EyeOff } from "lucide-react";
+import api from "../../../services/api"
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function RegisterPart() {
   const [tipoPessoa, setTipoPessoa] = useState("pf");
   const [aceite, setAceite] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    cpf: "",
+    cnpj: "",
+    CompanyName: "",
+    street: "",
+    number: "",
+    neighborhood: "",
+    city: "",
+    state: "",
+    complement: "",
+    cep: "",
+    reference: "",
+    birth_date: "",
+  });
+
+  const [password, setPassword] = useState({
+    
+    newPassword: "",
+    confirmPassword: "",
+  })
+
+  const [passwordVisibility, setPasswordVisibility] = useState({
+   
+    newPassword: false,
+    confirmPassword: false,
+  })
+
+  const senhaInvalida = password.newPassword !== password.confirmPassword;
+
+  const togglePasswordVisibility = (field: "newPassword" | "confirmPassword") => {
+    setPasswordVisibility(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }))
+  }
 
   const navigate = useNavigate();
   function handleClicClient(){
     navigate("/register");
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+  
     if (!aceite) {
       alert("Você deve aceitar os termos para continuar.");
       return;
     }
-    // lógica de cadastro
-    alert("Cadastro enviado com sucesso!");
+
+    const payload = {
+      name: formData.name,
+      company_name: formData.CompanyName,
+      email: formData.email,
+      password: password.newPassword,
+      phone: formData.phone,
+      cpf: formData.cpf,
+      cnpj: formData.cnpj,
+      tipe_person: tipoPessoa === "pf" ? "fisico" : "juridico",
+      street: formData.street,
+      number: formData.number,
+      neighborhood: formData.neighborhood,
+      city: formData.city,
+      state: formData.state,
+      complement: formData.complement,
+      cep: formData.cep,
+      reference: formData.reference,
+      birth_date: formData.birth_date,
+      accept_terms: aceite,
+      role: "instalador",
+      type_person: "instalador",
+      photo: "", // ou link da imagem se tiver
+    };
+
+    try {
+      await api.post("/user/register", payload);
+      toast.success("Cadastro realizado com sucesso. Vamos avaliar as suas informações e entraremos em contato por email ou pelo telefone.");
+      navigate("/parceiros"); // ou redirecionamento desejado
+    } catch (error) {
+      toast.error("Erro ao cadastrar usuário.");
+      console.error("Erro ao registrar:", error);
+    }
   };
+
 
     useEffect(() => {
       window.scrollTo(0, 0);
@@ -44,6 +119,7 @@ export default function RegisterPart() {
               type="email"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite seu email"
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
           </div>
 
@@ -54,9 +130,64 @@ export default function RegisterPart() {
               type="text"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 w-52 max-w-lg"
               placeholder="(DDD) x xxxx-xxxx"
+              value={formData.phone}
+              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             />
           </div>
+
+          <div className="flex md:flex-row flex-col md:items-center md:gap-4 gap-2 w-full">
+            <label className="w-44 md:text-right">Senha</label>
+            <div className="relative md:w-92 w-full max-w-lg">
+               <input
+                  type={passwordVisibility.newPassword ? "text" : "password"}
+                  value={password.newPassword}
+                  onChange={(e) =>
+                  setPassword({ ...password, newPassword: e.target.value })
+                  }
+                  className="w-full px-4 py-2 border border-black rounded-md"
+                  placeholder="Digite a nova senha"
+                />
+                  <button
+                  type="button"
+                  onClick={() => togglePasswordVisibility("newPassword")}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  >
+                  {passwordVisibility.newPassword ? <EyeOff /> : <Eye />}
+                  </button>
+              </div>
+          </div>
+          <div className="flex md:flex-row flex-col md:items-center md:gap-4 gap-2 w-full">
+            <label className="w-44 md:text-right">Repetir Nova Senha</label>
+              <div className="relative md:w-92 w-full max-w-lg">
+                <input
+                  type={passwordVisibility.confirmPassword ? "text" : "password"}
+                  value={password.confirmPassword}
+                  onChange={(e) =>
+                    setPassword({ ...password, confirmPassword: e.target.value })
+                  }
+                  className={`w-full px-4 py-2 border rounded-md ${
+                    senhaInvalida ? "border-red-500" : "border-black"
+                  }`}
+                  placeholder="Digite novamente a nova senha"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => togglePasswordVisibility("confirmPassword")}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 sla"
+                  >
+                  {passwordVisibility.confirmPassword ? <EyeOff /> : <Eye />}
+                  </button>
+              </div>
+                  
+          </div>
+          {senhaInvalida && (
+              <p className="text-red-500 text-sm mt-0.5">
+                  As senhas não coincidem.
+              </p>
+          )}
         </div>
+                
+       
         {/* Tipo de Pessoa */}
         <div className="flex flex-row items-center justify-center gap-2 w-full md:ml-28">
           <p className="w-32">Tipo de Pessoa:</p>
@@ -102,6 +233,8 @@ export default function RegisterPart() {
               type="text"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite seu nome"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
           </div>
           ):(
@@ -112,6 +245,8 @@ export default function RegisterPart() {
               type="text"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite sua razão social"
+              value={formData.CompanyName}
+              onChange={(e) => setFormData({ ...formData, CompanyName: e.target.value })}
             />
           </div>
           )}
@@ -124,6 +259,8 @@ export default function RegisterPart() {
               type="text"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-52 max-w-lg"
               placeholder="xxx.xxx.xxx-xx"
+              value={formData.cpf}
+              onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
             />
           </div>
           ):(
@@ -134,6 +271,8 @@ export default function RegisterPart() {
               type="text"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-52 max-w-lg"
               placeholder="xx.xxx.xxx/xxxx-xx"
+              value={formData.cnpj}
+              onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
             />
           </div>
           )}
@@ -145,7 +284,8 @@ export default function RegisterPart() {
               id="dataNascimento"
               type="date"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-52 max-w-lg"
-             
+              value={formData.birth_date}
+              onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })}
             />
           </div>
           )}
@@ -161,6 +301,8 @@ export default function RegisterPart() {
               type="text"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="xxxxx-xxx"
+              value={formData.cep}
+              onChange={(e) => setFormData({ ...formData, cep: e.target.value })}
             />
           </div>
 
@@ -171,6 +313,8 @@ export default function RegisterPart() {
               type="text"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite seu endereço"
+              value={formData.street}
+              onChange={(e) => setFormData({ ...formData, street: e.target.value })}
             />
           </div>
 
@@ -181,6 +325,8 @@ export default function RegisterPart() {
               type="text"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite o número"
+              value={formData.number}
+              onChange={(e) => setFormData({ ...formData, number: e.target.value })}
             />
           </div>
 
@@ -191,6 +337,8 @@ export default function RegisterPart() {
               type="text"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite o complemento"
+              value={formData.complement}
+              onChange={(e) => setFormData({ ...formData, complement: e.target.value })}
             />
           </div>
 
@@ -201,6 +349,8 @@ export default function RegisterPart() {
               type="text"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite o bairro"
+              value={formData.neighborhood}
+              onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
             />
           </div>
           <div className="flex md:flex-row flex-col md:items-center md:gap-4 gap-2 w-full">
@@ -210,6 +360,8 @@ export default function RegisterPart() {
               type="text"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite a cidade"
+              value={formData.city}
+              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
             />
           </div>
 
@@ -220,6 +372,8 @@ export default function RegisterPart() {
               type="text"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite o estado"
+              value={formData.state}
+              onChange={(e) => setFormData({ ...formData, state: e.target.value })}
             />
           </div>
 
@@ -230,6 +384,8 @@ export default function RegisterPart() {
               type="text"
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="Digite o ponto de referência"
+              value={formData.reference}
+              onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
             />
           </div>
 
@@ -240,6 +396,7 @@ export default function RegisterPart() {
                 checked={aceite}
                 onChange={(e) => setAceite(e.target.checked)}
                 className="mt-1"
+                value={formData.email}
               />
               <span>
                 Li e concordo com os{" "}
@@ -257,7 +414,7 @@ export default function RegisterPart() {
           <div className="flex flex-row items-center justify-center w-full mt-8">
             <button 
             className="bg-black text-white  py-1 rounded-lg w-52  hover:bg-gray-700 hover:cursor-pointer disabled:bg-gray-300 disabled:cursor-not-allowed"
-            disabled={!aceite}
+            disabled={!aceite || senhaInvalida}
             >
               Cadastrar
             </button>

@@ -9,8 +9,8 @@ export default function Contact() {
   return (
     <div className="flex flex-col min-h-screen bg-stone-950 text-black">
       {/* Conteúdo da página */}
-      <main className="flex-grow flex flex-col items-center justify-center w-full md:pb-4">
-        <div className="flex flex-col items-center justify-center md:w-5/6 mt-20 bg-gray-200 rounded-md">
+      <main className="flex-grow flex flex-col items-center justify-center w-full md:pb-4 ">
+        <div className="flex flex-col items-center justify-center md:w-5/6 mt-20 bg-gray-200 rounded-md max-w-4xl">
           <div className="flex flex-col items-center justify-center w-full gap-6">
             <h1 className="text-gray-900 font-extrabold text-4xl mt-8">Como podemos ajudar?</h1>
             <p className="mx-4">Envie para a nossa equipe suas dúvidas, sugestões e reclamações. Estaremos prontos para te ajudar.</p>

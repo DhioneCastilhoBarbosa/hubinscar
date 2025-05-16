@@ -65,10 +65,12 @@ export default function RegisterClient() {
 
   const payload = {
     name: formData.name,
+    company_name: formData.CompanyName,
     email: formData.email,
     password: password.newPassword,
     phone: formData.phone,
     cpf: formData.cpf,
+    cnpj: formData.cnpj,
     tipe_person: tipoPessoa === "pf" ? "fisico" : "juridico",
     street: formData.street,
     number: formData.number,

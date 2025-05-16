@@ -75,6 +75,7 @@ export default function Budget() {
       const installersRes = await api.get(`/user/public/installers/nearby?lat=${lat}&lng=${lon}`);
       if (Array.isArray(installersRes.data)) {
         setInstallers(installersRes.data);
+       
       } else {
         setInstallers([]);
       }
@@ -117,6 +118,7 @@ export default function Budget() {
         // Verifica se o retorno é um array válido
         if (Array.isArray(response.data)) {
           setInstallers(response.data);
+          console.log('Instaladores:', response.data);
         } else {
           setInstallers([]);
           console.warn('Resposta da API não é um array:', response.data);
@@ -219,7 +221,8 @@ export default function Budget() {
                           alt="Imagem do profissional"
                           className="rounded-full w-12 h-12"
                         />
-                        <span>{installer.username || installer.company_name}</span>
+                        <span>{installer.username?.trim() ? installer.username : installer.company_name}</span>
+
                       </div>
                     </TableCell>
                     <TableCell className="text-gray-800 flex-1">
