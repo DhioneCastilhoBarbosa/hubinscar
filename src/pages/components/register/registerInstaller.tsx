@@ -87,7 +87,9 @@ export default function RegisterPart() {
 
     try {
       await api.post("/user/register", payload);
-      toast.success("Cadastro realizado com sucesso. Vamos avaliar as suas informações e entraremos em contato por email ou pelo telefone.");
+      toast.success("Cadastro realizado com sucesso. Vamos avaliar as suas informações e entraremos em contato por email ou pelo telefone.", {
+        duration: 6000 // em milissegundos (8 segundos)
+      });
       navigate("/parceiros"); // ou redirecionamento desejado
     } catch (error) {
       toast.error("Erro ao cadastrar usuário.");
