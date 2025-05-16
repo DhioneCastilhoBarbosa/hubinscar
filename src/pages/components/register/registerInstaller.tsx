@@ -34,7 +34,7 @@ export default function RegisterPart() {
       onSubmit={handleSubmit} 
       >
         <h1 className="text-black self-start font-semibold text-2xl">Cadastro do Instalador</h1> {/* Alinhado à esquerda */}
-        <p className="text-sm self-start mb-8">Para cadastrar como instalador parceiro click <strong className="cursor-pointer" onClick={handleClicClient}>aqui</strong></p>
+        <p className="text-sm self-start mb-8">Para cadastrar como cliente click <strong className="cursor-pointer" onClick={handleClicClient}>aqui</strong></p>
         {/* Campos de email e telefone */}
         <div className="flex flex-col md:items-center items-start w-full gap-4">
           <div className="flex md:flex-row flex-col md:items-center md:gap-4 gap-2 w-full">

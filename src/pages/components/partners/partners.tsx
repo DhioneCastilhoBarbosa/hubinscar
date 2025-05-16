@@ -35,7 +35,7 @@ export default function Partners() {
               Como funciona a EletriHub?
             </h1>
             <div className="font-normal text-base md:text-lg">
-              <p>A HubInstCar conecta instaladores de carregadores</p>
+              <p>A EletriHub conecta instaladores de carregadores</p>
               <p>para carros elétricos a clientes, oferecendo mais</p>
               <p>visibilidade e permitindo receber pedidos sem</p>
               <p>precisar buscar clientes ou investir em divulgação.</p>
