@@ -1,43 +1,62 @@
 import { Dialog } from '@headlessui/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import api from '../../../../../services/api';
+import { Installer } from '../installer';
+import { toast } from 'sonner';
+
+
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  installer: Installer | null;
+  sessionId: string | null;
 }
 
-export default function RequestQuoteModal({isOpen, onClose}:Props) {
+export default function RequestQuoteModal({isOpen, onClose, installer, sessionId}:Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<{ file: File; preview: string }[]>([]);
   const [aceite, setAceite] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
-    if (selectedFiles) {
-      const fileArray = Array.from(selectedFiles);
+    if (!selectedFiles) return;
+    
+    const fileArray = Array.from(selectedFiles);
   
-      const newFiles = fileArray
-        .map(file => {
-          // Cria um novo arquivo com timestamp no nome
-          const uniqueFile = new File([file], `${Date.now()}-${file.name}`, {
-            type: file.type,
-          });
+    const newFiles = fileArray
+      .map(file => {
+        const uniqueFile = new File([file], `${Date.now()}-${file.name}`, {
+          type: file.type,
+        });
   
-          return {
-            file: uniqueFile,
-            preview: URL.createObjectURL(uniqueFile),
-          };
-        })
-        // Filtra apenas os que ainda não foram adicionados
-        .filter(newFile =>
-          !files.some(f => f.file.name === newFile.file.name)
-        );
+        return {
+          file: uniqueFile,
+          preview: URL.createObjectURL(uniqueFile),
+        };
+      })
+      .filter(newFile =>
+        !files.some(existing => existing.file.name === newFile.file.name)
+      );
   
-      setFiles(prev => [...prev, ...newFiles]);
+    // Limitar o total a 2 imagens
+    const totalAllowed = 2 - files.length;
+    if (totalAllowed <= 0) {
+      toast.info("Você só pode enviar no máximo 2 imagens.");
+      return;
+    }
   
-      if (inputRef.current) inputRef.current.value = '';
+    const limitedNewFiles = newFiles.slice(0, totalAllowed);
+  
+    setFiles(prev => [...prev, ...limitedNewFiles]);
+  
+    if (inputRef.current) {
+      inputRef.current.value = '';
     }
   };
+  
   
   
 
@@ -51,16 +70,65 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
     });
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+  
     if (!aceite) {
-      alert("Você deve aceitar os termos para continuar.");
+      toast.info("Você deve aceitar os termos para continuar.");
       return;
     }
-    // lógica de cadastro
-    alert("Cadastro enviado com sucesso!");
+    setIsSubmitting(true); // 🔄 Inicia o loading
+  
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+  
+    // Adiciona dados extras
+    if (sessionId) formData.append("session_id", sessionId);
+    if (installer?.id) formData.append("installer_id", installer.id);
+    if (installer?.username || installer?.company_name) {
+      formData.append("installer_name", installer.username || installer.company_name || "");
+    }
+  
+    // Fotos (no máximo 2)
+    files.slice(0, 2).forEach((f, i) => {
+      formData.append(`photo${i + 1}`, f.file);
+    });
+  
+    try {
+      const response = await api.post("/api/v1/budget/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+  
+      console.log("Orçamento enviado com sucesso:", response.data);
+      toast.success("Orçamento enviado com sucesso! Aguarde nosso contato.");
+      setFiles([]);
+      onClose();
+    } catch (err) {
+      console.error(err);
+      toast.error("Erro ao enviar orçamento. Tente novamente mais tarde.");
+    } finally{
+      setIsSubmitting(false); // 🔄 Para o loading
+    }
   };
-
+  
+  useEffect(() => {
+    if (isOpen) {
+      // Limpa arquivos
+      setFiles([]);
+      
+      // Limpa aceite
+      setAceite(false);
+  
+      // Limpa inputs (se quiser garantir manualmente)
+      if (inputRef.current) inputRef.current.value = '';
+      
+      // Reseta o formulário via DOM
+      const form = document.getElementById('quote-form') as HTMLFormElement | null;
+      if (form) form.reset();
+    }
+  }, [isOpen]);
   
 
   return (
@@ -72,27 +140,28 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
 
             <Dialog.Title className="text-2xl font-bold mb-4 text-black">Solicitar Orçamento</Dialog.Title>
 
-            <form 
+            <form
+              id="quote-form" 
               className="space-y-4 text-black pb-[calc(5rem+env(safe-area-inset-bottom))]"
               onSubmit={handleSubmit} 
             >
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input type="text" placeholder="Nome" className="rounded px-3 py-2 outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black" />
-                <input type="email" placeholder="E-mail" className=" rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
-                <input type="tel" placeholder="Telefone" className="rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
+                <input name="name" type="text" placeholder="Nome" className="rounded px-3 py-2 outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black" />
+                <input name="email" type="email" placeholder="E-mail" className=" rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
+                <input name="phone" type="tel" placeholder="Telefone" className="rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
               </div>
 
               <div>
                 <label className="block font-medium">Número de estações que deseja intalar</label>
-                <input type="number" className="w-32 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
+                <input name="station_count" type="number" className="w-32 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
               </div>
 
               
 
               <div>
                 <label className="block font-medium">Tipo de local</label>
-                <select className="w-60  rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2">
+                <select name="location_type" className="w-60  rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2">
                   <option>Residencial</option>
                   <option>Condomínio</option>
                   <option>Empresa</option>
@@ -156,12 +225,12 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
 
               <div>
                 <label className="block font-medium">Distância até o quadro de energia (m)</label>
-                <input type="number" className="w-32 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
+                <input name="distance" type="number" className="w-32 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
               </div>
 
               <div>
                 <label className="block font-medium">Conexão de rede disponível</label>
-                <select className="w-60 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2">
+                <select name="network_type" className="w-60 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2">
                   <option>Wi-Fi</option>
                   <option>Cabo (Ethernet)</option>
                   <option>Nenhuma</option>
@@ -170,7 +239,7 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
 
               <div>
                 <label className="block font-medium">Estrutura de instalação</label>
-                <select className="w-60 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2">
+                <select name="structure_type" className="w-60 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2">
                   <option>Parede</option>
                   <option>Poste</option>
                   <option>Totem existente</option>
@@ -180,7 +249,7 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
 
               <div>
                 <label className="block font-medium">Tipo de carregador</label>
-                <select className="w-60 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2">
+                <select name="charger_type" className="w-60 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2">
                   <option>Portátil (tomada comum)</option>
                   <option>Wallbox (AC)</option>
                   <option>Carregador rápido (DC)</option>
@@ -189,7 +258,7 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
 
               <div>
                 <label className="block font-medium">Potência disponível (kW)</label>
-                <input type="number" className="w-60 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
+                <input name="power"type="number" className="w-60 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
                 <label className="flex items-center mt-1">
                   <input type="checkbox" className="mr-2" /> Não sei informar
                 </label>
@@ -197,14 +266,14 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
 
               <div>
                 <label className="block font-medium mb-1">Deseja incluir proteção elétrica?</label>
-                <label className="flex items-center"><input type="checkbox" className="mr-2" /> Disjuntor exclusivo</label>
-                <label className="flex items-center"><input type="checkbox" className="mr-2" /> DPS</label>
-                <label className="flex items-center"><input type="checkbox" className="mr-2" /> DR</label>
+                <label className="flex items-center"><input type="checkbox" name="protection" className="mr-2" /> Disjuntor exclusivo</label>
+                <label className="flex items-center"><input type="checkbox" name="protection" className="mr-2" /> DPS</label>
+                <label className="flex items-center"><input type="checkbox" name="protection" className="mr-2" /> DR</label>
               </div>
 
               <div>
                 <label className="block font-medium">Observações</label>
-                <textarea className="w-full  rounded outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black px-3 py-2" rows={3} />
+                <textarea  name="notes" className="w-full  rounded outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black px-3 py-2" rows={3} />
               </div>
 
               <div>
@@ -239,10 +308,11 @@ export default function RequestQuoteModal({isOpen, onClose}:Props) {
                 <button
                   type="submit"
                   className="px-4 py-2 rounded bg-gray-900 text-white hover:bg-gray-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
-                  disabled={!aceite}
+                  disabled={!aceite || isSubmitting}
                 >
-                  Enviar Solicitação
+                  {isSubmitting ? "Enviando..." : "Enviar Solicitação"}
                 </button>
+
               </div>
             </form>
           </Dialog.Panel>

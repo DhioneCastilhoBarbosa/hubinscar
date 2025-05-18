@@ -11,7 +11,7 @@ import RequestQuoteModal from './components/requestBudget/requestBudget'
 import api from '../../../services/api'
 import ImgAvatar from "../../../assets/avatar.jpeg"
 import { toast } from 'sonner'
-
+import { v4 as uuidv4 } from 'uuid';
 
 
 interface Installer {
@@ -31,9 +31,22 @@ export default function Budget() {
   const [installers, setInstallers] = useState<Installer[]>([]);
   const [cep, setCep] = useState('');
   const [loading, setLoading] = useState(false);
+  const [selectedInstaller, setSelectedInstaller] = useState<Installer | null>(null);
 
+  const handleOpenModal = (installer: Installer) => {
+    // Verifica se já existe session_id
+  let sessionId = localStorage.getItem('session_id');
 
-  const handleOpenModal = () => {
+  if (!sessionId) {
+    sessionId = uuidv4();
+    localStorage.setItem('session_id', sessionId);
+    console.log('🔐 Nova session_id criada:', sessionId);
+  } else {
+    console.log('🔐 session_id existente:', sessionId);
+  }
+
+  // Define o instalador selecionado e abre o modal
+    setSelectedInstaller(installer);
     setIsOpen(true);
   };
 
@@ -241,7 +254,8 @@ export default function Budget() {
                       <div className="w-full flex flex-row items-center justify-center gap-2">
                         <button
                           className="bg-sky-600 text-white w-44 h-8 rounded-lg hover:cursor-pointer hover:bg-sky-500"
-                          onClick={handleOpenModal}
+                          onClick={() => handleOpenModal(installer)}
+
                         >
                           Solicitar orçamento
                         </button>
@@ -265,7 +279,12 @@ export default function Budget() {
           <Footer />
         </div>
       </div>
-      <RequestQuoteModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <RequestQuoteModal 
+        isOpen={isOpen} 
+        onClose={() => setIsOpen(false)} 
+        installer={selectedInstaller} 
+        sessionId={localStorage.getItem("session_id")}
+      />
     </>
   );
 }
