@@ -1,5 +1,21 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle, XCircle, Clock} from 'lucide-react';
+import { CheckCircle, XCircle, Clock, BadgeDollarSign,
+  Calendar,
+  CalendarClock,
+  CheckCheck,
+  ClipboardList,
+  Construction,
+  Home,
+  MapPin,
+  Network,
+  ShieldCheck,
+  Zap,
+  PlugZap,
+  User2,
+  FileText,
+  Gauge,
+  Camera,
+  CreditCard} from 'lucide-react';
 import { motion } from 'framer-motion';
 import api from '../../../../services/api';
 import React from 'react';
@@ -36,7 +52,7 @@ interface Budget {
 }
 
 const getStatusStyle = (status: string) => {
-  const base = 'w-full justify-start text-right';
+  const base = 'w-60 justify-start text-right';
   switch (status.toLowerCase()) {
     case 'concluido':
       return `${base} bg-green-900 text-green-300 border-green-500`;
@@ -46,6 +62,8 @@ const getStatusStyle = (status: string) => {
       return `${base} bg-yellow-900 text-yellow-300 border-yellow-500`;
     case 'aguardando orçamento':
       return `${base} bg-blue-900 text-blue-300 border-blue-500`;
+    case 'aguardando pagamento':
+      return `${base} bg-amber-700 text-white border-amber-500 text-center`;
     default:
       return base;
   }
@@ -61,6 +79,8 @@ const getStatusIcon = (status: string) => {
       return <Clock className="w-4 h-4 mr-2" />;
     case 'aguardando orçamento':
       return <Clock className="w-4 h-4 mr-2" />;
+    case 'aguardando pagamento':
+      return <Clock className="w-4 h-4 mr-2" />;
     default:
       return null;
   }
@@ -75,6 +95,10 @@ export default function Services() {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const isCliente = () => {
+    return localStorage.getItem("person") === "cliente";
+  };
+  
 
   useEffect(() => {
     const user_id = localStorage.getItem("ID");
@@ -196,14 +220,20 @@ export default function Services() {
               <th className="text-left py-1">Instalador</th>
               <th className="text-left py-1">Início</th>
               <th className="text-left py-1">Finalização</th>
-              <th className="text-left py-1 w-52 ">Status</th>
+              <th className="text-left py-1 w-62">Status</th>
+              <th className="text-left py-1 w-60">Ação</th>
             </tr>
           </thead>
           <tbody>
-            {currentServices.map((service) => (
+          {currentServices.map((service) => {
+            const isClienteValido = isCliente();
+            const valorValido = Number(service.value) > 0;
+            const isPago = service.payment_status === "pago";
+            const desabilitado = isPago || !isClienteValido || !valorValido;
+
+            return (
               <React.Fragment key={service.id}>
                 <tr
-                  key={service.id}
                   className="border-b border-zinc-700 cursor-pointer hover:bg-zinc-700"
                   onClick={() => toggleRow(service.id)}
                 >
@@ -213,7 +243,7 @@ export default function Services() {
                   <td>{service.finish_date ? new Date(service.finish_date).toLocaleDateString() : '-'}</td>
                   <td className="text-left">
                     <span
-                      className={`inline-flex items-center border rounded-lg px-3 py-2 text-sm font-medium${getStatusStyle(
+                      className={`inline-flex items-center border rounded-lg px-3 py-2 text-sm font-medium ${getStatusStyle(
                         service.status
                       )}`}
                     >
@@ -221,14 +251,39 @@ export default function Services() {
                       {service.status.charAt(0).toUpperCase() + service.status.slice(1)}
                     </span>
                   </td>
+                  <td>
+                    <button
+                      disabled={desabilitado}
+                      className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 w-full justify-center border
+                        ${isPago
+                          ? "bg-zinc-800 text-green-500 border-green-500 cursor-not-allowed"
+                          : isClienteValido && valorValido
+                            ? "bg-green-600 hover:bg-green-700 text-white border-transparent"
+                            : "bg-zinc-600 text-zinc-400 border-transparent cursor-not-allowed"
+                        }`}
+                    >
+                      <CreditCard
+                        size={16}
+                        className={isPago ? "text-green-500" : ""}
+                      />
+                      {isPago
+                        ? "Pago"
+                        : isClienteValido && valorValido
+                          ? "Realizar pagamento"
+                          : "Pagamento indisponível"}
+                    </button>
+                  </td>
                 </tr>
+
                 {expandedRows.includes(service.id) && (
                   <tr className="bg-zinc-900 text-gray-300">
-                    <td colSpan={5} className="p-4 space-y-2">
-                    {(service.photo1 || service.photo2) && (
+                    <td colSpan={6} className="p-4 space-y-2">
+                      {(service.photo1 || service.photo2) && (
                         <div className="flex gap-4 mt-2">
-                          <label className="text-sm">Fotos:</label>
-                          {/* Exibe as fotos se existirem */}
+                          <div className="flex items-start gap-2">
+                            <Camera size={16} className="text-zinc-400" />
+                            <span><strong>Fotos:</strong></span>
+                          </div>
                           {[service.photo1, service.photo2].filter(Boolean).map((photo, index) => (
                             <img
                               key={index}
@@ -240,20 +295,63 @@ export default function Services() {
                         </div>
                       )}
 
-                      <p><strong>Data de Solicitação:</strong> {new Date(service.created_at).toLocaleDateString()}</p>
-                      <p><strong>Qtd. Estações:</strong> {service.station_count}</p>
-                      <p><strong>Tipo de Local:</strong> {service.location_type}</p>
-                      <p><strong>Distância:</strong> {service.distance}m</p>
-                      <p><strong>Rede:</strong> {service.network_type}</p>
-                      <p><strong>Estrutura:</strong> {service.structure_type}</p>
-                      <p><strong>Potência:</strong> {service.power}</p>
-                      <p><strong>Proteção:</strong> {service.protection}</p>
-                      <p><strong>Observações:</strong> {service.notes}</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm text-zinc-300 mt-4">
+                        <div className="flex items-center gap-2">
+                          <Calendar size={16} className="text-zinc-400" />
+                          <span><strong>Solicitação:</strong> {new Date(service.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <BadgeDollarSign size={16} className="text-zinc-400" />
+                          <span><strong>Valor:</strong> R$ {service.value.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <User2 size={16} className="text-zinc-400" />
+                          <span><strong>Instalador:</strong> {service.installer_name}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Gauge size={16} className="text-zinc-400" />
+                          <span><strong>Qtd. Estações:</strong> {service.station_count}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Home size={16} className="text-zinc-400" />
+                          <span><strong>Tipo de Local:</strong> {service.location_type}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <MapPin size={16} className="text-zinc-400" />
+                          <span><strong>Distância:</strong> {service.distance}m</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Network size={16} className="text-zinc-400" />
+                          <span><strong>Rede de dados:</strong> {service.network_type}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Construction size={16} className="text-zinc-400" />
+                          <span><strong>Estrutura:</strong> {service.structure_type}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <PlugZap size={16} className="text-zinc-400" />
+                          <span><strong>Carregador:</strong> {service.charger_type}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Zap size={16} className="text-zinc-400" />
+                          <span><strong>Potência:</strong> {service.power}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <ShieldCheck size={16} className="text-zinc-400" />
+                          <span><strong>Proteção:</strong> {service.protection}</span>
+                        </div>
+                        <div className="sm:col-span-2 flex items-start gap-2">
+                          <FileText size={16} className="text-zinc-400 mt-1" />
+                          <span><strong>Observações:</strong> {service.notes}</span>
+                        </div>
+                      </div>
                     </td>
                   </tr>
                 )}
               </React.Fragment>
-            ))}
+            );
+          })}
+
           </tbody>
         </table>
       </div>
@@ -266,7 +364,10 @@ export default function Services() {
            {/* Carrossel de fotos - mobile */}
             {(service.photo1 || service.photo2) && (
               <div className="mb-4">
-                <p className="text-sm mb-2 text-gray-300">📸 Fotos do local:</p>
+                <div className="flex items-center gap-2 ">
+                    <Camera size={16} className="text-zinc-400" />
+                    <span><strong>Fotos:</strong></span>
+                  </div>
                 <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory px-1">
                   {[service.photo1, service.photo2].filter(Boolean).map((photo, index) => (
                     <div key={index} className="flex-shrink-0 snap-start">
@@ -282,27 +383,108 @@ export default function Services() {
             )}
 
 
-            <div className="mb-1">🆔 <strong>ID:</strong> #{service.id}</div>
-            <div className="mb-1">👷 <strong>Instalador:</strong> {service.installer_name}</div>
-            <div className="mb-1">🚀 <strong>Início:</strong> {service.execution_date ? new Date(service.execution_date).toLocaleDateString() : '-'}</div>
-            <div className="mb-1">✅ <strong>Finalização:</strong> {service.finish_date ? new Date(service.finish_date).toLocaleDateString() : '-'}</div>
-            <div className="mb-1">📅 <strong>Solicitado em:</strong> {new Date(service.created_at).toLocaleDateString()}</div>
-            <div className="mb-1">🏠 <strong>Tipo de Local:</strong> {service.location_type}</div>
-            <div className="mb-1">📏 <strong>Distância:</strong> {service.distance}m</div>
-            <div className="mb-1">📡 <strong>Rede:</strong> {service.network_type}</div>
-            <div className="mb-1">🧱 <strong>Estrutura:</strong> {service.structure_type}</div>
-            <div className="mb-1">⚡ <strong>Potência:</strong> {service.power}</div>
-            <div className="mb-1">🛡️ <strong>Proteção:</strong> {service.protection}</div>
-            <div className="mb-1">📝 <strong>Observações:</strong> {service.notes}</div>
-            <div className="mt-2 text-right">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-sm text-zinc-300">
+              <div className="flex items-center gap-2">
+                <ClipboardList size={16} className="text-zinc-400" />
+                <span><strong>ID:</strong> #{service.id}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <User2 size={16} className="text-zinc-400" />
+                <span><strong>Instalador:</strong> {service.installer_name}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Calendar size={16} className="text-zinc-400" />
+                <span><strong>Solicitado em:</strong> {new Date(service.created_at).toLocaleDateString()}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <BadgeDollarSign size={16} className="text-zinc-400" />
+                <span><strong>Valor:</strong> R$ {service.value.toFixed(2).replace('.', ',')}</span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <CalendarClock size={16} className="text-zinc-400" />
+                <span><strong>Início:</strong> {service.execution_date ? new Date(service.execution_date).toLocaleDateString() : '-'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCheck size={16} className="text-zinc-400" />
+                <span><strong>Finalização:</strong> {service.finish_date ? new Date(service.finish_date).toLocaleDateString() : '-'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Home size={16} className="text-zinc-400" />
+                <span><strong>Tipo de Local:</strong> {service.location_type}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin size={16} className="text-zinc-400" />
+                <span><strong>Distância:</strong> {service.distance}m</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Network size={16} className="text-zinc-400" />
+                <span><strong>Tipo de rede:</strong> {service.network_type}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Construction size={16} className="text-zinc-400" />
+                <span><strong>Estrutura:</strong> {service.structure_type}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <PlugZap size={16} className="text-zinc-400" />
+                <span><strong>Tipo de Carregador:</strong> {service.charger_type}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap size={16} className="text-zinc-400" />
+                <span><strong>Potência:</strong> {service.power}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <ShieldCheck size={16} className="text-zinc-400" />
+                <span><strong>Proteção:</strong> {service.protection}</span>
+              </div>
+              <div className="sm:col-span-2 flex items-start gap-2">
+                <FileText size={16} className="text-zinc-400 mt-1" />
+                <span><strong>Observações:</strong> {service.notes}</span>
+              </div>
+            </div>
+
+
+            <div className="mt-2">
               <span
-                className={`inline-flex items-center border rounded-lg px-3 py-1 text-sm font-medium ${getStatusStyle(
-                  service.status
-                )}`}
+                className={`inline-flex items-center border rounded-lg px-4 py-2 text-sm font-medium
+                  ${getStatusStyle(service.status)}`}
               >
                 {getStatusIcon(service.status)}
                 {service.status.charAt(0).toUpperCase() + service.status.slice(1)}
               </span>
+            </div>
+
+            <div className="mt-4">
+            {(() => {
+                const isClienteValido = isCliente();
+                const valorValido = Number(service.value) > 0;
+                const isPago = service.payment_status === "pago";
+                const desabilitado = isPago || !isClienteValido || !valorValido;
+
+                return (
+                  <button
+                    disabled={desabilitado}
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 w-full justify-center border
+                      ${isPago
+                        ? "bg-zinc-800 text-green-500 border-green-500 cursor-not-allowed"
+                        : isClienteValido && valorValido
+                          ? "bg-green-600 hover:bg-green-700 text-white border-transparent"
+                          : "bg-zinc-600 text-zinc-400 border-transparent cursor-not-allowed"
+                      }`}
+                  >
+                    <CreditCard
+                      size={16}
+                      className={isPago ? "text-green-500" : ""}
+                    />
+                    {isPago
+                      ? "Pago"
+                      : isClienteValido && valorValido
+                        ? "Realizar pagamento"
+                        : "Pagamento indisponível"}
+                  </button>
+                );
+              })()}
+
             </div>
           </div>
         ))}
