@@ -19,19 +19,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const token = localStorage.getItem('token')
     const name = localStorage.getItem('name')
     const ID = localStorage.getItem('ID')
+    
 
     if (token && name && ID) {
-      setUser({ name, ID })
+      setUser({ name, ID})
     }
   }, [])
 
   const signIn = async (email: string, password: string) => {
     const response = await api.post('/user/login', { email, password })
-    const { token, name, ID } = response.data
+    const { token, name, ID,person,photo } = response.data
 
     localStorage.setItem('token', token)
     localStorage.setItem('name', name)
     localStorage.setItem('ID', ID)
+    localStorage.setItem('person', person)
+    localStorage.setItem('photo', photo)
 
     setUser({ name, ID })
     navigate('/dashboard')

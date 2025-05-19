@@ -6,7 +6,6 @@ import {
   User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import api from "../../../../services/api";
 import ImgAvatar from "../../../../assets/avatar.jpeg"
 
 interface SidebarProps {
@@ -32,26 +31,29 @@ export default function Sidebar({onSelectMenuItem}: SidebarProps) {
   
 
   useEffect(() => {
-    const ID = localStorage.getItem("ID")
-    if (!ID) return
-
-    const fetchUser = async () => {
-      try {
-        const response = await api.get(`/user/list?id=${ID}`)
-        const data = response.data[0] // supondo que a API retorna um array com 1 item
-        setUser({
-          name: data.username,
-         
-          avatar: data.photo, // ou use data.avatar se tiver
-        })
-       
-      } catch (err) {
-        console.error("Erro ao buscar dados do usuário", err)
+    //console.log("useEffect montado: escutando evento photoUpdated");
+  
+    const updatePhoto = () => {
+      //console.log("Evento photoUpdated disparado");
+      const name = localStorage.getItem("name");
+      const photo = localStorage.getItem("photo");
+      if (name && photo) {
+        setUser({ name, avatar: photo });
       }
-    }
+    };
+  
+    window.addEventListener("photoUpdated", updatePhoto);
+  
+    // Carrega dados inicialmente
+    updatePhoto();
+  
+    return () => {
+      window.removeEventListener("photoUpdated", updatePhoto);
+    };
+  }, []);
+  
 
-    fetchUser()
-  }, [])
+  
 
   return (
     <div

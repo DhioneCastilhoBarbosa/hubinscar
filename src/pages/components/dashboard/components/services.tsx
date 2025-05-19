@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { CheckCircle, XCircle, Clock} from 'lucide-react';
 import { motion } from 'framer-motion';
 import api from '../../../../services/api';
+import React from 'react';
+import { AxiosError } from 'axios';
 
 interface Budget {
   id: number;
@@ -75,30 +77,57 @@ export default function Services() {
   const [filterStatus, setFilterStatus] = useState('');
 
   useEffect(() => {
-    const user_id = localStorage.getItem('ID');
-    const session_id = localStorage.getItem('session_id');
-
-    if (!user_id || !session_id) {
-      setError('Usuário não identificado.');
+    const user_id = localStorage.getItem("ID");
+    const session_id = localStorage.getItem("session_id");
+  
+    if (!user_id) {
+      setError("Usuário não identificado.");
       setLoading(false);
       return;
     }
-
+  
     const linkAndFetch = async () => {
       try {
-        await api.put('/api/v1/budget/link', { user_id, session_id });
+        if (session_id) {
+          try {
+            await api.put("/api/v1/budget/link", { user_id, session_id });
+            localStorage.removeItem("session_id");
+          } catch (linkError: unknown) {
+            if (
+              linkError instanceof AxiosError &&
+              linkError.response?.status !== 409
+            ) {
+              throw linkError;
+            }
+          
+            if (
+              linkError instanceof AxiosError &&
+              linkError.response?.status === 409
+            ) {
+              console.warn("Orçamentos já estavam vinculados.");
+              localStorage.removeItem("session_id");
+            } else {
+              // erro inesperado que não é do Axios
+              throw linkError;
+            }
+          }
+        }
+  
+        // Sempre busca os orçamentos
         const res = await api.get(`/api/v1/budget/?user_id=${user_id}`);
         setBudgets(res.data);
       } catch (err) {
         console.error(err);
-        setError('Erro ao buscar seus orçamentos.');
+        setError("Erro ao buscar seus orçamentos.");
       } finally {
         setLoading(false);
       }
     };
-
+  
     linkAndFetch();
   }, []);
+  
+  
 
   const toggleRow = (id: number) => {
     setExpandedRows((prev) =>
@@ -172,7 +201,7 @@ export default function Services() {
           </thead>
           <tbody>
             {currentServices.map((service) => (
-              <>
+              <React.Fragment key={service.id}>
                 <tr
                   key={service.id}
                   className="border-b border-zinc-700 cursor-pointer hover:bg-zinc-700"
@@ -196,6 +225,21 @@ export default function Services() {
                 {expandedRows.includes(service.id) && (
                   <tr className="bg-zinc-900 text-gray-300">
                     <td colSpan={5} className="p-4 space-y-2">
+                    {(service.photo1 || service.photo2) && (
+                        <div className="flex gap-4 mt-2">
+                          <label className="text-sm">Fotos:</label>
+                          {/* Exibe as fotos se existirem */}
+                          {[service.photo1, service.photo2].filter(Boolean).map((photo, index) => (
+                            <img
+                              key={index}
+                              src={photo}
+                              alt={`Foto ${index + 1}`}
+                              className="w-60 h-44 rounded-lg object-cover border border-zinc-600"
+                            />
+                          ))}
+                        </div>
+                      )}
+
                       <p><strong>Data de Solicitação:</strong> {new Date(service.created_at).toLocaleDateString()}</p>
                       <p><strong>Qtd. Estações:</strong> {service.station_count}</p>
                       <p><strong>Tipo de Local:</strong> {service.location_type}</p>
@@ -208,16 +252,36 @@ export default function Services() {
                     </td>
                   </tr>
                 )}
-              </>
+              </React.Fragment>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Cards para telas pequenas */}
+    {/* Cards para telas pequenas */}
       <div className="md:hidden flex flex-col gap-4">
         {currentServices.map((service) => (
           <div key={service.id} className="bg-zinc-700 p-4 rounded-lg shadow-md">
+            
+           {/* Carrossel de fotos - mobile */}
+            {(service.photo1 || service.photo2) && (
+              <div className="mb-4">
+                <p className="text-sm mb-2 text-gray-300">📸 Fotos do local:</p>
+                <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory px-1">
+                  {[service.photo1, service.photo2].filter(Boolean).map((photo, index) => (
+                    <div key={index} className="flex-shrink-0 snap-start">
+                      <img
+                        src={photo}
+                        alt={`Foto ${index + 1}`}
+                        className="w-64 h-40 rounded-lg object-cover border border-zinc-600 shadow-md"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+
             <div className="mb-1">🆔 <strong>ID:</strong> #{service.id}</div>
             <div className="mb-1">👷 <strong>Instalador:</strong> {service.installer_name}</div>
             <div className="mb-1">🚀 <strong>Início:</strong> {service.execution_date ? new Date(service.execution_date).toLocaleDateString() : '-'}</div>
@@ -243,6 +307,7 @@ export default function Services() {
           </div>
         ))}
       </div>
+
 
       <div className="flex justify-between items-center mt-6 text-sm text-gray-300">
         <button

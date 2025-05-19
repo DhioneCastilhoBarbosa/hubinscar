@@ -117,26 +117,36 @@ export default function UserProfile() {
       return;
     }
   
-    // Atualiza preview localmente
+    // Atualiza preview local (URL temporária só para exibir antes do upload)
     const imageUrl = URL.createObjectURL(file);
     setUser((prev) => ({ ...prev, photo: imageUrl }));
   
-    // Envia para a API
     const formData = new FormData();
     formData.append("photo", file);
   
     try {
-      await api.put(`/user/${ID}/photo`, formData, {
+      const response = await api.put(`/user/${ID}/photo`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+  
+      const newPhotoUrl = response.data.photo; // a nova URL da imagem retornada pela API
+  
+      // ✅ Salva a nova foto no localStorage
+      localStorage.setItem("photo", newPhotoUrl);
+      
+  
+      // ✅ Emite evento global de atualização da foto
+      window.dispatchEvent(new Event("photoUpdated"));
+  
       toast.success("Foto atualizada com sucesso");
     } catch (error) {
       console.error("Erro ao enviar foto:", error);
       toast.error("Erro ao atualizar a foto.");
     }
   };
+  
   
 
   const fetchAddressByCep = useCallback(async (cep: string) => {
