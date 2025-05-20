@@ -108,12 +108,26 @@ export default function RequestQuoteModal({isOpen, onClose, installer,}:Props) {
     }
   
     const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-    formData.append("power", formDataState.power.replace(",", "."));
-    const protections = Array.from(form.querySelectorAll('input[name="protection"]:checked'))
-      .map((input) => (input as HTMLInputElement).value);
+    const formData = new FormData();
 
-    formData.append("protections", JSON.stringify(protections)); // ou proteções separadas por vírgula
+    // Preenche manualmente todos os campos visíveis do formulário
+    new FormData(form).forEach((value, key) => {
+      if (key !== "protection") {
+        formData.append(key, value);
+      }
+    });
+
+    formData.append("power", formDataState.power.replace(",", "."));
+
+
+    // Captura múltiplos checkboxes marcados
+    const protections = Array.from(
+    form.querySelectorAll('input[name="protection"]:checked')
+          ).map((input) => (input as HTMLInputElement).value);
+
+    const protectionString = protections.join(", ");
+    formData.append("protection", protectionString);
+
 
 
 
@@ -498,8 +512,6 @@ export default function RequestQuoteModal({isOpen, onClose, installer,}:Props) {
                   Não sei informar
                 </label>
               </div>
-
-
 
               <div>
                 <label className="block font-medium">Deseja instalar proteções?</label>
