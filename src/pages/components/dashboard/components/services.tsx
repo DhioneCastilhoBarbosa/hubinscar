@@ -20,6 +20,7 @@ import { motion } from 'framer-motion';
 import api from '../../../../services/api';
 import React from 'react';
 import { AxiosError } from 'axios';
+import { toast } from 'sonner';
 
 interface Budget {
   id: number;
@@ -29,6 +30,14 @@ interface Budget {
   name: string;
   email: string;
   phone: string;
+  cep?: string;
+  street?: string;
+  number?: string;
+  neighborhood?: string;
+  city?: string;
+  state?: string;
+  complement?: string;
+
   station_count: number;
   location_type: string;
   photo1?: string;
@@ -254,11 +263,15 @@ export default function Services() {
                   <td>
                     <button
                       disabled={desabilitado}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toast.info("Pagamento em desenvolvimento...");
+                      }}
                       className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 w-full justify-center border
                         ${isPago
                           ? "bg-zinc-800 text-green-500 border-green-500 cursor-not-allowed"
                           : isClienteValido && valorValido
-                            ? "bg-green-600 hover:bg-green-700 text-white border-transparent"
+                            ? "bg-green-600 hover:bg-green-700 text-white border-transparent cursor-pointer"
                             : "bg-zinc-600 text-zinc-400 border-transparent cursor-not-allowed"
                         }`}
                     >
@@ -294,7 +307,19 @@ export default function Services() {
                           ))}
                         </div>
                       )}
-
+                      <div className="flex items-center gap-2">
+                        <MapPin size={16} className="text-zinc-400" />
+                        <span>
+                          <strong>Endereço:</strong>{" "}
+                          {`${service.street || ""}, ${service.number || ""} - ${service.neighborhood || ""}, ${service.city || ""} - ${service.state || ""}, CEP ${service.cep || ""}`}
+                        </span>
+                      </div>
+                      {service.complement && (
+                        <div className="flex items-center gap-2">
+                          <MapPin size={16} className="text-zinc-400" />
+                          <span><strong>Complemento:</strong> {service.complement}</span>
+                        </div>
+                      )}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 text-sm text-zinc-300 mt-4">
                         <div className="flex items-center gap-2">
                           <Calendar size={16} className="text-zinc-400" />
@@ -388,13 +413,24 @@ export default function Services() {
                 <ClipboardList size={16} className="text-zinc-400" />
                 <span><strong>ID:</strong> #{service.id}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <User2 size={16} className="text-zinc-400" />
-                <span><strong>Instalador:</strong> {service.installer_name}</span>
+              
+              <div className="flex items-start gap-2">
+                <MapPin size={16} className="text-zinc-400 mt-1" />
+                <span>
+                  <strong>Endereço:</strong><br />
+                  {`${service.street || ""}, ${service.number || ""} - ${service.neighborhood || ""}`}<br />
+                  {`${service.city || ""} - ${service.state || ""}, CEP ${service.cep || ""}`}
+                  {service.complement && <><br /><strong>Complemento:</strong> {service.complement}</>}
+                </span>
               </div>
+
               <div className="flex items-center gap-2">
                 <Calendar size={16} className="text-zinc-400" />
                 <span><strong>Solicitado em:</strong> {new Date(service.created_at).toLocaleDateString()}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <User2 size={16} className="text-zinc-400" />
+                <span><strong>Instalador:</strong> {service.installer_name}</span>
               </div>
               <div className="flex items-center gap-2">
                 <BadgeDollarSign size={16} className="text-zinc-400" />

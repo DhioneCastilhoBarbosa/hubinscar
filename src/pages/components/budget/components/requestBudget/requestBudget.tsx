@@ -18,6 +18,21 @@ export default function RequestQuoteModal({isOpen, onClose, installer, sessionId
   const [files, setFiles] = useState<{ file: File; preview: string }[]>([]);
   const [aceite, setAceite] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formDataState, setFormDataState] = useState<{ power: string }>({
+    power: "",
+  });
+  
+  const [addressData, setAddressData] = useState({
+    cep: "",
+    street: "",
+    number: "",
+    neighborhood: "",
+    city: "",
+    state: "",
+    complement: ""
+  });
+  
+  
 
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,13 +96,24 @@ export default function RequestQuoteModal({isOpen, onClose, installer, sessionId
   
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
-  
+    formData.append("power", formDataState.power.replace(",", "."));
+
+
+
     // Adiciona dados extras
     if (sessionId) formData.append("session_id", sessionId);
     if (installer?.id) formData.append("installer_id", installer.id);
     if (installer?.username || installer?.company_name) {
       formData.append("installer_name", installer.username || installer.company_name || "");
     }
+    formData.append("cep", addressData.cep);
+    formData.append("street", addressData.street);
+    formData.append("number", addressData.number);
+    formData.append("neighborhood", addressData.neighborhood);
+    formData.append("city", addressData.city);
+    formData.append("state", addressData.state);
+    formData.append("complement", addressData.complement);
+
   
     // Fotos (no máximo 2)
     files.slice(0, 2).forEach((f, i) => {
@@ -112,6 +138,38 @@ export default function RequestQuoteModal({isOpen, onClose, installer, sessionId
       setIsSubmitting(false); // 🔄 Para o loading
     }
   };
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      const cep = addressData.cep.replace(/\D/g, "");
+      if (cep.length !== 8) return;
+  
+      try {
+        const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await res.json();
+  
+        if (data.erro) {
+          toast.error("CEP não encontrado.");
+          return;
+        }
+  
+        setAddressData((prev) => ({
+          ...prev,
+          street: data.logradouro || "",
+          neighborhood: data.bairro || "",
+          city: data.localidade || "",
+          state: data.uf || "",
+          complement: data.complemento || ""
+        }));
+      } catch (err) {
+        console.error("Erro ao buscar o CEP:", err);
+        toast.error("Erro ao buscar o CEP.",);
+      }
+    };
+  
+    if (addressData.cep) fetchAddress();
+  }, [addressData.cep]);
+  
   
   useEffect(() => {
     if (isOpen) {
@@ -146,22 +204,155 @@ export default function RequestQuoteModal({isOpen, onClose, installer, sessionId
               onSubmit={handleSubmit} 
             >
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input name="name" type="text" placeholder="Nome" className="rounded px-3 py-2 outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black" />
-                <input name="email" type="email" placeholder="E-mail" className=" rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
-                <input name="phone" type="tel" placeholder="Telefone" className="rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
+              <div className="grid grid-cols-1 gap-4 w-72">
+                <div>
+                  <label className="block font-medium">Nome</label>
+                  <input name="name" type="text" placeholder="Digite seu nome" className="rounded px-3 py-2 outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black"  required/>
+                </div>
+                <div>
+                  <label className="block font-medium">E-mail</label>
+                  <input name="email" type="email" placeholder="Digite seu e-mail" className=" rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" required/>
+                </div>
+                <div>
+                  <label className="block font-medium">Telefone</label>
+                  <input name="phone" type="tel" placeholder="(xxx)xxxxx-xxxx" className="rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" required/>
+                </div>
               </div>
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <label className="block font-medium">CEP</label>
+                  <input
+                    name="cep"
+                    type="text"
+                    placeholder="Digite seu CEP"
+                    className="rounded px-3 py-2 outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black w-72"
+                    value={addressData.cep}
+                    onChange={(e) => setAddressData({ ...addressData, cep: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className='flex flex-col gap-4 w-full md:flex-row'>
+                  <div className='w-full'>
+                    <label className="block font-medium">Endereço</label>
+                    <input
+                      name="street"
+                      type="text"
+                      placeholder="Digite seu endereço"
+                      className="rounded px-3 py-2 outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black w-full"
+                      value={addressData.street}
+                      onChange={(e) => setAddressData({ ...addressData, street: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-medium">Número</label>
+                    <input
+                      name="number"
+                      type="text"
+                      placeholder=""
+                      className="rounded px-3 py-2 outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black w-32"
+                      value={addressData.number}
+                      onChange={(e) => setAddressData({ ...addressData, number: e.target.value })}
+                      required
+                    />
+                  </div>
+                </div>
+                
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <label className="block font-medium">Bairro</label>
+                    <input
+                      name="neighborhood"
+                      type="text"
+                      placeholder=""
+                      className="rounded px-3 py-2 outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black w-72"
+                      value={addressData.neighborhood}
+                      onChange={(e) => setAddressData({ ...addressData, neighborhood: e.target.value })}
+                      required
+                    />
+                </div>
+                <div className="flex flex-col gap-4 w-full md:flex-row">
+                  <div>
+                    <label className="block font-medium">Cidade</label>
+                    <input
+                      name="city"
+                      type="text"
+                      placeholder=""
+                      className="rounded px-3 py-2 outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black w-72"
+                      value={addressData.city}
+                      onChange={(e) => setAddressData({ ...addressData, city: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-medium">Estado</label>
+                    <select
+                      name="state"
+                      className="rounded px-3 py-2 outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black w-32"
+                      value={addressData.state}
+                      onChange={(e) => setAddressData({ ...addressData, state: e.target.value })}
+                      required
+                    >
+                      <option value="">Estado</option>
+                      <option value="AC">AC</option>
+                      <option value="AL">AL</option>
+                      <option value="AP">AP</option>
+                      <option value="AM">AM</option>
+                      <option value="BA">BA</option>
+                      <option value="CE">CE</option>
+                      <option value="DF">DF</option>
+                      <option value="ES">ES</option>
+                      <option value="GO">GO</option>
+                      <option value="MA">MA</option>
+                      <option value="MT">MT</option>
+                      <option value="MS">MS</option>
+                      <option value="MG">MG</option>
+                      <option value="PA">PA</option>
+                      <option value="PB">PB</option>
+                      <option value="PR">PR</option>
+                      <option value="PE">PE</option>
+                      <option value="PI">PI</option>
+                      <option value="RJ">RJ</option>
+                      <option value="RN">RN</option>
+                      <option value="RS">RS</option>
+                      <option value="RO">RO</option>
+                      <option value="RR">RR</option>
+                      <option value="SC">SC</option>
+                      <option value="SP">SP</option>
+                      <option value="SE">SE</option>
+                      <option value="TO">TO</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                <label className="block font-medium">Complemento</label>
+                  <input
+                    name="complement"
+                    type="text"
+                    placeholder="Complemento"
+                    className="rounded px-3 py-2 outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black"
+                    value={addressData.complement}
+                    onChange={(e) => setAddressData({ ...addressData, complement: e.target.value })}
+                  />
+                </div>
+              </div>
+
 
               <div>
                 <label className="block font-medium">Número de estações que deseja intalar</label>
-                <input name="station_count" type="number" className="w-32 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
+                <input name="station_count" type="number" className="w-32 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" required min={1}/>
               </div>
 
               
 
               <div>
                 <label className="block font-medium">Tipo de local</label>
-                <select name="location_type" className="w-60  rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2">
+                <select name="location_type" className="w-60  rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" required>
                   <option>Residencial</option>
                   <option>Condomínio</option>
                   <option>Empresa</option>
@@ -225,7 +416,7 @@ export default function RequestQuoteModal({isOpen, onClose, installer, sessionId
 
               <div>
                 <label className="block font-medium">Distância até o quadro de energia (m)</label>
-                <input name="distance" type="number" className="w-32 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
+                <input name="distance" type="number" className="w-32 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" min={1}/>
               </div>
 
               <div>
@@ -258,11 +449,25 @@ export default function RequestQuoteModal({isOpen, onClose, installer, sessionId
 
               <div>
                 <label className="block font-medium">Potência disponível (kW)</label>
-                <input name="power"type="number" className="w-60 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2" />
+                <input
+                  name="power"
+                  type="text"
+                  inputMode="decimal"
+                  className="w-60 rounded outline-1 outline-gray-400 focus-within:outline-2 focus-within:outline-black px-3 py-2"
+                  placeholder="Ex: 7.4 ou 11,7"
+                  value={formDataState.power}
+                  onChange={(e) => {
+                    const raw = e.target.value.replace(",", ".");
+                    if (/^\d*\.?\d*$/.test(raw)) {
+                      setFormDataState({ ...formDataState, power: e.target.value });
+                    }
+                  }}
+                />
                 <label className="flex items-center mt-1">
                   <input type="checkbox" className="mr-2" /> Não sei informar
                 </label>
               </div>
+
 
               <div>
                 <label className="block font-medium mb-1">Deseja incluir proteção elétrica?</label>

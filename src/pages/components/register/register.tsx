@@ -97,6 +97,40 @@ export default function RegisterClient() {
   }
 };
 
+    useEffect(() => {
+      const fetchAddressByCep = async () => {
+        const cep = formData.cep.replace(/\D/g, ""); // Remove caracteres não numéricos
+        if (cep.length !== 8) return; // CEP inválido
+
+        try {
+          const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+          const data = await response.json();
+
+          if (data.erro) {
+            toast.error("CEP não encontrado.");
+            return;
+          }
+
+          setFormData((prev) => ({
+            ...prev,
+            street: data.logradouro || "",
+            neighborhood: data.bairro || "",
+            city: data.localidade || "",
+            state: data.uf || "",
+            complement: data.complemento || "",
+          }));
+        } catch (error) {
+          console.error("Erro ao buscar CEP:", error);
+          toast.error("Erro ao buscar o CEP.");
+        }
+      };
+
+      if (formData.cep) {
+        fetchAddressByCep();
+      }
+    }, [formData.cep]);
+
+
 
 
     useEffect(() => {
@@ -113,7 +147,7 @@ export default function RegisterClient() {
       onSubmit={handleSubmit} 
       >
         <h1 className="text-black self-start font-semibold text-2xl">Cadastro do Cliente</h1> {/* Alinhado à esquerda */}
-        <p className="text-sm self-start mb-8">Para cadastrar como instalador parceiro click <strong className="cursor-pointer" onClick={handleClicPartners}>aqui</strong></p>
+        <p className="text-sm self-start mb-8">Para cadastrar como instalador parceiro clique <strong className="cursor-pointer text-red-700" onClick={handleClicPartners}>aqui.</strong></p>
         {/* Campos de email e telefone */}
         <div className="flex flex-col md:items-center items-start w-full gap-4">
           <div className="flex md:flex-row flex-col md:items-center md:gap-4 gap-2 w-full">
@@ -125,6 +159,7 @@ export default function RegisterClient() {
               placeholder="Digite seu email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              required
             />
           </div>
 
@@ -137,6 +172,7 @@ export default function RegisterClient() {
               placeholder="(DDD) x xxxx-xxxx"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              required
             />
           </div>
 
@@ -151,6 +187,7 @@ export default function RegisterClient() {
                   }
                   className="w-full px-4 py-2 border border-black rounded-md"
                   placeholder="Digite a nova senha"
+                  required
                 />
                   <button
                   type="button"
@@ -174,6 +211,7 @@ export default function RegisterClient() {
                     senhaInvalida ? "border-red-500" : "border-black"
                   }`}
                   placeholder="Digite novamente a nova senha"
+                  required
                   />
                   <button
                     type="button"
@@ -206,6 +244,7 @@ export default function RegisterClient() {
                 checked = {tipoPessoa === "pf"}
                 onChange={(e) => setTipoPessoa(e.target.value)}
                 className="accent-black"
+                required
               />
               <label htmlFor="pf">Física</label>
             </div>
@@ -218,6 +257,7 @@ export default function RegisterClient() {
                 checked = {tipoPessoa === "pj"}
                 onChange={(e) => setTipoPessoa(e.target.value)}
                 className="accent-black"
+                required
               />
               <label htmlFor="pj">Jurídica</label>
             </div>
@@ -240,6 +280,7 @@ export default function RegisterClient() {
               placeholder="Digite seu nome"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              required
             />
           </div>
           ):(
@@ -252,6 +293,7 @@ export default function RegisterClient() {
               placeholder="Digite sua razão social"
               value={formData.CompanyName}
               onChange={(e) => setFormData({ ...formData, CompanyName: e.target.value })}
+              required
             />
           </div>
           )}
@@ -266,6 +308,7 @@ export default function RegisterClient() {
               placeholder="xxx.xxx.xxx-xx"
               value={formData.cpf}
               onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
+              required
             />
           </div>
           ):(
@@ -278,6 +321,7 @@ export default function RegisterClient() {
               placeholder="xx.xxx.xxx/xxxx-xx"
               value={formData.cnpj}
               onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
+              required
             />
           </div>
           )}
@@ -291,6 +335,7 @@ export default function RegisterClient() {
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-52 max-w-lg"
               value={formData.birth_date}
               onChange={(e) => setFormData({ ...formData, birth_date: e.target.value })}
+              required
             />
           </div>
           )}
@@ -307,7 +352,12 @@ export default function RegisterClient() {
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
               placeholder="xxxxx-xxx"
               value={formData.cep}
-              onChange={(e) => setFormData({ ...formData, cep: e.target.value })}
+              onChange={(e) => {
+                const rawCep = e.target.value.replace(/\D/g, "");
+                const maskedCep = rawCep.replace(/^(\d{5})(\d{0,3})/, "$1-$2");
+                setFormData({ ...formData, cep: maskedCep });
+              }}
+              required
             />
           </div>
 
@@ -320,6 +370,7 @@ export default function RegisterClient() {
               placeholder="Digite seu endereço"
               value={formData.street}
               onChange={(e) => setFormData({ ...formData, street: e.target.value })}
+              required
             />
           </div>
 
@@ -332,6 +383,7 @@ export default function RegisterClient() {
               placeholder="Digite o número"
               value={formData.number}
               onChange={(e) => setFormData({ ...formData, number: e.target.value })}
+              required
             />
           </div>
 
@@ -344,6 +396,7 @@ export default function RegisterClient() {
               placeholder="Digite o complemento"
               value={formData.complement}
               onChange={(e) => setFormData({ ...formData, complement: e.target.value })}
+              required
             />
           </div>
 
@@ -356,6 +409,7 @@ export default function RegisterClient() {
               placeholder="Digite o bairro"
               value={formData.neighborhood}
               onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
+              required
             />
           </div>
           <div className="flex md:flex-row flex-col md:items-center md:gap-4 gap-2 w-full">
@@ -367,20 +421,50 @@ export default function RegisterClient() {
               placeholder="Digite a cidade"
               value={formData.city}
               onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+              required
             />
           </div>
 
           <div className="flex md:flex-row flex-col md:items-center md:gap-4 gap-2 w-full">
-            <label className="w-44 md:text-right" htmlFor="nome">Estado</label>
-            <input
-              id="nome"
-              type="text"
-              className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-92 max-w-lg"
-              placeholder="Digite o estado"
+            <label className="w-44 md:text-right" htmlFor="estado">Estado</label>
+            <select
+              id="estado"
+                className="h-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black py-0.5 px-2 md:w-92 max-w-lg"
               value={formData.state}
               onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-            />
+              required
+            >
+              <option value="">Selecione o estado</option>
+              <option value="AC">AC</option>
+              <option value="AL">AL</option>
+              <option value="AP">AP</option>
+              <option value="AM">AM</option>
+              <option value="BA">BA</option>
+              <option value="CE">CE</option>
+              <option value="DF">DF</option>
+              <option value="ES">ES</option>
+              <option value="GO">GO</option>
+              <option value="MA">MA</option>
+              <option value="MT">MT</option>
+              <option value="MS">MS</option>
+              <option value="MG">MG</option>
+              <option value="PA">PA</option>
+              <option value="PB">PB</option>
+              <option value="PR">PR</option>
+              <option value="PE">PE</option>
+              <option value="PI">PI</option>
+              <option value="RJ">RJ</option>
+              <option value="RN">RN</option>
+              <option value="RS">RS</option>
+              <option value="RO">RO</option>
+              <option value="RR">RR</option>
+              <option value="SC">SC</option>
+              <option value="SP">SP</option>
+              <option value="SE">SE</option>
+              <option value="TO">TO</option>
+            </select>
           </div>
+
 
           <div className="flex md:flex-row flex-col md:items-center md:gap-4 gap-2 w-full">
             <label className="w-44 md:text-right" htmlFor="nome">Ponto de referência</label>
@@ -391,6 +475,7 @@ export default function RegisterClient() {
               placeholder="Digite o ponto de referência"
               value={formData.reference}
               onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
+              required
             />
           </div>
 
@@ -402,6 +487,7 @@ export default function RegisterClient() {
                 onChange={(e) => setAceite(e.target.checked)}
                 className="mt-1"
                 value={formData.email}
+                required
               />
               <span>
                 Li e concordo com os{" "}
