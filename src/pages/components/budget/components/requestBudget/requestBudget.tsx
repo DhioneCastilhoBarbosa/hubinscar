@@ -3,17 +3,17 @@ import { useEffect, useRef, useState } from 'react';
 import api from '../../../../../services/api';
 import { Installer } from '../installer';
 import { toast } from 'sonner';
-
+import { v4 as uuidv4 } from 'uuid';
 
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   installer: Installer | null;
-  sessionId: string | null;
+ 
 }
 
-export default function RequestQuoteModal({isOpen, onClose, installer, sessionId}:Props) {
+export default function RequestQuoteModal({isOpen, onClose, installer,}:Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<{ file: File; preview: string }[]>([]);
   const [aceite, setAceite] = useState(false);
@@ -21,6 +21,9 @@ export default function RequestQuoteModal({isOpen, onClose, installer, sessionId
   const [formDataState, setFormDataState] = useState<{ power: string }>({
     power: "",
   });
+  
+  const [unknownPower, setUnknownPower] = useState(false);
+  
   
   const [addressData, setAddressData] = useState({
     cep: "",
@@ -93,10 +96,24 @@ export default function RequestQuoteModal({isOpen, onClose, installer, sessionId
       return;
     }
     setIsSubmitting(true); // 🔄 Inicia o loading
+    // Verifica se já existe session_id
+    let sessionId = localStorage.getItem('session_id');
+
+    if (!sessionId) {
+      sessionId = uuidv4();
+      localStorage.setItem('session_id', sessionId);
+      console.log('🔐 Nova session_id criada:', sessionId);
+    } else {
+      console.log('🔐 session_id existente:', sessionId);
+    }
   
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     formData.append("power", formDataState.power.replace(",", "."));
+    const protections = Array.from(form.querySelectorAll('input[name="protection"]:checked'))
+      .map((input) => (input as HTMLInputElement).value);
+
+    formData.append("protections", JSON.stringify(protections)); // ou proteções separadas por vírgula
 
 
 
@@ -462,18 +479,42 @@ export default function RequestQuoteModal({isOpen, onClose, installer, sessionId
                       setFormDataState({ ...formDataState, power: e.target.value });
                     }
                   }}
+                  disabled={unknownPower}
+                  required
                 />
                 <label className="flex items-center mt-1">
-                  <input type="checkbox" className="mr-2" /> Não sei informar
+                  <input
+                    type="checkbox"
+                    checked={unknownPower}
+                    onChange={(e) => {
+                      const isChecked = e.target.checked;
+                      setUnknownPower(isChecked);
+                      setFormDataState({
+                        power: isChecked ? "Não informado" : "",
+                      });
+                    }}
+                    className="mr-2"
+                  />
+                  Não sei informar
                 </label>
               </div>
 
 
+
               <div>
-                <label className="block font-medium mb-1">Deseja incluir proteção elétrica?</label>
-                <label className="flex items-center"><input type="checkbox" name="protection" className="mr-2" /> Disjuntor exclusivo</label>
-                <label className="flex items-center"><input type="checkbox" name="protection" className="mr-2" /> DPS</label>
-                <label className="flex items-center"><input type="checkbox" name="protection" className="mr-2" /> DR</label>
+                <label className="block font-medium">Deseja instalar proteções?</label>
+                <label className="flex items-center">
+                  <input type="checkbox" name="protection" value="Disjuntor exclusivo" className="mr-2" />
+                  Disjuntor exclusivo
+                </label>
+                <label className="flex items-center">
+                  <input type="checkbox" name="protection" value="DPS" className="mr-2" />
+                  DPS
+                </label>
+                <label className="flex items-center">
+                  <input type="checkbox" name="protection" value="DR" className="mr-2" />
+                  DR
+                </label>
               </div>
 
               <div>

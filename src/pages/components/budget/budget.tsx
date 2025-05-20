@@ -11,7 +11,7 @@ import RequestQuoteModal from './components/requestBudget/requestBudget'
 import api from '../../../services/api'
 import ImgAvatar from "../../../assets/avatar.jpeg"
 import { toast } from 'sonner'
-import { v4 as uuidv4 } from 'uuid';
+
 
 
 interface Installer {
@@ -34,16 +34,7 @@ export default function Budget() {
   const [selectedInstaller, setSelectedInstaller] = useState<Installer | null>(null);
 
   const handleOpenModal = (installer: Installer) => {
-    // Verifica se já existe session_id
-  let sessionId = localStorage.getItem('session_id');
-
-  if (!sessionId) {
-    sessionId = uuidv4();
-    localStorage.setItem('session_id', sessionId);
-    console.log('🔐 Nova session_id criada:', sessionId);
-  } else {
-    console.log('🔐 session_id existente:', sessionId);
-  }
+    
 
   // Define o instalador selecionado e abre o modal
     setSelectedInstaller(installer);
@@ -283,7 +274,6 @@ export default function Budget() {
         isOpen={isOpen} 
         onClose={() => setIsOpen(false)} 
         installer={selectedInstaller} 
-        sessionId={localStorage.getItem("session_id")}
       />
     </>
   );

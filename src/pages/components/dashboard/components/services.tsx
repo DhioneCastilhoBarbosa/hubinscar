@@ -21,6 +21,7 @@ import api from '../../../../services/api';
 import React from 'react';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
+import CancelBudgetButton from './cancelBudgetButton';
 
 interface Budget {
   id: number;
@@ -369,6 +370,26 @@ export default function Services() {
                           <FileText size={16} className="text-zinc-400 mt-1" />
                           <span><strong>Observações:</strong> {service.notes}</span>
                         </div>
+                        <div className="mt-4 sm:col-span-2 flex justify-end w-full">
+                          <div className='w-32'>
+                          <CancelBudgetButton
+                            id={service.id}
+                            status={service.status} 
+                            onCancelSuccess={async () => {
+                              try {
+                                const user_id = localStorage.getItem("ID");
+                                if (!user_id) return;
+                                const res = await api.get(`/api/v1/budget/?user_id=${user_id}`);
+                                setBudgets(res.data);
+                              } catch (err) {
+                                console.error(err);
+                                toast.error("Erro ao atualizar lista de orçamentos.");
+                              }
+                            }}
+                          />
+                          </div>
+                        </div>
+
                       </div>
                     </td>
                   </tr>
@@ -382,125 +403,35 @@ export default function Services() {
       </div>
 
     {/* Cards para telas pequenas */}
-      <div className="md:hidden flex flex-col gap-4">
-        {currentServices.map((service) => (
-          <div key={service.id} className="bg-zinc-700 p-4 rounded-lg shadow-md">
-            
-           {/* Carrossel de fotos - mobile */}
-            {(service.photo1 || service.photo2) && (
-              <div className="mb-4">
-                <div className="flex items-center gap-2 ">
-                    <Camera size={16} className="text-zinc-400" />
-                    <span><strong>Fotos:</strong></span>
-                  </div>
-                <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory px-1">
-                  {[service.photo1, service.photo2].filter(Boolean).map((photo, index) => (
-                    <div key={index} className="flex-shrink-0 snap-start">
-                      <img
-                        src={photo}
-                        alt={`Foto ${index + 1}`}
-                        className="w-64 h-40 rounded-lg object-cover border border-zinc-600 shadow-md"
-                      />
-                    </div>
-                  ))}
+    <div className="md:hidden flex flex-col gap-4">
+        {currentServices.map((service) => {
+          const isClienteValido = isCliente();
+          const valorValido = Number(service.value) > 0;
+          const isPago = service.payment_status === "pago";
+          const desabilitado = isPago || !isClienteValido || !valorValido;
+
+          const isExpanded = expandedRows.includes(service.id);
+
+          return (
+            <div key={service.id} className="bg-zinc-700 p-4 rounded-lg shadow-md">
+              <div className="grid grid-cols-1 gap-3 text-sm text-zinc-300">
+                <div className="flex items-center gap-2">
+                  <ClipboardList size={16} className="text-zinc-400" />
+                  <span><strong>ID:</strong> #{service.id}</span>
                 </div>
-              </div>
-            )}
 
+                <div className="flex items-center gap-2">
+                  {getStatusIcon(service.status)}
+                  <span className={`inline-flex items-center border rounded-lg px-4 py-2 text-sm font-medium ${getStatusStyle(service.status)}`}>
+                    {service.status.charAt(0).toUpperCase() + service.status.slice(1)}
+                  </span>
+                </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-sm text-zinc-300">
-              <div className="flex items-center gap-2">
-                <ClipboardList size={16} className="text-zinc-400" />
-                <span><strong>ID:</strong> #{service.id}</span>
-              </div>
-              
-              <div className="flex items-start gap-2">
-                <MapPin size={16} className="text-zinc-400 mt-1" />
-                <span>
-                  <strong>Endereço:</strong><br />
-                  {`${service.street || ""}, ${service.number || ""} - ${service.neighborhood || ""}`}<br />
-                  {`${service.city || ""} - ${service.state || ""}, CEP ${service.cep || ""}`}
-                  {service.complement && <><br /><strong>Complemento:</strong> {service.complement}</>}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Calendar size={16} className="text-zinc-400" />
-                <span><strong>Solicitado em:</strong> {new Date(service.created_at).toLocaleDateString()}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <User2 size={16} className="text-zinc-400" />
-                <span><strong>Instalador:</strong> {service.installer_name}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <BadgeDollarSign size={16} className="text-zinc-400" />
-                <span><strong>Valor:</strong> R$ {service.value.toFixed(2).replace('.', ',')}</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <CalendarClock size={16} className="text-zinc-400" />
-                <span><strong>Início:</strong> {service.execution_date ? new Date(service.execution_date).toLocaleDateString() : '-'}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCheck size={16} className="text-zinc-400" />
-                <span><strong>Finalização:</strong> {service.finish_date ? new Date(service.finish_date).toLocaleDateString() : '-'}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Home size={16} className="text-zinc-400" />
-                <span><strong>Tipo de Local:</strong> {service.location_type}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin size={16} className="text-zinc-400" />
-                <span><strong>Distância:</strong> {service.distance}m</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Network size={16} className="text-zinc-400" />
-                <span><strong>Tipo de rede:</strong> {service.network_type}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Construction size={16} className="text-zinc-400" />
-                <span><strong>Estrutura:</strong> {service.structure_type}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <PlugZap size={16} className="text-zinc-400" />
-                <span><strong>Tipo de Carregador:</strong> {service.charger_type}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Zap size={16} className="text-zinc-400" />
-                <span><strong>Potência:</strong> {service.power}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck size={16} className="text-zinc-400" />
-                <span><strong>Proteção:</strong> {service.protection}</span>
-              </div>
-              <div className="sm:col-span-2 flex items-start gap-2">
-                <FileText size={16} className="text-zinc-400 mt-1" />
-                <span><strong>Observações:</strong> {service.notes}</span>
-              </div>
-            </div>
-
-
-            <div className="mt-2">
-              <span
-                className={`inline-flex items-center border rounded-lg px-4 py-2 text-sm font-medium
-                  ${getStatusStyle(service.status)}`}
-              >
-                {getStatusIcon(service.status)}
-                {service.status.charAt(0).toUpperCase() + service.status.slice(1)}
-              </span>
-            </div>
-
-            <div className="mt-4">
-            {(() => {
-                const isClienteValido = isCliente();
-                const valorValido = Number(service.value) > 0;
-                const isPago = service.payment_status === "pago";
-                const desabilitado = isPago || !isClienteValido || !valorValido;
-
-                return (
+                <div className="flex flex-col gap-2 mt-2">
                   <button
                     disabled={desabilitado}
-                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 w-full justify-center border
+                    onClick={() => toast.info("Pagamento em desenvolvimento...")}
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 justify-center border
                       ${isPago
                         ? "bg-zinc-800 text-green-500 border-green-500 cursor-not-allowed"
                         : isClienteValido && valorValido
@@ -508,23 +439,128 @@ export default function Services() {
                           : "bg-zinc-600 text-zinc-400 border-transparent cursor-not-allowed"
                       }`}
                   >
-                    <CreditCard
-                      size={16}
-                      className={isPago ? "text-green-500" : ""}
-                    />
-                    {isPago
-                      ? "Pago"
-                      : isClienteValido && valorValido
-                        ? "Realizar pagamento"
-                        : "Pagamento indisponível"}
+                    <CreditCard size={16} className={isPago ? "text-green-500" : ""} />
+                    {isPago ? "Pago" : isClienteValido && valorValido ? "Realizar pagamento" : "Pagamento indisponível"}
                   </button>
-                );
-              })()}
 
+                  <CancelBudgetButton
+                    id={service.id}
+                    status={service.status}
+                    onCancelSuccess={async () => {
+                      try {
+                        const user_id = localStorage.getItem("ID");
+                        if (!user_id) return;
+                        const res = await api.get(`/api/v1/budget/?user_id=${user_id}`);
+                        setBudgets(res.data);
+                      } catch (err) {
+                        console.error(err);
+                        toast.error("Erro ao atualizar lista de orçamentos.");
+                      }
+                    }}
+                  />
+                </div>
+
+                <button
+                  onClick={() => toggleRow(service.id)}
+                  className="text-sm text-blue-400 mt-3 underline"
+                >
+                  {isExpanded ? "Ocultar detalhes" : "Mostrar detalhes"}
+                </button>
+
+                {isExpanded && (
+                  <>
+                    {(service.photo1 || service.photo2) && (
+                      <div className="mb-4">
+                        <div className="flex items-center gap-2">
+                          <Camera size={16} className="text-zinc-400" />
+                          <span><strong>Fotos:</strong></span>
+                        </div>
+                        <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory px-1">
+                          {[service.photo1, service.photo2].filter(Boolean).map((photo, index) => (
+                            <div key={index} className="flex-shrink-0 snap-start">
+                              <img
+                                src={photo}
+                                alt={`Foto ${index + 1}`}
+                                className="w-72 h-52 rounded-lg object-cover border border-zinc-600 shadow-md"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-1 gap-y-3 text-sm text-zinc-300 mt-2">
+                      <div className="flex items-start gap-2">
+                        <MapPin size={16} className="text-zinc-400 mt-1" />
+                        <span>
+                          <strong>Endereço:</strong><br />
+                          {`${service.street || ""}, ${service.number || ""} - ${service.neighborhood || ""}`}<br />
+                          {`${service.city || ""} - ${service.state || ""}, CEP ${service.cep || ""}`}
+                          {service.complement && <><br /><strong>Complemento:</strong> {service.complement}</>}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <Calendar size={16} className="text-zinc-400" />
+                        <span><strong>Solicitado em:</strong> {new Date(service.created_at).toLocaleDateString()}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <User2 size={16} className="text-zinc-400" />
+                        <span><strong>Instalador:</strong> {service.installer_name}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <BadgeDollarSign size={16} className="text-zinc-400" />
+                        <span><strong>Valor:</strong> R$ {service.value.toFixed(2).replace('.', ',')}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CalendarClock size={16} className="text-zinc-400" />
+                        <span><strong>Início:</strong> {service.execution_date ? new Date(service.execution_date).toLocaleDateString() : '-'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCheck size={16} className="text-zinc-400" />
+                        <span><strong>Finalização:</strong> {service.finish_date ? new Date(service.finish_date).toLocaleDateString() : '-'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Gauge size={16} className="text-zinc-400" />
+                        <span><strong>Qtd. Estações:</strong> {service.station_count}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Home size={16} className="text-zinc-400" />
+                        <span><strong>Tipo de Local:</strong> {service.location_type}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Network size={16} className="text-zinc-400" />
+                        <span><strong>Tipo de rede:</strong> {service.network_type}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Construction size={16} className="text-zinc-400" />
+                        <span><strong>Estrutura:</strong> {service.structure_type}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <PlugZap size={16} className="text-zinc-400" />
+                        <span><strong>Carregador:</strong> {service.charger_type}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Zap size={16} className="text-zinc-400" />
+                        <span><strong>Potência:</strong> {service.power}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <ShieldCheck size={16} className="text-zinc-400" />
+                        <span><strong>Proteção:</strong> {service.protection}</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <FileText size={16} className="text-zinc-400 mt-1" />
+                        <span><strong>Observações:</strong> {service.notes}</span>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
 
 
       <div className="flex justify-between items-center mt-6 text-sm text-gray-300">
