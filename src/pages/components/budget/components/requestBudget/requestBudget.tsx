@@ -159,7 +159,14 @@ export default function RequestQuoteModal({isOpen, onClose, installer,}:Props) {
       });
   
       console.log("Orçamento enviado com sucesso:", response.data);
-      toast.success("Orçamento enviado com sucesso! Aguarde nosso contato.");
+      toast.success("Orçamento enviado com sucesso! Realize o login para acompanhá-lo.", {
+        duration: Infinity,
+        action: {
+          label: "Fechar",
+          onClick: () => toast.dismiss(),
+        },
+      });
+      
       setFiles([]);
       onClose();
     } catch (err) {

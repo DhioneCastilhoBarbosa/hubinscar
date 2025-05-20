@@ -108,6 +108,43 @@ export default function Services() {
   const isCliente = () => {
     return localStorage.getItem("person") === "cliente";
   };
+
+  const handleRealizarPagamento = async (service: Budget) => {
+    const user_id = localStorage.getItem("ID");
+    const fullName = localStorage.getItem("name") || "";
+
+    const [first, ...rest] = fullName.trim().split(" ");
+    const name = first || "-";
+    const lastname = rest.length > 0 ? rest.join(" ") : "-";
+  
+    if (!user_id || !name || !lastname) {
+      toast.error("Informações do usuário ausentes.");
+      return;
+    }
+  
+    try {
+      const response = await api.post("https://api.eletrihub.com/criar-pagamento", {
+        titulo: `Pagamento do orçamento ID=${service.id} - Instalação de carregador`,
+        valor: service.value,
+        name,
+        lastname,
+        user_id,
+        id_budget: service.id.toString(),
+      });
+  
+      const { url } = response.data;
+  
+      if (url) {
+        window.open(url, "_blank"); // abre em nova aba
+      } else {
+        toast.error("Erro: URL de pagamento não recebida.");
+      }
+    } catch (error) {
+      console.error("Erro ao iniciar pagamento:", error);
+      toast.error("Erro ao iniciar pagamento.");
+    }
+  };
+  
   
 
   useEffect(() => {
@@ -266,7 +303,7 @@ export default function Services() {
                       disabled={desabilitado}
                       onClick={(e) => {
                         e.stopPropagation();
-                        toast.info("Pagamento em desenvolvimento...");
+                        handleRealizarPagamento(service);
                       }}
                       className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 w-full justify-center border
                         ${isPago
@@ -430,7 +467,10 @@ export default function Services() {
                 <div className="flex flex-col gap-2 mt-2">
                   <button
                     disabled={desabilitado}
-                    onClick={() => toast.info("Pagamento em desenvolvimento...")}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRealizarPagamento(service);
+                    }}
                     className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 justify-center border
                       ${isPago
                         ? "bg-zinc-800 text-green-500 border-green-500 cursor-not-allowed"
