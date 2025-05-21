@@ -711,7 +711,7 @@ export default function Services() {
                                   type="number"
                                   value={service.tempChanges?.value ?? ''}
                                   onChange={(e) => handleUpdateField(service.id, "value", e.target.value === '' ? '' : parseFloat(e.target.value))}
-                                  className="bg-zinc-800 text-white p-2 rounded border border-zinc-600 w-32"
+                                  className="bg-zinc-800 text-white px-3 py-2 rounded border border-zinc-600 w-full h-10 appearance-none"
                                   placeholder="Valor"
                                 />
                           </div>
@@ -722,7 +722,7 @@ export default function Services() {
                                   type="date"
                                   value={service.tempChanges?.execution_date ?? service.execution_date?.split("T")[0] ?? ''}
                                   onChange={(e) => handleUpdateField(service.id, "execution_date", e.target.value)}
-                                  className="bg-zinc-800 text-white p-2 rounded border border-zinc-600 w-40"
+                                  className="bg-zinc-800 text-white px-3 py-2 rounded border border-zinc-600 w-full h-10 appearance-none"
                                 />
                           </div>
                         </div>
