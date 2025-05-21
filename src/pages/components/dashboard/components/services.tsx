@@ -22,6 +22,8 @@ import React from 'react';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import CancelBudgetButton from './cancelBudgetButton';
+import ConfirmServiceButton from './ConfirmServiceButton';
+import { useRefreshBudgets } from './useRefreshBudgets';
 
 interface Budget {
   id: number;
@@ -61,6 +63,14 @@ interface Budget {
   created_at: string;
 }
 
+export interface BudgetWithTemp extends Budget {
+  tempChanges?: {
+    value?: number | '';
+    execution_date?: string;
+  };
+}
+
+
 const getStatusStyle = (status: string) => {
   const base = 'w-60 justify-start text-right';
   switch (status.toLowerCase()) {
@@ -98,7 +108,8 @@ const getStatusIcon = (status: string) => {
 
 export default function Services() {
   const itemsPerPage = 10;
-  const [budgets, setBudgets] = useState<Budget[]>([]);
+  const [budgets, setBudgets] = useState<BudgetWithTemp[]>([]);
+  const refreshBudgets = useRefreshBudgets(setBudgets);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -144,12 +155,66 @@ export default function Services() {
       toast.error("Erro ao iniciar pagamento.");
     }
   };
-  
+
+  // Crie a função handleUpdateField para atualizar local e opcionalmente salvar na API
+    const handleUpdateField = (id: number, field: keyof Budget, value: Budget[keyof Budget]) => {
+      setBudgets(prev => prev.map(b => {
+        if (b.id !== id) return b;
+        return {
+          ...b,
+          tempChanges: {
+            ...b.tempChanges,
+            [field]: value,
+          },
+        };
+      }));
+      
+    };
+
+    const handleServicoRealizado = async (id: number) => {
+      try {
+        await api.put(`/api/v1/budget/confirm`, { id });
+        toast.success("Serviço confirmado com sucesso!");
+      } catch (err) {
+        console.error(err);
+        toast.error("Erro ao confirmar serviço.");
+      }
+    };
+
+    const handleEnviarOrcamento = async (service: BudgetWithTemp) => {
+      try {
+        const value = service.tempChanges?.value ?? service.value;
+        const executionDate = service.tempChanges?.execution_date ?? service.execution_date;
+    
+        if (!value || !executionDate) {
+          toast.error("Preencha o valor e a data de início antes de enviar.");
+          return;
+        }
+    
+        // Atualiza status
+        await api.put(`/api/v1/budget/${service.id}/status`, { status: "aguardando pagamento" });
+    
+        // Atualiza valor
+        await api.put(`/api/v1/budget/${service.id}/value`, { value });
+    
+        // Atualiza data de início
+        await api.put(`/api/v1/budget/${service.id}/dates`, { execution_date: executionDate });
+    
+        toast.success("Orçamento enviado com sucesso!");
+        refreshBudgets();
+      } catch (err) {
+        console.error(err);
+        toast.error("Erro ao enviar orçamento.");
+      }
+    };
+        
+      
   
 
   useEffect(() => {
     const user_id = localStorage.getItem("ID");
     const session_id = localStorage.getItem("session_id");
+    const person = localStorage.getItem("person");
   
     if (!user_id) {
       setError("Usuário não identificado.");
@@ -170,7 +235,7 @@ export default function Services() {
             ) {
               throw linkError;
             }
-          
+  
             if (
               linkError instanceof AxiosError &&
               linkError.response?.status === 409
@@ -178,14 +243,14 @@ export default function Services() {
               console.warn("Orçamentos já estavam vinculados.");
               localStorage.removeItem("session_id");
             } else {
-              // erro inesperado que não é do Axios
               throw linkError;
             }
           }
         }
   
-        // Sempre busca os orçamentos
-        const res = await api.get(`/api/v1/budget/?user_id=${user_id}`);
+        // Busca condicional
+        const param = person === "instalador" ? `installer_id=${user_id}` : `user_id=${user_id}`;
+        const res = await api.get(`/api/v1/budget/?${param}`);
         setBudgets(res.data);
       } catch (err) {
         console.error(err);
@@ -252,10 +317,10 @@ export default function Services() {
           onChange={(e) => setFilterStatus(e.target.value)}
         >
           <option value="">Todos os Status</option>
-          <option value="aguardando orçamento">aguardando orçamento</option>
-          <option value="em andamento">Em Andamento</option>
-          <option value="concluido">Concluído</option>
-          <option value="cancelado">Cancelado</option>
+          <option value="Aguardando orçamento">Aguardando orçamento</option>
+          <option value="Em andamento">Em andamento</option>
+          <option value="Concluido">Concluído</option>
+          <option value="Cancelado">Cancelado</option>
         </select>
       </div>
 
@@ -264,7 +329,7 @@ export default function Services() {
           <thead>
             <tr className="text-gray-400 border-b border-zinc-600 ">
               <th className="text-left py-1 pl-3">ID</th>
-              <th className="text-left py-1">Instalador</th>
+              <th className="text-left py-1">{isCliente() ? "Instalador" :"Cliente"}</th>
               <th className="text-left py-1">Início</th>
               <th className="text-left py-1">Finalização</th>
               <th className="text-left py-1 w-62">Status</th>
@@ -285,7 +350,7 @@ export default function Services() {
                   onClick={() => toggleRow(service.id)}
                 >
                   <td className="py-3 pl-3">#{service.id}</td>
-                  <td>{service.installer_name}</td>
+                  <td>{isCliente()? service.installer_name : service.name}</td>
                   <td>{service.execution_date ? new Date(service.execution_date).toLocaleDateString() : '-'}</td>
                   <td>{service.finish_date ? new Date(service.finish_date).toLocaleDateString() : '-'}</td>
                   <td className="text-left">
@@ -407,23 +472,66 @@ export default function Services() {
                           <FileText size={16} className="text-zinc-400 mt-1" />
                           <span><strong>Observações:</strong> {service.notes}</span>
                         </div>
-                        <div className="mt-4 sm:col-span-2 flex justify-end w-full">
-                          <div className='w-32'>
-                          <CancelBudgetButton
-                            id={service.id}
-                            status={service.status} 
-                            onCancelSuccess={async () => {
-                              try {
-                                const user_id = localStorage.getItem("ID");
-                                if (!user_id) return;
-                                const res = await api.get(`/api/v1/budget/?user_id=${user_id}`);
-                                setBudgets(res.data);
-                              } catch (err) {
-                                console.error(err);
-                                toast.error("Erro ao atualizar lista de orçamentos.");
-                              }
-                            }}
-                          />
+
+
+                        <div className="flex flex-row justify-end items-end gap-4 mt-4 text-right w-full sm:col-span-2">
+                          {!isCliente() && !isPago && (
+                            <div className="flex gap-4 items-end">
+                              <div className='flex flex-col  items-start gap-1'>
+                                <label htmlFor="">Valor:(R$)</label>
+                                <input
+                                  type="number"
+                                  value={service.tempChanges?.value ?? ''}
+                                  onChange={(e) => handleUpdateField(service.id, "value", e.target.value === '' ? '' : parseFloat(e.target.value))}
+                                  className="bg-zinc-800 text-white p-2 rounded border border-zinc-600 w-32"
+                                  placeholder="Valor"
+                                />
+                              </div>
+                              <div className='flex flex-col  items-start gap-1'>
+                                <label htmlFor="">Data de início</label>
+                                <input
+                                  type="date"
+                                  value={service.tempChanges?.execution_date ?? service.execution_date?.split("T")[0] ?? ''}
+                                  onChange={(e) => handleUpdateField(service.id, "execution_date", e.target.value)}
+                                  className="bg-zinc-800 text-white p-2 rounded border border-zinc-600 w-40"
+                                />
+                              </div>
+                            </div>
+                          )}
+
+                          {!isCliente() && service.payment_status !== "pago" &&(
+                            <button
+                              onClick={() => handleEnviarOrcamento(service)}
+                              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 px-4 py-2 border-blue-600 rounded-lg font-medium text-sm justify-center border transition-colors duration-200 w-40"
+                              >
+                              Enviar orçamento
+                            </button>
+                          )}
+
+                          <div className="flex gap-4 items-end justify-end">
+                            {service.status !== "concluido" && (
+
+                                  <div className='w-36'>
+                                  <CancelBudgetButton
+                                    id={service.id}
+                                    status={service.status} 
+                                    onCancelSuccess={refreshBudgets}
+                                  />
+                                  </div>
+                                  )
+                            }
+                            
+
+                            {service.payment_status === "pago" && (
+                              <ConfirmServiceButton
+                              id={service.id}
+                              isCliente={isCliente()}
+                              clientConfirmed={service.client_confirm}
+                              installerConfirmed={service.installer_confirm}
+                              onConfirmSuccess={refreshBudgets}
+                            
+                            />
+                            )}
                           </div>
                         </div>
 
@@ -546,7 +654,7 @@ export default function Services() {
                       </div>
                       <div className="flex items-center gap-2">
                         <User2 size={16} className="text-zinc-400" />
-                        <span><strong>Instalador:</strong> {service.installer_name}</span>
+                        <span><strong>{isCliente()?"Instalador:":"Cliente:"}</strong> {isCliente()?service.installer_name: service.name}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <BadgeDollarSign size={16} className="text-zinc-400" />
@@ -593,6 +701,52 @@ export default function Services() {
                         <span><strong>Observações:</strong> {service.notes}</span>
                       </div>
                     </div>
+
+                    <div className="flex flex-col justify-end items-end gap-4 mt-4 text-right w-full sm:col-span-2">
+                          {!isCliente() && service.payment_status !== "pago" &&(
+                            <div className="flex gap-4 items-end border border-zinc-600 p-2 rounded-lg w-full">
+                              <div className='flex flex-col  items-start gap-1 w-full'>
+                                <label htmlFor="">Valor:(R$)</label>
+                                <input
+                                  type="number"
+                                  value={service.value}
+                                  onChange={(e) => handleUpdateField(service.id, "value", parseFloat(e.target.value) || 0)}
+                                  className="bg-zinc-800 text-white p-2 rounded border border-zinc-600 w-32"
+                                  placeholder="Valor"
+                                />
+                              </div>
+                              <div className='flex flex-col  items-start gap-1'>
+                                <label htmlFor="">Data de início</label>
+                                <input
+                                  type="date"
+                                  value={service.execution_date?.split("T")[0] || ""}
+                                  onChange={(e) => handleUpdateField(service.id, "execution_date", e.target.value)}
+                                  className="bg-zinc-800 text-white p-2 rounded border border-zinc-600 w-40"
+                                />
+                              </div>
+                            </div>
+                            
+                          )}
+                          {!isCliente() && service.payment_status !== "pago" &&(
+                          <button
+                            onClick={() => handleEnviarOrcamento(service)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium w-full"
+                          >
+                            Enviar orçamento
+                          </button>
+                          )}
+                          </div>
+
+
+                    {!isCliente() && service.payment_status === "pago" && (
+                      <button
+                        onClick={() => handleServicoRealizado(service.id)}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
+                      >
+                      Serviço realizado
+                      </button>
+                    )}
+
                   </>
                 )}
               </div>
