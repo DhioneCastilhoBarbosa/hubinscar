@@ -715,13 +715,13 @@ export default function Services() {
                                   placeholder="Valor"
                                 />
                               </div>
-                              <div className='flex flex-col  items-start gap-1'>
+                              <div className='flex flex-col  items-start gap-1 w-full'>
                                 <label htmlFor="">Data de início</label>
                                 <input
                                   type="date"
                                   value={service.execution_date?.split("T")[0] || ""}
                                   onChange={(e) => handleUpdateField(service.id, "execution_date", e.target.value)}
-                                  className="bg-zinc-800 text-white p-2 rounded border border-zinc-600 w-40"
+                                  className="bg-zinc-800 text-white p-2 rounded border border-zinc-600 w-32"
                                 />
                               </div>
                             </div>
@@ -735,6 +735,16 @@ export default function Services() {
                             Enviar orçamento
                           </button>
                           )}
+                          {service.payment_status === "pago" && (
+                              <ConfirmServiceButton
+                              id={service.id}
+                              isCliente={isCliente()}
+                              clientConfirmed={service.client_confirm}
+                              installerConfirmed={service.installer_confirm}
+                              onConfirmSuccess={refreshBudgets}
+                            
+                            />
+                            )}
                           </div>
 
 
