@@ -703,30 +703,42 @@ export default function Services() {
                     </div>
 
                     <div className="flex flex-col justify-end items-end gap-4 mt-4 text-right w-full sm:col-span-2">
-                          {!isCliente() && service.payment_status !== "pago" &&(
-                            <div className="flex gap-4 items-end border border-zinc-600 p-2 rounded-lg w-full">
-                              <div className='flex flex-col  items-start gap-1 w-full'>
-                                <label htmlFor="">Valor:(R$)</label>
-                                <input
-                                  type="number"
-                                  value={service.value}
-                                  onChange={(e) => handleUpdateField(service.id, "value", parseFloat(e.target.value) || 0)}
-                                  className="bg-zinc-800 text-white p-2 rounded border border-zinc-600 w-32"
-                                  placeholder="Valor"
-                                />
-                              </div>
-                              <div className='flex flex-col  items-start gap-1 w-full'>
-                                <label htmlFor="">Data de início</label>
-                                <input
-                                  type="date"
-                                  value={service.execution_date?.split("T")[0] || ""}
-                                  onChange={(e) => handleUpdateField(service.id, "execution_date", e.target.value)}
-                                  className="bg-zinc-800 text-white p-2 rounded border border-zinc-600 w-32"
-                                />
-                              </div>
-                            </div>
-                            
-                          )}
+                    {!isCliente() && service.payment_status !== "pago" && (
+                        <div className="flex gap-4 items-end border border-zinc-600 p-2 rounded-lg w-full flex-wrap">
+                          <div className="flex flex-col items-start gap-1 flex-1 min-w-[120px]">
+                            <label htmlFor={`value-${service.id}`}>Valor (R$)</label>
+                            <input
+                              id={`value-${service.id}`}
+                              type="number"
+                              inputMode="decimal"
+                              value={service.value}
+                              onChange={(e) =>
+                                handleUpdateField(
+                                  service.id,
+                                  "value",
+                                  parseFloat(e.target.value) || 0
+                                )
+                              }
+                              className="bg-zinc-800 text-white px-3 py-2 rounded border border-zinc-600 w-full h-10 appearance-none"
+                              placeholder="Valor"
+                            />
+                          </div>
+
+                          <div className="flex flex-col items-start gap-1 flex-1 min-w-[120px]">
+                            <label htmlFor={`date-${service.id}`}>Data de início</label>
+                            <input
+                              id={`date-${service.id}`}
+                              type="date"
+                              value={service.execution_date?.split("T")[0] || ""}
+                              onChange={(e) =>
+                                handleUpdateField(service.id, "execution_date", e.target.value)
+                              }
+                              className="bg-zinc-800 text-white px-3 py-2 rounded border border-zinc-600 w-full h-10 appearance-none"
+                            />
+                          </div>
+                        </div>
+                      )}
+
                           {!isCliente() && service.payment_status !== "pago" &&(
                           <button
                             onClick={() => handleEnviarOrcamento(service)}
