@@ -1,8 +1,11 @@
 import {
   ChevronLeft,
   ChevronRight,
+  DollarSign,
+  FileText,
+  HardHat,
+  Headset,
   MessageCircle,
-  Settings,
   User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -21,12 +24,21 @@ export default function Sidebar({onSelectMenuItem}: SidebarProps) {
     
   });
 
-  const menuItems = [
-    
-    { icon: <Settings className="w-5 h-5" />, label: "Meus Serviços" },
-    { icon: <MessageCircle className="w-5 h-5" />, label: "Chat" },
-    { icon: <User className="w-5 h-5" />, label: "Minha Conta" },
-  ];
+  const person = localStorage.getItem("person");
+
+const menuItems = [
+  { icon: <FileText className="w-5 h-5" />, label: "Meus orçamentos" },
+  ...(person ==="cliente"
+  ?[{ icon: <HardHat className="w-5 h-5" />, label: "Instaladores" }]
+  : []),
+  ...(person !== "cliente"
+    ? [{ icon: <DollarSign className="w-5 h-5" />, label: "Financeiro" }]
+    : []),
+  { icon: <MessageCircle className="w-5 h-5" />, label: "Chat" },
+  { icon: <User className="w-5 h-5" />, label: "Minha conta" },
+  { icon: <Headset className="w-5 h-5" />, label: "Suporte" },
+];
+
 
   
 

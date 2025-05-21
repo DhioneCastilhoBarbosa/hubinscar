@@ -213,7 +213,8 @@ export default function UserProfile() {
   }, [address.cep, fetchAddressByCep]);
 
   return (
-    <motion.div className="bg-white rounded-2xl w-full max-w-5xl px-4 py-6 sm:px-6 flex flex-col lg:flex-row lg:mt-16 lg:h-[90vh]"
+    <motion.div className="bg-white rounded-2xl w-full max-w-5xl px-4 py-6 sm:px-6 flex flex-col lg:flex-row mt-4"
+
       initial={{ opacity: 0}}
       animate={{ opacity: 1}}
       transition={{ duration: 1 }}
@@ -286,7 +287,7 @@ export default function UserProfile() {
                   type="text"
                   value={user.name}
                   onChange={(e) => setUser({ ...user, name: e.target.value })}
-                  className="w-full px-4 py-2 border border-black rounded-md"
+                  className="w-96 px-4 py-2 border border-black rounded-md"
                 />
               </div>
               <div>
@@ -295,7 +296,7 @@ export default function UserProfile() {
                   type="email"
                   value={user.email}
                   onChange={(e) => setUser({ ...user, email: e.target.value })}
-                  className="w-full px-4 py-2 border border-black rounded-md bg-zinc-200"
+                  className="w-96 px-4 py-2 border border-black rounded-md bg-zinc-200"
                   disabled
                 />
               </div>
@@ -305,7 +306,7 @@ export default function UserProfile() {
                   type="text"
                   value={user.phone}
                   onChange={(e) => setUser({ ...user, phone: e.target.value })}
-                  className="w-full px-4 py-2 border border-black rounded-md"
+                  className="w-96 px-4 py-2 border border-black rounded-md"
                 />
               </div>
               <div>
@@ -314,7 +315,7 @@ export default function UserProfile() {
                   type="text"
                   value={user.cpf}
                   onChange={(e) => setUser({ ...user, cpf: e.target.value })}
-                  className="w-full px-4 py-2 border border-black rounded-md bg-zinc-200"
+                  className="w-96 px-4 py-2 border border-black rounded-md bg-zinc-200"
                   disabled
                 />
               </div>

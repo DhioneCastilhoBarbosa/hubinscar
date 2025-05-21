@@ -564,6 +564,10 @@ export default function Services() {
                   <ClipboardList size={16} className="text-zinc-400" />
                   <span><strong>ID:</strong> #{service.id}</span>
                 </div>
+                <div className="flex items-center gap-2">
+                  <User2 size={16} className="text-zinc-400" />
+                  <span><strong>{isCliente()?"Instalador:":"Cliente:"}</strong> {isCliente()?service.installer_name: service.name}</span>
+                </div>
 
                 <div className="flex items-center gap-2">
                   {getStatusIcon(service.status)}
@@ -652,10 +656,7 @@ export default function Services() {
                         <Calendar size={16} className="text-zinc-400" />
                         <span><strong>Solicitado em:</strong> {new Date(service.created_at).toLocaleDateString()}</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <User2 size={16} className="text-zinc-400" />
-                        <span><strong>{isCliente()?"Instalador:":"Cliente:"}</strong> {isCliente()?service.installer_name: service.name}</span>
-                      </div>
+                      
                       <div className="flex items-center gap-2">
                         <BadgeDollarSign size={16} className="text-zinc-400" />
                         <span><strong>Valor:</strong> R$ {service.value.toFixed(2).replace('.', ',')}</span>

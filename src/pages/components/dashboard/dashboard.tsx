@@ -4,20 +4,30 @@ import Sidebar from "./components/sidebar";
 import UserProfile from "./components/userProfile";
 import Services from "./components/services";
 import Chats from "./components/chat/chats";
+import EmConstrucao from "./components/EmConstrucao";
+import Installer from "./components/installer/installer"
+import Financeiro from "./components/financeiro/financeiro";
+import Support from "./components/support/supportPage";
 
 export default function Dashboard() {
-  const [selectedMenuItem, setSelectedMenuItem] = useState("Meus Serviços")
+  const [selectedMenuItem, setSelectedMenuItem] = useState("Meus orçamentos");
 
   const renderContent = () => {
     switch (selectedMenuItem) {
-      case "Minha Conta":
+      case "Minha conta":
         return <UserProfile />;
-      case "Meus Serviços":
+      case "Meus orçamentos":
         return <Services/>;
       case "Chat":
         return <Chats/>;
+      case "Instaladores":
+        return <Installer/>
+      case "Financeiro":
+        return <Financeiro />;
+      case "Suporte":
+        return <Support />;
       default:
-        return <UserProfile />;
+        return <EmConstrucao />;
     }
   }
   return (
