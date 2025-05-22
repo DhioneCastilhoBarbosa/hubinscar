@@ -213,42 +213,44 @@ export default function UserProfile() {
   }, [address.cep, fetchAddressByCep]);
 
   return (
-    <motion.div className="bg-white rounded-2xl w-full max-w-5xl px-4 py-6 sm:px-6 flex flex-col lg:flex-row mt-4"
-
-      initial={{ opacity: 0}}
-      animate={{ opacity: 1}}
-      transition={{ duration: 1 }}
-       >
-      {/* Sidebar */}
-     <div className=" w-full lg:w-48 border-b lg:border-r border-gray-300 lg:pr-6 lg:border-b-0 ">
-        <ul className="gap-x-2 lg:space-y-4 text-sm font-medium flex flex-wrap justify-between lg:block">
-          <li
-            className={`cursor-pointer ${
-              activeTab === "perfil" ? "text-black font-bold" : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("perfil")}
-          >
-            Perfil
-          </li>
-          
-          <li
-            className={`cursor-pointer ${
-              activeTab === "senha" ? "text-black font-bold" : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("senha")}
-          >
-            Senha 
-          </li>
-          <li className={`text-red-500 cursor-pointer lg:mt-4 lg:border-t-0 lg:border-b border-gray-300 lg:pt-4 ${activeTab === "excluir" ? "font-bold" : "font-normal"}`}
-            onClick={() => setActiveTab("excluir")}
-          >
-            Excluir conta
-          </li>
-        </ul>
-      </div>
-
-      {/* Conteúdo */}
-      <div className="flex-1 pl-6 mt-6 lg:mt-0 w-full flex flex-col justify-center items-center  overflow-y-auto">
+    <motion.div
+    className="bg-white rounded-2xl w-full max-w-4xl px-4 py-6 sm:px-6 mx-auto flex flex-col lg:flex-row gap-6 mt-4"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 1 }}
+  >
+    {/* Sidebar */}
+    <div className="w-full lg:w-48 border-b lg:border-r border-gray-300 lg:pr-6 lg:border-b-0">
+      <ul className="gap-x-2 lg:space-y-4 text-sm font-medium flex flex-wrap justify-between lg:block">
+        <li
+          className={`cursor-pointer ${
+            activeTab === "perfil" ? "text-black font-bold" : "text-gray-500"
+          }`}
+          onClick={() => setActiveTab("perfil")}
+        >
+          Perfil
+        </li>
+        <li
+          className={`cursor-pointer ${
+            activeTab === "senha" ? "text-black font-bold" : "text-gray-500"
+          }`}
+          onClick={() => setActiveTab("senha")}
+        >
+          Senha
+        </li>
+        <li
+          className={`text-red-500 cursor-pointer md:mt-4 md:border-t md:pt-4 border-gray-300 ${
+            activeTab === "excluir" ? "font-bold" : "font-normal"
+          }`}
+          onClick={() => setActiveTab("excluir")}
+        >
+          Excluir conta
+        </li>
+      </ul>
+    </div>
+  
+    {/* Conteúdo */}
+    <div className="flex-1 w-full flex flex-col justify-start items-center overflow-y-auto">
         {activeTab === "perfil" && (
           <motion.div
           initial={{ opacity: 0}}
@@ -287,7 +289,7 @@ export default function UserProfile() {
                   type="text"
                   value={user.name}
                   onChange={(e) => setUser({ ...user, name: e.target.value })}
-                  className="w-96 px-4 py-2 border border-black rounded-md"
+                  className="w-full max-w-md px-4 py-2 border border-black rounded-md"
                 />
               </div>
               <div>
@@ -296,7 +298,7 @@ export default function UserProfile() {
                   type="email"
                   value={user.email}
                   onChange={(e) => setUser({ ...user, email: e.target.value })}
-                  className="w-96 px-4 py-2 border border-black rounded-md bg-zinc-200"
+                  className="w-full max-w-md px-4 py-2 border border-black rounded-md bg-zinc-200"
                   disabled
                 />
               </div>
@@ -306,7 +308,7 @@ export default function UserProfile() {
                   type="text"
                   value={user.phone}
                   onChange={(e) => setUser({ ...user, phone: e.target.value })}
-                  className="w-96 px-4 py-2 border border-black rounded-md"
+                  className="w-full max-w-md md:w-56 px-4 py-2 border border-black rounded-md"
                 />
               </div>
               <div>
@@ -315,7 +317,7 @@ export default function UserProfile() {
                   type="text"
                   value={user.cpf}
                   onChange={(e) => setUser({ ...user, cpf: e.target.value })}
-                  className="w-96 px-4 py-2 border border-black rounded-md bg-zinc-200"
+                  className="w-full max-w-md md:w-56 px-4 py-2 border border-black rounded-md bg-zinc-200"
                   disabled
                 />
               </div>

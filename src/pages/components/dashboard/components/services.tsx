@@ -271,13 +271,22 @@ export default function Services() {
     );
   };
 
-  const filtered = budgets.filter((s) => {
-    const matchSearch =
-      s.id.toString().includes(search.toLowerCase()) ||
-      s.installer_name?.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = filterStatus ? s.status?.toLowerCase() === filterStatus.toLowerCase() : true;
-    return matchSearch && matchStatus;
-  });
+const filtered = budgets.filter((s) => {
+  const searchTerm = search.toLowerCase();
+
+  const matchSearch =
+    s.id.toString().includes(searchTerm) ||
+    (isCliente()
+      ? s.installer_name?.toLowerCase().includes(searchTerm)
+      : s.name?.toLowerCase().includes(searchTerm));
+
+  const matchStatus = filterStatus
+    ? s.status?.toLowerCase() === filterStatus.toLowerCase()
+    : true;
+
+  return matchSearch && matchStatus;
+});
+
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -306,7 +315,7 @@ export default function Services() {
       <div className="flex flex-col md:flex-row md:items-center justify-end gap-4 mb-4">
         <input
           type="text"
-          placeholder="Buscar por ID ou instalador..."
+          placeholder={isCliente()?"Buscar por ID ou instalador...":"Buscar por ID ou cliente..."}
           className="px-2 py-1 rounded bg-zinc-700 text-white placeholder-gray-400 w-full md:w-56"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -491,7 +500,7 @@ export default function Services() {
                                 <label htmlFor="">Data de início</label>
                                 <input
                                   type="date"
-                                  value={service.tempChanges?.execution_date ?? service.execution_date?.split("T")[0] ?? ''}
+                                  value={service.tempChanges?.execution_date ?? ''}
                                   onChange={(e) => handleUpdateField(service.id, "execution_date", e.target.value)}
                                   className="bg-zinc-800 text-white p-2 rounded border border-zinc-600 w-40"
                                 />
@@ -721,7 +730,7 @@ export default function Services() {
                             <label htmlFor={`date-${service.id}`}>Data de início</label>
                             <input
                                   type="date"
-                                  value={service.tempChanges?.execution_date ?? service.execution_date?.split("T")[0] ?? ''}
+                                  value={service.tempChanges?.execution_date ?? ''}
                                   onChange={(e) => handleUpdateField(service.id, "execution_date", e.target.value)}
                                   className="bg-zinc-800 text-white px-3 py-2 rounded border border-zinc-600 w-full h-10 appearance-none"
                                 />
