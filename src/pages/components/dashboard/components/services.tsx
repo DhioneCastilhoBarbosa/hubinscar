@@ -184,21 +184,37 @@ export default function Services() {
     const handleEnviarOrcamento = async (service: BudgetWithTemp) => {
       try {
         const value = service.tempChanges?.value ?? service.value;
-        const executionDate = service.tempChanges?.execution_date ?? service.execution_date;
+        const rawExecutionDate = service.tempChanges?.execution_date ?? service.execution_date;
     
-        if (!value || !executionDate) {
+        if (!value || !rawExecutionDate) {
           toast.error("Preencha o valor e a data de início antes de enviar.");
           return;
         }
     
+      // Divide a string "YYYY-MM-DD" em partes
+      const [year, month, day] = rawExecutionDate.split("-");
+
+      // Cria um Date no horário local ao meio-dia
+      const executionDate = new Date(Number(year), Number(month) - 1, Number(day), 12, 0, 0); // mês começa em 0
+
+      // Converte para ISO (com fuso)
+      const executionDateISO = executionDate.toISOString();
+
+    
         // Atualiza status
-        await api.put(`/api/v1/budget/${service.id}/status`, { status: "aguardando pagamento" });
+        await api.put(`/api/v1/budget/${service.id}/status`, {
+          status: "aguardando pagamento",
+        });
     
         // Atualiza valor
-        await api.put(`/api/v1/budget/${service.id}/value`, { value });
+        await api.put(`/api/v1/budget/${service.id}/value`, {
+          value,
+        });
     
-        // Atualiza data de início
-        await api.put(`/api/v1/budget/${service.id}/dates`, { execution_date: executionDate });
+        // Atualiza data de início com data/hora ISO
+        await api.put(`/api/v1/budget/${service.id}/dates`, {
+          execution_date: executionDateISO,
+        });
     
         toast.success("Orçamento enviado com sucesso!");
         refreshBudgets();
@@ -207,7 +223,7 @@ export default function Services() {
         toast.error("Erro ao enviar orçamento.");
       }
     };
-        
+    
       
   
 

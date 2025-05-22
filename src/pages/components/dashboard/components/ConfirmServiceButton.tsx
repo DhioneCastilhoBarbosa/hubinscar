@@ -28,9 +28,14 @@ export default function ConfirmServiceButton({
       const payload = isCliente
         ? { client_confirm: true }
         : { installer_confirm: true };
+
   
       // Confirmação de serviço
+  
+
+      //console.log("Payload de confirmação:", payload);
       const res = await api.put(`/api/v1/budget/${id}/confirm`, payload);
+      //console.log("Resposta confirmação:", res);
   
       if (res.status === 200) {
         // Se for cliente, atualiza o status para "concluido"
@@ -42,7 +47,7 @@ export default function ConfirmServiceButton({
   
         // Atualiza a data de finalização para ambos
         const today = new Date();
-        const finishDate = today.toISOString().split("T")[0]; // "yyyy-mm-dd"
+        const finishDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0, 0).toISOString();
   
         await api.put(`/api/v1/budget/${id}/dates`, {
           finish_date: finishDate,
