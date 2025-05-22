@@ -287,21 +287,23 @@ export default function Services() {
     );
   };
 
-const filtered = budgets.filter((s) => {
-  const searchTerm = search.toLowerCase();
-
-  const matchSearch =
-    s.id.toString().includes(searchTerm) ||
-    (isCliente()
+  const filtered = budgets.filter((s) => {
+    const searchTerm = search.toLowerCase();
+  
+    const idMatch = s.id.toString().includes(searchTerm);
+    const nameMatch = isCliente()
       ? s.installer_name?.toLowerCase().includes(searchTerm)
-      : s.name?.toLowerCase().includes(searchTerm));
-
-  const matchStatus = filterStatus
-    ? s.status?.toLowerCase() === filterStatus.toLowerCase()
-    : true;
-
-  return matchSearch && matchStatus;
-});
+      : s.name?.toLowerCase().includes(searchTerm);
+  
+    const matchSearch = idMatch || nameMatch;
+  
+    const matchStatus = filterStatus
+      ? s.status?.toLowerCase() === filterStatus.toLowerCase()
+      : true;
+  
+    return matchSearch && matchStatus;
+  });
+  
 
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
@@ -334,7 +336,7 @@ const filtered = budgets.filter((s) => {
           placeholder={isCliente()?"Buscar por ID ou instalador...":"Buscar por ID ou cliente..."}
           className="px-2 py-1 rounded bg-zinc-700 text-white placeholder-gray-400 w-full md:w-56"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value.trimStart())}
         />
         <select
           className="px-2 py-1 rounded bg-zinc-700 text-white w-full md:w-52"
