@@ -23,6 +23,7 @@ interface Installer {
   total_services_accepted: number;
   average_rating: number;
   services_not_executed: number;
+  state: string;
 }
 
 export default function Budget() {
@@ -227,10 +228,14 @@ export default function Budget() {
                         />
                         <span>{installer.username?.trim() ? installer.username : installer.company_name}</span>
 
-                      </div>
+                      </div>  
                     </TableCell>
+                    
                     <TableCell className="text-gray-800 flex-1">
                       {installer.role}
+                    </TableCell>
+                    <TableCell className="text-gray-800 flex-1">
+                      Estado - <span className="bg-black text-white p-1 rounded-sm">{installer.state}</span>
                     </TableCell>
                     <TableCell className="text-gray-800 flex-1">
                       Serviços realizados - <span className="bg-black text-white p-1 rounded-sm">{installer.total_services_accepted}</span>
