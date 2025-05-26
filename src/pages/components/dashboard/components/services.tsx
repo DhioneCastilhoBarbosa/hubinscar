@@ -116,6 +116,7 @@ export default function Services() {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [loadingSendBudget, setLoadingSendBudger] = useState<number | null>(null);
   const isCliente = () => {
     return localStorage.getItem("person") === "cliente";
   };
@@ -183,6 +184,7 @@ export default function Services() {
 
     const handleEnviarOrcamento = async (service: BudgetWithTemp) => {
       try {
+        setLoadingSendBudger(service.id);
         const value = service.tempChanges?.value ?? service.value;
         const rawExecutionDate = service.tempChanges?.execution_date ?? service.execution_date;
     
@@ -215,12 +217,29 @@ export default function Services() {
         await api.put(`/api/v1/budget/${service.id}/dates`, {
           execution_date: executionDateISO,
         });
+
+        // 🔽 NOVO: Notificar cliente
+        const notificationPayload = {
+          phone_number: service.phone,  // A propriedade phone já está no objeto service
+          client_name: service.name,
+          budget_id: service.id.toString(),
+        };
+
+        try {
+          await api.post("/notificar-cliente", notificationPayload);
+          //console.log("Cliente notificado com sucesso!");
+        } catch (notificationError) {
+          console.error("Erro ao notificar cliente:", notificationError);
+          //console.log("Erro ao notificar cliente.");
+        }
     
         toast.success("Orçamento enviado com sucesso!");
         refreshBudgets();
       } catch (err) {
         console.error(err);
-        toast.error("Erro ao enviar orçamento.");
+        toast.error("Erro ao enviar orçamento. Tente novamente mais tarde.");
+      }finally{
+        setLoadingSendBudger(null);
       }
     };
     
@@ -304,11 +323,11 @@ export default function Services() {
     return matchSearch && matchStatus;
   });
   
+  const sortedFiltered = filtered.sort((a, b) => b.id - a.id);
 
-
-  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  const totalPages = Math.ceil(sortedFiltered.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentServices = filtered.slice(startIndex, startIndex + itemsPerPage);
+  const currentServices = sortedFiltered.slice(startIndex, startIndex + itemsPerPage);
 
   if (loading) {
     return <div className="text-white text-center mt-8">🔄 Carregando seus orçamentos...</div>;
@@ -526,12 +545,15 @@ export default function Services() {
                             </div>
                           )}
 
-                          {!isCliente() && service.payment_status !== "pago" &&(
+                          {!isCliente() && service.payment_status !== "pago" && (
                             <button
                               onClick={() => handleEnviarOrcamento(service)}
-                              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 px-4 py-2 border-blue-600 rounded-lg font-medium text-sm justify-center border transition-colors duration-200 w-40"
-                              >
-                              Enviar orçamento
+                              disabled={loadingSendBudget === service.id}
+                              className={`bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 px-4 py-2 border-blue-600 rounded-lg font-medium text-sm justify-center border transition-colors duration-200 w-40 ${
+                                loadingSendBudget === service.id ? "opacity-60 cursor-not-allowed" : ""
+                              }`}
+                            >
+                              {loadingSendBudget === service.id ? "Enviando..." : "Enviar orçamento"}
                             </button>
                           )}
 
@@ -756,13 +778,16 @@ export default function Services() {
                         </div>
                       )}
 
-                          {!isCliente() && service.payment_status !== "pago" &&(
-                          <button
-                            onClick={() => handleEnviarOrcamento(service)}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium w-full"
-                          >
-                            Enviar orçamento
-                          </button>
+                          {!isCliente() && service.payment_status !== "pago" && (
+                            <button
+                              onClick={() => handleEnviarOrcamento(service)}
+                              disabled={loadingSendBudget === service.id}
+                              className={`bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium w-full ${
+                                loadingSendBudget === service.id ? "opacity-60 cursor-not-allowed" : ""
+                              }`}
+                            >
+                              {loadingSendBudget === service.id ? "Enviando..." : "Enviar orçamento"}
+                            </button>
                           )}
                           {service.payment_status === "pago" && (
                               <ConfirmServiceButton

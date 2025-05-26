@@ -99,9 +99,40 @@ export default function RequestQuoteModal({ isOpen, onClose, installer }: Props)
     );
   
     try {
-      await api.post("/api/v1/budget/", formData, {
+      const response = await api.post("/api/v1/budget/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      const budget = response.data.data;
+    //console.log("Dados do orçamento:", budget);
+    // 🔽 Aqui vamos pegar os dados necessários do response
+    const budgetId = (budget.id).toString();
+    const installerName = budget.installer_name ||  installer?.company_name;
+    const clientName = budget.name; // Supondo que o campo do cliente seja 'name', ajuste se for diferente
+    const installerPhone = `55${installer?.phone}`; // Se o backend não retornar, pega do estado installer
+    /*console.log("Dados do orçamento:", {
+      budgetId,
+      installerName,
+      clientName,
+      installerPhone,
+    });*/
+
+    if (!installerName || !installerPhone || !clientName) {
+      console.warn("Dados incompletos para notificação do instalador.");
+    } else {
+      // Enviar notificação para o instalador
+      const notifyPayload = {
+        installer_name: installerName,
+        phone_number: installerPhone,
+        client_name: clientName,
+        budget_id: budgetId,
+      };
+
+      console.log("🔔 Enviando notificação para instalador:", notifyPayload);
+      await api.post("/notificar-instalador", notifyPayload);
+
+      console.log("✅ Notificação enviada com sucesso!");
+    }
       toast.success("Orçamento enviado com sucesso! Você pode visualiza-lo em Meus orçamentos");
       setFiles([]);
       onClose();
