@@ -16,6 +16,7 @@ interface Installer {
   total_services_accepted: number;
   average_rating: number;
   services_not_executed: number;
+  state: string;
 }
 
 export default function Installer() {
@@ -138,6 +139,7 @@ export default function Installer() {
               <tr>
                 <th className="py-2 px-3 text-left">Profissional</th>
                 <th className="py-2 px-3 text-left">Função</th>
+                <th className="py-2 px-3 text-left">Estado</th>
                 <th className="py-2 px-3 text-left">Serviços</th>
                 <th className="py-2 px-3 text-left">Nota</th>
                 <th className="py-2 px-3 text-left">Ação</th>
@@ -153,6 +155,7 @@ export default function Installer() {
                     </div>
                   </td>
                   <td className="py-2 px-3">{installer.role}</td>
+                  <td className='py-2 px-3'>{installer.state}</td>
                   <td className="py-2 px-3">{installer.total_services_accepted}</td>
                   <td className="py-2 px-3">
                     <div className="flex items-center gap-1">
