@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import ImgStation from "../../../../assets/station.svg";
 import { useNavigate } from "react-router-dom";
+import ReactGA from 'react-ga4';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -30,7 +31,17 @@ export default function Home() {
           <div>
             <button 
             className="bg-sky-600 text-white w-56 h-12 rounded-lg hover:cursor-pointer hover:bg-sky-500"
-            onClick={handleClickNeedContract}
+            onClick={() => {
+              // Rastrear evento no GA4
+              ReactGA.event({
+                category: 'Botão',
+                action: 'Clique em Quero contratar',
+                label: 'Quero contratar',
+              });
+          
+              // Chamar a função original
+              handleClickNeedContract();
+            }}
             >
               Quero contratar
             </button>

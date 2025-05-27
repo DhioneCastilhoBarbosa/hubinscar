@@ -6,6 +6,7 @@ import ImgDolar from '../../../assets/dolar.svg';
 import { useNavigate } from "react-router-dom";
 import Footer from "../footer";
 import { useEffect } from "react";
+import ReactGA from 'react-ga4';
 
 export default function Partners() {
   const navigate = useNavigate();
@@ -43,7 +44,17 @@ export default function Partners() {
 
             <button
               className="bg-sky-600 text-white w-full h-12 rounded-lg hover:bg-sky-500 mt-8"
-              onClick={handleClickRegisterPart}
+              onClick={() => {
+                // Rastrear evento no GA4
+                ReactGA.event({
+                  category: 'Botão 1 Cadastro Instalador',
+                  action: 'Clique em Cadastrar',
+                  label: 'Cadastrar Instalador Parceiro',
+                });
+            
+                // Chamar a função original
+                handleClickRegisterPart();
+              }}
             >
               Cadastrar
             </button>
@@ -115,7 +126,17 @@ export default function Partners() {
 
           <button
             className="bg-sky-600 text-white w-full max-w-md h-12 rounded-lg hover:bg-sky-500 mt-12"
-            onClick={handleClickRegisterPart}
+            onClick={() => {
+              // Rastrear evento no GA4
+              ReactGA.event({
+                category: 'Botão 2 Cadastro Instalador',
+                action: 'Clique em Cadastrar',
+                label: 'Cadastrar Instalador Parceiro',
+              });
+          
+              // Chamar a função original
+              handleClickRegisterPart();
+            }}
           >
             Cadastrar
           </button>

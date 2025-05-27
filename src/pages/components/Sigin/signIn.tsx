@@ -3,6 +3,7 @@ import { Eye, EyeClosed, Lock, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../../../hooks/userAuth";
 import { toast } from "sonner";
+import ReactGA from 'react-ga4';
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -41,7 +42,19 @@ export default function SignIn() {
           <p className="text-white">Não tem conta?</p>
           <button
             className="bg-white text-black w-36 h-10 rounded-lg hover:bg-gray-200 hover:cursor-pointer"
-            onClick={() => (window.location.href = "/register")}
+            onClick={() => {
+              // Rastrear evento com ReactGA4
+              ReactGA.event({
+                category: 'Botão',
+                action: 'Clique em Solicitar Cadastrar em Pagina de Login',
+                label: 'Cadastrar',
+              });
+          
+              // Pequeno delay para garantir o envio do evento
+              setTimeout(() => {
+                window.location.href = "/register";
+              }, 300); // 300ms (pode ajustar se quiser)
+            }}
           >
             Cadastrar
           </button>

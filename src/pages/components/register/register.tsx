@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+
 export default function RegisterClient() {
   const [tipoPessoa, setTipoPessoa] = useState("pf");
   const [aceite, setAceite] = useState(false);

@@ -39,7 +39,7 @@ export default function Support() {
         
 
         const user = response.data[0];
-        
+        console.log("Dados do usuário:", user);
         if (user && user.username && user.email) {
           setFormData((prev) => ({
             ...prev,

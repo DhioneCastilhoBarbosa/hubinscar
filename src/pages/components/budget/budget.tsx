@@ -11,6 +11,7 @@ import RequestQuoteModal from './components/requestBudget/requestBudget'
 import api from '../../../services/api'
 import ImgAvatar from "../../../assets/avatar.jpeg"
 import { toast } from 'sonner'
+import ReactGA from 'react-ga4';
 
 
 
@@ -180,7 +181,15 @@ export default function Budget() {
 
               <button
                 className="flex flex-row gap-2 bg-red-500 py-3 px-6 rounded-lg text-white hover:bg-red-700 transition duration-300 border-1 border-red-500 hover:border-red-700"
-                onClick={handleSearchByCep}
+                onClick={()=>{
+                  // Rastrear evento com ReactGA4
+                  ReactGA.event({
+                    category: 'Botão',
+                    action: 'Clique em Buscar por CEP',
+                    label: 'Buscar por CEP',
+                  });
+                  handleSearchByCep()
+                }}
                 disabled={loading}
               >
                 <Search size={24} />
@@ -250,8 +259,17 @@ export default function Budget() {
                       <div className="w-full flex flex-row items-center justify-center gap-2">
                         <button
                           className="bg-sky-600 text-white w-44 h-8 rounded-lg hover:cursor-pointer hover:bg-sky-500"
-                          onClick={() => handleOpenModal(installer)}
-
+                          onClick={() => {
+                            // Rastrear evento com ReactGA4
+                            ReactGA.event({
+                              category: 'Botão',
+                              action: 'Clique em Solicitar orçamento',
+                              label: 'Solicitar orçamento',
+                            });
+                        
+                            // Chamar a função original
+                            handleOpenModal(installer);
+                          }}
                         >
                           Solicitar orçamento
                         </button>

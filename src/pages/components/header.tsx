@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link } from "react-scroll";
 import { useNavigate } from "react-router-dom";
+import ReactGA from 'react-ga4';
+
 import ImgLogo from "../../assets/LOGO BRANCA.png"
 
 interface HeaderProps {
@@ -102,7 +104,17 @@ export default function Header({ menuType, buttonVisible, menuVisible }: HeaderP
         {buttonVisible && (
           <button
             className="bg-white text-black w-24 h-full md:h-8 md:rounded-lg hover:bg-gray-200 hover:cursor-pointer md:mr-4"
-            onClick={handleLogin}
+            onClick={() => {
+              // Rastrear evento no GA4
+              ReactGA.event({
+                category: 'Botão',
+                action: 'Clique em Login',
+                label: 'Login',
+              });
+          
+              // Chamar a função original
+              handleLogin();
+            }}
           >
             Login
           </button>
