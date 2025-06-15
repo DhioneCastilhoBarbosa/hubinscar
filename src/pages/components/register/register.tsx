@@ -4,6 +4,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { cpf, cnpj } from 'cpf-cnpj-validator';
+
 
 
 export default function RegisterClient() {
@@ -55,6 +57,9 @@ export default function RegisterClient() {
   function handleClicPartners(){
     navigate("/cadastro-parceiro");
   }
+
+
+
 
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -308,7 +313,17 @@ export default function RegisterClient() {
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-52 max-w-lg"
               placeholder="xxx.xxx.xxx-xx"
               value={formData.cpf}
-              onChange={(e) => setFormData({ ...formData, cpf: e.target.value })}
+              onChange={(e) => {
+                const rawValue = e.target.value;
+                const stripped = cpf.strip(rawValue); // remove pontos e traços
+                const formatted = cpf.format(stripped); // aplica máscara
+                setFormData({ ...formData, cpf: formatted });
+              }}
+              onBlur={() => {
+                if (!cpf.isValid(formData.cpf)) {
+                  toast.error('CPF inválido');
+                }
+              }}
               required
             />
           </div>
@@ -321,7 +336,17 @@ export default function RegisterClient() {
               className="h-10 rounded-lg outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-black py-0.5 px-2 md:w-52 max-w-lg"
               placeholder="xx.xxx.xxx/xxxx-xx"
               value={formData.cnpj}
-              onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
+              onChange={(e) => {
+                const rawValue = e.target.value;
+                const stripped = cnpj.strip(rawValue);
+                const formatted = cnpj.format(stripped);
+                setFormData({ ...formData, cnpj: formatted });
+              }}
+              onBlur={() => {
+                if (!cnpj.isValid(formData.cnpj)) {
+                  toast.error('CNPJ inválido');
+                }
+              }}
               required
             />
           </div>
@@ -397,7 +422,7 @@ export default function RegisterClient() {
               placeholder="Digite o complemento"
               value={formData.complement}
               onChange={(e) => setFormData({ ...formData, complement: e.target.value })}
-              required
+              
             />
           </div>
 
@@ -476,7 +501,7 @@ export default function RegisterClient() {
               placeholder="Digite o ponto de referência"
               value={formData.reference}
               onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
-              required
+              
             />
           </div>
 

@@ -229,7 +229,7 @@ export default function Budget() {
                 installers.map((installer: Installer) => (
                   <TableRow key={installer.id} className="border-b border-gray-100">
                     <TableCell className="text-gray-800 flex-1">
-                      <div className="flex flex-row items-center gap-2 md:gap-8 w-full justify-center">
+                      <div className="flex flex-row items-center gap-2 md:gap-8 w-full justify-start">
                         <img
                           src={installer.photo || ImgAvatar }
                           alt="Imagem do profissional"

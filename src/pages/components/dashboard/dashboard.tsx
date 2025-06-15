@@ -3,7 +3,7 @@ import { useState } from "react";
 import Sidebar from "./components/sidebar";
 import UserProfile from "./components/userProfile";
 import Services from "./components/services";
-import Chats from "./components/chat/chats";
+//import Chats from "./components/chat/chats";
 import EmConstrucao from "./components/EmConstrucao";
 import Installer from "./components/installer/installer"
 import Financeiro from "./components/financeiro/financeiro";
@@ -18,8 +18,8 @@ export default function Dashboard() {
         return <UserProfile />;
       case "Meus orçamentos":
         return <Services/>;
-      case "Chat":
-        return <Chats/>;
+      //case "Chat":
+        //return <Chats/>;
       case "Instaladores":
         return <Installer/>
       case "Financeiro":

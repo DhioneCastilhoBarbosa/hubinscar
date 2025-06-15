@@ -77,7 +77,7 @@ export default function Footer() {
         <p className="cursor-pointer" onClick={handleClicLogin}>
           Minha conta
         </p>
-        <p className="cursor-pointer">Suporte</p>
+        
       </div>
     </div>
   );
