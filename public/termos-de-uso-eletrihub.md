@@ -1,8 +1,8 @@
 # Termos de Uso
 
-Pedimos que leia com atenção este documento, pois foi elaborado com muita dedicação, buscando prever todos os detalhes de nossa operação e eliminar dúvidas para que os negócios ocorram da melhor forma possível. Ao se cadastrar e utilizar a plataforma de serviços ELETRIHUB, estes Termos constituem nosso acordo com você.
+Pedimos que leia com atenção este documento, pois foi elaborado com muita dedicação, buscando prever todos os detalhes de nossa operação e eliminar dúvidas, para que os negócios ocorram da melhor forma possível. Ao se cadastrar e utilizar a plataforma de serviços ELETRIHUB, você automaticamente concorda em seguir as regras que estabelecemos aqui. 
+Ao final, caso ainda reste alguma dúvida, basta entrar em contato pelo e-mail contato@eletrihub.com ou pelo canal de Suporte em nosso website, onde nossa equipe estará à disposição para atendê-lo. Se não concordar com algo, por favor, considere não usar nossos serviços. É muito importante para nós que você se sinta seguro e plenamente informado.
 
-Ao final, caso ainda reste alguma dúvida, basta entrar em contato pelo e-mail  ou pelo canal de suporte em nosso site, onde nossa equipe estará à disposição para atendê-lo.
 
 Os tópicos que organizam as informações de nossos Termos, são os seguintes:
 
@@ -33,9 +33,9 @@ Os tópicos que organizam as informações de nossos Termos, são os seguintes:
 
 Apresentamos a seguir alguns conceitos úteis para facilitar a compreensão desses Termos de Uso:
 
-ELETRIHUB: Eletrihub Desenvolvimento de Negócios Ltda., sociedade empresária limitada, com sede na cidade de Florianópolis, Estado de Santa Catarina, na Avenida Luiz Boiteux Piazza, 1302, Lote 87/89, Cachoeira do Bom Jesus, CEP:88.056-000, inscrita no CNPJ/MF sob o  nº  00.000.000/0001-60. (ALTERAR CFME DADOS VERDADEIROS)
+ELETRIHUB: EletriHub Intermediação e Serviços Ltda., sociedade empresária limitada, com sede na Avenida Pref. Osmar Cunha, 416, Sala 1108, Centro, Florianópolis – SC, CEP: 88.015-100, inscrita no CNPJ sob o nº 61.279.316/0001-59.
 
-PLATAFORMA: Sistema constituído por um aplicativo mobile e um , oferecido pela ELETRIHUB, que permite aos USUÁRIOS disponibilizarem e contratarem serviços ofertados através da PLATAFORMA.
+PLATAFORMA: Sistema estruturado em um website, oferecido pela ELETRIHUB, que permite aos USUÁRIOS disponibilizarem e contratarem serviços através da PLATAFORMA.
 
 USUÁRIOS: Clientes e Profissionais cadastrados na PLATAFORMA.
 
@@ -45,7 +45,7 @@ PROFISSIONAL: Pessoa física ou jurídica cadastrada na PLATAFORMA que oferta o
 
 ## <span id="3-cadastros-gerais"></span>3. CADASTROS GERAIS
 
-3.1. Ao se cadastrar na PLATAFORMA, o USUÁRIO, seja CLIENTE ou PROFISSIONAL, concorda em observar as condições de uso descritas neste termo, a legislação vigente aplicável e o tratamento de dados pessoais pela ELETRIHUB, regido pela  (ALTERAR ESTE LINK DEPOIS) também disponível em nosso site.
+3.1. Ao se cadastrar na PLATAFORMA, o USUÁRIO, seja CLIENTE ou PROFISSIONAL, concorda em observar as condições de uso descritas neste termo, a legislação vigente aplicável e o tratamento de dados pessoais pela ELETRIHUB, regido pela Política de Privacidade também disponível em nosso site.
 
 3.2. O USUÁRIO não poderá criar mais de uma conta na PLATAFORMA, que é destinada exclusivamente a maiores de 18 anos e pessoas jurídicas devidamente inscritas e ativas no Cadastro Nacional da Pessoa Jurídica (CNPJ). Em caso de multiplicidade de cadastros ou utilização por menores de 18 anos, a conta será excluída, sem aviso prévio, podendo a ELETRIHUB não aceitar novo cadastro.
 
@@ -93,19 +93,27 @@ PROFISSIONAL: Pessoa física ou jurídica cadastrada na PLATAFORMA que oferta o
 
 6.2. Os PROFISSIONAIS ficam expressamente proibidos de redirecionar o contato de serviços tratados via plataforma para outras formas de comunicação ou pagamentos externos à PLATAFORMA. Em caso de violação desta regra, a ELETRIHUB tem o direito de suspender imediatamente o acesso do PROFISSIONAL à PLATAFORMA.
 
-6.3. Para garantir a segurança da negociação e execução dos serviços contratados, a ELETRIHUB poderá examinar as comunicações ocorridas na PLATAFORMA, respeitando e zelando por estas, conforme rege a  (ALTERAR ESTE LINK DEPOIS).
+6.3. Para garantir a segurança da negociação e execução dos serviços contratados, a ELETRIHUB poderá examinar as comunicações ocorridas na PLATAFORMA, respeitando e zelando por estas, conforme rege a Política de Privacidade.
 
 6.4. A PLATAFORMA oferece diversos recursos para gerenciar as cobranças, incluindo: (i) a disponibilização de meios e formas de pagamento, com condições de parcelamento, quando aplicáveis; (ii) captura de transações; (iii) submissão de transações para aprovação dos emissores; (iv) gerenciamento da liquidação financeira de transações aprovadas pelos emissores; (v) validação de cartões de crédito cadastrados; (vi) autorização de reserva de valor e (vii) controle de transações.
 
-6.5. O PROFISSIONAL será responsável pelo pagamento de uma taxa de intermediação a ser aplicada sobre o valor dos serviços contratados pelos CLIENTES, em razão da aproximação proporcionada entre as partes. Esta taxa será retida automaticamente pela PLATAFORMA e variará entre 15% (quinze por cento) e 19% (dezenove por cento) do valor, a depender da quantidade de serviços já concluídos com sucesso pelo PROFISSIONAL via PLATAFORMA, conforme tabela abaixo:
+6.5. O PROFISSIONAL será responsável pelo pagamento de uma taxa de intermediação a ser aplicada sobre o valor dos serviços contratados pelos CLIENTES, em razão da aproximação proporcionada entre as partes. Esta taxa será retida automaticamente pela PLATAFORMA e variará entre 20% (vinte por cento) e 25% (vinte e cinco por cento) do valor, a depender da quantidade de serviços já concluídos com sucesso pelo PROFISSIONAL via PLATAFORMA, conforme tabela abaixo:
 
-Exemplo de fluxo financeiro com taxa de 19%
+| Quantidade de serviços | Status dos serviços | Taxa a ser retida |
+|------------------------|---------------------|-------------------|
+| Até 5                 | Concluídos          | 25%               |
+| Entre 6 e 10          | Concluídos          | 24%               |
+| Entre 11 e 15         | Concluídos          | 23%               |
+| Entre 16 e 20         | Concluídos          | 22%               |
+| Entre 21 e 25         | Concluídos          | 21%               |
+| Acima de 25           | Concluídos          | 20%               |
 
-Valor do serviço acordado entre PROFISSIONAL e CLIENTE: R$ 5.000,00
 
-Taxa de intermediação a ser retida pela PLATAFORMA: R$ 950,00
+Exemplo de fluxo financeiro com taxa de 20%
+Valor do serviço acordado entre PROFISSIONAL e CLIENTE: R$ 4.000,00
+Taxa de intermediação a ser retida pela PLATAFORMA: R$ 800,00
+Valor a ser repassado ao PROFISSIONAL após conclusão do processo: R$ 3.200,00
 
-Valor a ser repassado ao PROFISSIONAL após conclusão do processo: R$ 4.050,00
 
 6.6. O PROFISSIONAL DECLARA ESTAR CIENTE DE QUE A COMPOSIÇÃO DO PREÇO A SER OFERTADO AOS CLIENTES DEVERÁ CONTEMPLAR TODOS OS CUSTOS INERENTES À PRESTAÇÃO DO SERVIÇO, TAIS COMO DESLOCAMENTO, ALIMENTAÇÃO, MATERIAIS NECESSÁRIOS, ALÉM DA MARGEM DE LUCRO DESEJADA E A TAXA DE INTERMEDIAÇÃO.
 
@@ -168,29 +176,17 @@ Valor a ser repassado ao PROFISSIONAL após conclusão do processo: R$ 4.050,00
 ## <span id="11-garantia-legal-pelo-profissional"></span>11. GARANTIA LEGAL PELO PROFISSIONAL:
 
 11.1. O PROFISSIONAL deve dar suporte ao CLIENTE de acordo com a Lei, inclusive sobre a garantia legal. A ELETRIHUB em nenhuma hipótese será responsável solidário ou subsidiário pela garantia.
-
-11.2. O CLIENTE deve comunicar eventual problema na prestação de serviços pagos através dos meios de pagamento disponíveis na PLATAFORMA dentro do prazo legal para facilitar a comunicação com o PROFISSIONAL sobre a garantia legal. Para isso, o CLIENTE deve enviar fotos e vídeos do problema encontrado e outras informações relevantes para comprovação do defeito através do e-mail  ou pelo canal de suporte em nosso site.
-
+11.2. O CLIENTE deve comunicar eventual problema na prestação de serviços pagos através dos meios de pagamento disponíveis na PLATAFORMA dentro do prazo legal para facilitar a comunicação com o PROFISSIONAL sobre a garantia legal. Para isso, o CLIENTE deve enviar fotos e vídeos do problema encontrado e outras informações relevantes para comprovação do defeito através do e-mail contato@eletrihub.com ou pelo canal de Suporte em nosso website.
 11.3. A ELETRIHUB pode facilitar a comunicação entre o CLIENTE e o PROFISSIONAL sobre a garantia legal, mas em nenhuma hipótese será responsável solidário ou subsidiário pela garantia.
-
 11.4. A ELETRIHUB ou o PROFISSIONAL poderão solicitar mais informações e documentos para atestar a origem do dano e o CLIENTE deve fornecê-los em até 10 (dez) dias corridos contados da solicitação, podendo haver a recusa da garantia caso comprovado que o dano não foi ocasionado pelo serviço do PROFISSIONAL, ou ainda o encerramento da solicitação, caso o CLIENTE não responda em até 30 (trinta) dias corridos após o primeiro contato.
-
 11.5. Por liberalidade e conforme seu exclusivo critério, a ELETRIHUB poderá prestar assistência ao CLIENTE em circunstâncias excepcionais em caso de verificação de vícios ou problemas graves na prestação dos serviços que tenham sido pagos exclusivamente através da PLATAFORMA, que não sejam resolvidos pelo PROFISSIONAL e que acarretem riscos relevantes ao CLIENTE. A assistência prestada por liberalidade pela ELETRIHUB não implicará, em nenhuma hipótese, na responsabilização da ELETRIHUB pelos serviços prestados pelo PROFISSIONAL.
-
 11.6. A garantia legal pelo PROFISSIONAL, bem como a assistência prestada por liberalidade pela ELETRIHUB não se aplicará nas seguintes hipóteses:
-
 (i) Acontecimentos causados por dolo do CLIENTE, ou provocados intencionalmente;
-
 (ii) Mau uso ou negligência do CLIENTE na preservação dos bens, antes, durante ou após a ocorrência de qualquer sinistro;
-
 (iii) Danos sofridos em consequência de eventos de força maior, como tremores de terra, incêndios ou explosões de qualquer natureza, queda de raio, chuvas, granizo, umidade, inundações de qualquer espécie, furacões, vendavais, ciclones, terremotos, maremotos, danos elétricos em decorrência de oscilação de energia elétrica, curtos-circuitos ou sobrecarga na rede elétrica;
-
 (iv) Desgastes naturais, desgastes pelo uso, deterioração gradativa, vício próprio, defeito latente, defeito de fabricação ou má qualidade do produto a ser instalado, desarranjos mecânicos, elétricos e eletrônicos, vibrações, erosão, corrosão de qualquer espécie, incrustação, oxidação, ferrugem, fuligem, escamações e cavitação;
-
 (v) Atos de hostilidade ou de guerra, treinamento militar, operações bélicas, terrorismo, subversão, guerrilhas, rebelião, motins, insurreição, revolução, comoção social, sabotagem, vandalismo, tumultos, arruaças, greves, lockout e quaisquer outras perturbações de ordem pública;
-
 (vi) Eventos premeditados ou preexistentes à prestação do serviço contratado;
-
 (vii) Serviços que tenham tido interferência de terceiros, que não o PROFISSIONAL cadastrado;
 
 ## <span id="12-limitacao-de-responsabilidade"></span>12. LIMITAÇÃO DE RESPONSABILIDADE:
@@ -273,4 +269,4 @@ Valor a ser repassado ao PROFISSIONAL após conclusão do processo: R$ 4.050,00
 
 ## ELETRIHUB DESENVOLVIMENTO DE NEGÓCIOS LTDA.
 
-Atualizado em 17 de abril de 2025.
+Atualizado em 14 de junho de 2025.
