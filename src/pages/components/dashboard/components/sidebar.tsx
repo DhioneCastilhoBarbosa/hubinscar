@@ -49,8 +49,8 @@ const menuItems = [
       //console.log("Evento photoUpdated disparado");
       const name = localStorage.getItem("name");
       const photo = localStorage.getItem("photo");
-      if (name && photo) {
-        setUser({ name, avatar: photo });
+      if (name) {
+        setUser({ name, avatar: photo || ""});
       }
     };
   
