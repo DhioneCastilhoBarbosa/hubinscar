@@ -17,6 +17,8 @@ import CookieBanner from './pages/components/cookieBanner/CookieBanner'
 import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 
+
+
 export default function App() {
   return (
     <BrowserRouter>

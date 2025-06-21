@@ -1,5 +1,11 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: "Roboto", sans-serif;
+}
+
 body {
   @apply bg-neutral-950 text-white;
+  @apply font-sans;
 }
