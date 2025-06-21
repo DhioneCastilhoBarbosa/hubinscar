@@ -329,9 +329,10 @@ export default function RequestQuoteModal({isOpen, onClose, installer,}:Props) {
               <label htmlFor="name" className="text-sm font-medium">Tipo de local</label>
               <select name="location_type" className="p-2 rounded border border-zinc-600 bg-zinc-800 text-white w-60" required>
                 <option>Residencial</option>
-                <option>Condomínio</option>
-                <option>Empresa</option>
-                <option>Estacionamento público</option>
+                <option>Condomínio vertical</option>
+                <option>Condomínio horizontal</option>
+                <option>Empresa</option>         
+                <option>Estacionamento</option>
                 <option>Outro</option>
               </select>
             </div>
@@ -415,15 +416,15 @@ export default function RequestQuoteModal({isOpen, onClose, installer,}:Props) {
             <div className="space-y-2">
               <label className="block font-medium">Deseja instalar proteções?</label>
               <label className="flex items-center">
-                <input type="checkbox" name="protection" value="Disjuntor exclusivo" className="mr-2" />
+                <input type="checkbox" name="protection" value="Disjuntor exclusivo" className="mr-2" required/>
                 Disjuntor exclusivo
               </label>
               <label className="flex items-center">
-                <input type="checkbox" name="protection" value="DPS" className="mr-2" />
+                <input type="checkbox" name="protection" value="DPS" className="mr-2" required/>
                 DPS
               </label>
               <label className="flex items-center">
-                <input type="checkbox" name="protection" value="DR" className="mr-2" />
+                <input type="checkbox" name="protection" value="DR" className="mr-2" required/>
                 DR
               </label>
             </div>

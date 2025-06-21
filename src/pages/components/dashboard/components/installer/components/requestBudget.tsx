@@ -4,6 +4,7 @@ import api from "../../../../../../services/api";
 import { Installer } from '../../../../budget/components/installer';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
+import { X } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;
@@ -186,7 +187,14 @@ export default function RequestQuoteModal({ isOpen, onClose, installer }: Props)
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/70" aria-hidden="true" />
       <div className="fixed inset-0 flex items-start justify-center pt-10 p-4 overflow-y-auto">
-        <Dialog.Panel className="bg-zinc-900 text-white max-h-[90vh] overflow-y-auto p-6 w-full max-w-3xl rounded-xl shadow-lg">
+        <Dialog.Panel className="relative bg-zinc-900 text-white max-h-[90vh] overflow-y-auto p-6 w-full max-w-3xl rounded-xl shadow-lg">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white bg-red-600 hover:bg-red-500 rounded-sm w-8 h-8 flex items-center justify-center"
+          aria-label="Fechar"
+        >
+          <X className="w-4 h-4" />
+        </button>
           <Dialog.Title className="text-2xl font-bold mb-4">Solicitar Orçamento</Dialog.Title>
           <form id="quote-form" className="space-y-4" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -245,7 +253,8 @@ export default function RequestQuoteModal({ isOpen, onClose, installer }: Props)
               <label htmlFor="name" className="text-sm font-medium">Tipo de local</label>
               <select name="location_type" className="p-2 rounded border border-zinc-600 bg-zinc-800 text-white w-60" required>
                 <option>Residencial</option>
-                <option>Condomínio</option>
+                <option>Condomínio vertical</option>
+                <option>Condomínio horizontal</option>
                 <option>Empresa</option>
                 <option>Estacionamento público</option>
                 <option>Outro</option>
@@ -331,15 +340,15 @@ export default function RequestQuoteModal({ isOpen, onClose, installer }: Props)
             <div className="space-y-2">
               <label className="block font-medium">Deseja instalar proteções?</label>
               <label className="flex items-center">
-                <input type="checkbox" name="protection" value="Disjuntor exclusivo" className="mr-2" />
+                <input type="checkbox" name="protection" value="Disjuntor exclusivo" className="mr-2" required/>
                 Disjuntor exclusivo
               </label>
               <label className="flex items-center">
-                <input type="checkbox" name="protection" value="DPS" className="mr-2" />
+                <input type="checkbox" name="protection" value="DPS" className="mr-2" required/>
                 DPS
               </label>
               <label className="flex items-center">
-                <input type="checkbox" name="protection" value="DR" className="mr-2" />
+                <input type="checkbox" name="protection" value="DR" className="mr-2" required/>
                 DR
               </label>
             </div>
