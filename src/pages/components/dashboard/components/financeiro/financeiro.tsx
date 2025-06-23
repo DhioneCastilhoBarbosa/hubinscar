@@ -7,6 +7,7 @@ import {
   PiggyBank,
 } from "lucide-react";
 import api from "../../../../../services/api";
+import { toast } from "sonner";
 
 export default function FinanceiroDashboard() {
   const [resumo, setResumo] = useState({
@@ -16,6 +17,9 @@ export default function FinanceiroDashboard() {
     valorDosServicos: 0,
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
+
   const [bankInfo, setBankInfo] = useState({
     nome: "",
     cpf: "",
@@ -23,31 +27,114 @@ export default function FinanceiroDashboard() {
     banco: "",
   });
 
+  const fields = [
+  { label: "Nome", name: "nome" },
+  { label: "CPF/CNPJ", name: "cpf" },
+  { label: "Chave Pix", name: "chavePix" },
+  
+];
+
+const bancosBrasil = [
+  { codigo: "001", nome: "Banco do Brasil" },
+  { codigo: "033", nome: "Santander" },
+  { codigo: "104", nome: "Caixa Econômica Federal" },
+  { codigo: "237", nome: "Bradesco" },
+  { codigo: "341", nome: "Itaú Unibanco" },
+  { codigo: "260", nome: "Nubank" },
+  { codigo: "077", nome: "Banco Inter" },
+  { codigo: "290", nome: "PagBank" },
+  { codigo: "336", nome: "C6 Bank" },
+  { codigo: "380", nome: "PicPay" },
+  { codigo: "655", nome: "Votorantim" },
+  { codigo: "748", nome: "Sicredi" },
+  { codigo: "756", nome: "Sicoob" },
+  { codigo: "741", nome: "Banrisul" },
+  { codigo: "422", nome: "Safra" },
+  { codigo: "389", nome: "Mercantil do Brasil" },
+  { codigo: "070", nome: "Banco de Brasília (BRB)" },
+  { codigo: "021", nome: "Banestes" },
+  { codigo: "136", nome: "Unicred" },
+  { codigo: "643", nome: "Pine" },
+  { codigo: "012", nome: "Banco Inbursa" },
+];
+
+
+
   const [valorSaque, setValorSaque] = useState("");
   const [erroSaque, setErroSaque] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBankInfo({ ...bankInfo, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+  // CPF/CNPJ: remover tudo que não for número
+  if (name === "cpf") {
+    const onlyDigits = value.replace(/\D/g, "");
+    setBankInfo((prev) => ({ ...prev, [name]: onlyDigits }));
+    return;
+  }
+
+  setBankInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsLoading(true);
 
-    const valor = parseFloat(valorSaque.replace(",", "."));
-    if (isNaN(valor) || valor <= 0) {
-      setErroSaque("Informe um valor válido para saque.");
-      return;
-    }
+  const valor = parseFloat(valorSaque.replace(/\./g, "").replace(",", "."));
 
-    if (valor > resumo.disponivel) {
-      setErroSaque("Valor solicitado é maior que o disponível para saque.");
-      return;
-    }
+  if (isNaN(valor) || valor <= 0) {
+    setErroSaque("Informe um valor válido para saque.");
+    return;
+  }
 
-    setErroSaque("");
-    console.log("Dados bancários enviados:", { ...bankInfo, valor_saque: valor });
-    // Envie para sua API aqui
+  if (valor > resumo.disponivel) {
+    setErroSaque("Valor solicitado é maior que o disponível para saque.");
+    return;
+  }
+
+ 
+  const id = localStorage.getItem("ID");
+  if (!id) {
+    setErroSaque("ID do usuario não identificado.");
+    return;
+  }
+
+  // Identificar CPF ou CNPJ
+  const digitsOnly = bankInfo.cpf.replace(/\D/g, "");
+  const isCNPJ = digitsOnly.length > 11;
+
+  const payload = {
+    id,
+    name: bankInfo.nome,
+    cpf: isCNPJ ? "" : bankInfo.cpf,
+    cnpj: isCNPJ ? bankInfo.cpf : "",
+    key: bankInfo.chavePix,
+    bank_name: bankInfo.banco,
+    value: valor,
+    request_date: new Date().toISOString().split("T")[0],
   };
+
+  try {
+    console.log("Enviando solicitação de saque:", payload);
+    await fetch("https://mail.api-castilho.com.br/withdrawal-request", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    toast.success("Solicitação de saque enviada com sucesso!");
+    setValorSaque("");
+    setBankInfo({ nome: "", cpf: "", chavePix: "", banco: "" });
+  } catch (err) {
+    console.error("Erro ao enviar solicitação:", err);
+    setErroSaque("Erro ao enviar solicitação. Tente novamente.");
+  }finally {
+    setIsLoading(false);
+  }
+};
+
 
   useEffect(() => {
     const fetchBudgets = async () => {
@@ -110,15 +197,13 @@ export default function FinanceiroDashboard() {
       <div className="pt-4 border-t border-zinc-700">
         <h3 className="text-xl font-semibold mb-2">Dados bancários (Pix)</h3>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {["Nome", "CPF/CNPJ", "ChavePix", "Banco"].map((field) => (
-            <div className="flex flex-col" key={field}>
-              <label className="text-sm text-gray-400 mb-1 capitalize">
-                {field === "chavePix" ? "Chave Pix" : field}
-              </label>
+          {fields.map(({ label, name }) => (
+            <div className="flex flex-col" key={name}>
+              <label className="text-sm text-gray-400 mb-1">{label}</label>
               <input
                 type="text"
-                name={field}
-                value={bankInfo[field as keyof typeof bankInfo]}
+                name={name}
+                value={bankInfo[name as keyof typeof bankInfo]}
                 onChange={handleChange}
                 className="bg-zinc-800 text-white border border-zinc-600 rounded-lg p-2"
                 required
@@ -126,16 +211,46 @@ export default function FinanceiroDashboard() {
             </div>
           ))}
 
+          <div className="flex flex-col">
+            <label className="text-sm text-gray-400 mb-1">Banco</label>
+            <select
+              name="banco"
+              value={bankInfo.banco}
+              onChange={(e) =>
+                setBankInfo((prev) => ({ ...prev, banco: e.target.value }))
+              }
+              className="bg-zinc-800 text-white border border-zinc-600 rounded-lg p-2"
+              required
+            >
+              <option value="">Selecione um banco</option>
+              {bancosBrasil.map((banco) => (
+                <option key={banco.codigo} value={banco.nome}>
+                  {banco.codigo} - {banco.nome}
+                </option>
+              ))}
+            </select>
+          </div>
+
+
+
           <div className="flex flex-col md:col-span-2">
             <label className="text-sm text-gray-400 mb-1">Valor a sacar (R$)</label>
             <input
-              type="text"
-              value={valorSaque}
-              onChange={(e) => setValorSaque(e.target.value)}
-              className="bg-zinc-800 text-white border border-zinc-600 rounded-lg p-2"
-              placeholder="Ex: 100.00"
-              required
-            />
+                type="text"
+                value={valorSaque}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, ""); // só dígitos
+                  const float = (parseInt(raw || "0") / 100).toFixed(2); // 10 → 10.00
+                  const formatted = Number(float).toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  });
+                  setValorSaque(formatted);
+                }}
+                className="bg-zinc-800 text-white border border-zinc-600 rounded-lg p-2"
+                placeholder="Ex: 100,00"
+                required
+              />
             {erroSaque && (
               <span className="text-red-500 text-sm mt-1">{erroSaque}</span>
             )}
@@ -144,10 +259,34 @@ export default function FinanceiroDashboard() {
           <div className="md:col-span-2">
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition"
+              disabled={isLoading}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition flex items-center justify-center gap-2 disabled:opacity-60"
             >
-              Solicitar saque
+              {isLoading && (
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                  ></path>
+                </svg>
+              )}
+              {isLoading ? "Enviando..." : "Solicitar saque"}
             </button>
+
           </div>
         </form>
       </div>
