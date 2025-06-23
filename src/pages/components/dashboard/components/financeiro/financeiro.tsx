@@ -130,6 +130,7 @@ const bancosBrasil = [
   } catch (err) {
     console.error("Erro ao enviar solicitação:", err);
     setErroSaque("Erro ao enviar solicitação. Tente novamente.");
+    setIsLoading(false);
   }finally {
     setIsLoading(false);
   }
