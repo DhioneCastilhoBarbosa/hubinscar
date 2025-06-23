@@ -84,11 +84,13 @@ const bancosBrasil = [
 
   if (isNaN(valor) || valor <= 0) {
     setErroSaque("Informe um valor válido para saque.");
+    setIsLoading(false); // ← necessário aqui
     return;
   }
 
   if (valor > resumo.disponivel) {
     setErroSaque("Valor solicitado é maior que o disponível para saque.");
+    setIsLoading(false); // ← necessário aqui
     return;
   }
 
@@ -96,6 +98,7 @@ const bancosBrasil = [
   const id = localStorage.getItem("ID");
   if (!id) {
     setErroSaque("ID do usuario não identificado.");
+    setIsLoading(false); // ← necessário aqui
     return;
   }
 
