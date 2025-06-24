@@ -12,7 +12,7 @@ export default function Main() {
       window.scrollTo(0, 0);
     }, []);
   return (
-    <div className=" h-screen w-full">
+    <div className="min-h-screen w-full flex flex-col">
       <Home/>
       <About/>
       <Service />

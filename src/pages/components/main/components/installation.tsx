@@ -25,7 +25,7 @@ export default function Installation() {
                 Quero ser um intalador
           </button>
         </div>
-        <div className='installer  flex flex-col items-center justify-center h-full md:mt-36 w-56 md:w-auto'>
+        <div className='installer flex flex-col items-center justify-center md:mt-24 w-full md:w-auto max-w-xs'>
           <img 
             src={ImgMamInstallation} 
             alt="homem na frente de uma estacao de recarga com um maleta de ferramenta na mão."
@@ -33,7 +33,8 @@ export default function Installation() {
           />
         </div>
       </div>
-      <div className='flex flex-col items-center justify-center w-full px-2 md:px-16 md:mt-[-3rem] mt-[-1rem]'>
+      <div className='flex flex-col items-center justify-center w-full px-2 md:px-16 mt-[-5rem]'>
+
         <div className='flex flex-col items-center justify-center bg-gray-500 w-full mx-16 rounded-lg gap-10 py-8'>
           <div>
             <p className='text-2xl font-semibold text-center'>Vantagens de ser um instalador parceiro</p>
