@@ -31,7 +31,7 @@ export default function Service() {
             <motion.div
              whileHover={{ scale: 1.1 }}
              whileTap={{ scale: 0.95 }}  
-             className='flex flex-col md:mt-16 mt-8 bg-gray-100 p-4 rounded-lg md:w-[370px] md:h-60 mx-6 shadow-2xl shadow-gray-500'
+             className='flex flex-col md:mt-16 mt-8 bg-gray-100 p-4 rounded-lg w-full max-w-xs md:max-w-[370px] h-60 shadow-2xl shadow-gray-500'
             >
               <img src={ImgMaintenance} alt="ferramentas" className='w-8 mb-4'/>
               <span className='text-black'>Manutenção</span>

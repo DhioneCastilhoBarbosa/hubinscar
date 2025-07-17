@@ -1,6 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 type Props = {
-  chats: any[];
+  chats: {
+    id: number;
+    name: string;
+    avatar: string;
+    budgetId: number;
+  }[];
   onSelect: (id: number) => void;
   selectedId: number | null;
 };
@@ -20,7 +24,7 @@ export default function Sidebar({ chats, onSelect, selectedId }: Props) {
           <div className="overflow-hidden">
             <p className="font-bold">{chat.name}</p>
             <p className="text-xs text-zinc-400 truncate max-w-[200px] sm:max-w-[250px] md:max-w-full">
-              {chat.messages.at(-1)?.text}
+              Orçamento #{chat.budgetId}
             </p>
           </div>
         </div>

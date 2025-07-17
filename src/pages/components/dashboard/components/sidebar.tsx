@@ -5,6 +5,7 @@ import {
   FileText,
   HardHat,
   Headset,
+ MessageCircle,
  // MessageCircle,
   User,
 } from "lucide-react";
@@ -34,7 +35,7 @@ const menuItems = [
   ...(person !== "cliente"
     ? [{ icon: <DollarSign className="w-5 h-5" />, label: "Financeiro" }]
     : []),
-  //{ icon: <MessageCircle className="w-5 h-5" />, label: "Chat" },
+  { icon: <MessageCircle className="w-5 h-5" />, label: "Chat" },
   { icon: <User className="w-5 h-5" />, label: "Minha conta" },
   { icon: <Headset className="w-5 h-5" />, label: "Suporte" },
 ];

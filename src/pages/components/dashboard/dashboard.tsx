@@ -8,6 +8,7 @@ import EmConstrucao from "./components/EmConstrucao";
 import Installer from "./components/installer/installer"
 import Financeiro from "./components/financeiro/financeiro";
 import Support from "./components/support/supportPage";
+import Chats from "./components/chat/chats";
 
 export default function Dashboard() {
   const [selectedMenuItem, setSelectedMenuItem] = useState("Meus orçamentos");
@@ -18,8 +19,8 @@ export default function Dashboard() {
         return <UserProfile />;
       case "Meus orçamentos":
         return <Services/>;
-      //case "Chat":
-        //return <Chats/>;
+      case "Chat":
+        return <Chats/>;
       case "Instaladores":
         return <Installer/>
       case "Financeiro":
