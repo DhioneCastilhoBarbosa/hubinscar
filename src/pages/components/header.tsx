@@ -68,7 +68,7 @@ export default function Header({ menuType, buttonVisible, menuVisible }: HeaderP
           className="font-bold text-2xl text-white md:ml-4 cursor-pointer"
           onClick={handleGoToHome}
         >
-          <img src={ImgLogo} alt="Logo" className="w-32 h-10" />
+          <img src={ImgLogo} alt="Logo" className="w-60 h-10" />
         </div>
         <ul className="hidden md:flex md:flex-row md:gap-8 font-light text-white">
           {filteredMenu &&
