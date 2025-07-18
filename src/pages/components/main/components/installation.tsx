@@ -22,7 +22,7 @@ export default function Installation() {
            className="bg-sky-600 text-white w-56 h-12 rounded-lg hover:cursor-pointer hover:bg-sky-500 md:mt-16 md:ml-8 mt-8"
             onClick={handleClickNeedPatner}
           >
-                Quero ser um intalador
+                Quero ser um instalador
           </button>
         </div>
         <div className='installer flex flex-col items-center justify-center md:mt-24 w-full md:w-auto max-w-xs'>
@@ -51,7 +51,7 @@ export default function Installation() {
               <img src={ImgGroupUser}  className="mb-4" alt="" />
               <p className='text-2xl font-semibold mb-4'>Novos clientes</p>
               <p className='text-[1rem] font-light'>Atraímos clientes da</p>
-              <p className='text-[1rem] font-light'>sua região, ampliado</p>
+              <p className='text-[1rem] font-light'>sua região, ampliando</p>
               <p className='text-[1rem] font-light'>seus contatos.</p>
             </div>
 
