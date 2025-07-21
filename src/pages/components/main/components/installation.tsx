@@ -2,6 +2,7 @@ import ImgMamInstallation from '../../../../assets/manInstallation.svg'
 import ImgCloudSpeak from '../../../../assets/cloudspeak.svg'
 import ImgGroupUser from '../../../../assets/Maskgroup.svg'
 import ImgDolar from '../../../../assets/dolar.svg'
+import ImgPraticidade from '../../../../assets/praticidade.svg'
 import { useNavigate } from 'react-router-dom';
 
 
@@ -53,6 +54,15 @@ export default function Installation() {
               <p className='text-[1rem] font-light'>Atraímos clientes da</p>
               <p className='text-[1rem] font-light'>sua região, ampliando</p>
               <p className='text-[1rem] font-light'>seus contatos.</p>
+            </div>
+
+            <div className='flex flex-col items-center justify-center'>
+              <img src={ImgPraticidade}  className="mb-4" alt="" />
+              <p className='text-2xl font-semibold mb-4'>Praticidade</p>
+              <p className='text-[1rem] font-light'>Não se preocupe com  </p>
+              <p className='text-[1rem] font-light'>trâmites fiscais e de cobrança</p>
+              <p className='text-[1rem] font-light'>junto ao cliente final,</p>
+              <p className='text-[1rem] font-light'>é tudo conosco.</p>
             </div>
 
             <div className='flex flex-col items-center justify-center'>

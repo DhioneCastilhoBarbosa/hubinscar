@@ -21,9 +21,7 @@ export default function Home() {
             transition={{ duration: 1 }}
             className="flex flex-col"
           >
-            <span className="font-medium text-xl md:text-4xl 2xl:text-6xl">
-              EletriHub
-            </span>
+            
             <h1 className="font-extrabold text-3xl md:text-6xl md:max-w-[600px] 2xl:text-8xl 2xl:max-w-[1000px]">
               Instalando o futuro da mobilidade elétrica.
             </h1>
