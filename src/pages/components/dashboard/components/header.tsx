@@ -16,7 +16,7 @@ export default function HeaderDashboard() {
         onClick={() => navigate("/")}
         className="text-2xl font-bold cursor-pointer"
       >
-        <img src={ImgLogo} alt="Logo" className="w-60 h-10" />
+        <img src={ImgLogo} alt="Logo" className="w-44 h-10" />
         
       </div>
 
