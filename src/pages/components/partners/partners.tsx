@@ -3,6 +3,7 @@ import ImgCar from "../../../assets/car.svg";
 import ImgCloudSpeak from '../../../assets/cloudspeak.svg';
 import ImgGroupUser from '../../../assets/Maskgroup.svg';
 import ImgDolar from '../../../assets/dolar.svg';
+import ImgPraticidade from '../../../assets/praticidade.svg';
 import { useNavigate } from "react-router-dom";
 import Footer from "../footer";
 import { useEffect } from "react";
@@ -108,11 +109,17 @@ export default function Partners() {
                 img: ImgGroupUser,
                 title: "Novos clientes",
                 lines: ["Atraímos clientes da", "sua região, ampliando", "seus contatos."]
-              }, {
+              },{
+                img: ImgPraticidade,
+                title: "Praticidade",
+                lines: ["Não se preocupe com", "trâmites fiscais e de cobrança", "junto ao cliente final,", "é tudo conosco."]
+              },
+              {
                 img: ImgDolar,
                 title: "Segurança",
                 lines: ["Facilidade e segurança", "na hora de receber."]
-              }].map(({ img, title, lines }, idx) => (
+              }
+            ].map(({ img, title, lines }, idx) => (
                 <div className="flex flex-col items-center text-center max-w-[240px]" key={idx}>
                   <img src={img} alt={title} className="mb-4 w-16 h-16" />
                   <p className="text-xl md:text-2xl font-semibold mb-3">{title}</p>
