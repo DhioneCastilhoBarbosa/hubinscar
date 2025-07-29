@@ -23,7 +23,7 @@ export default function Home() {
           >
             
             <h1 className="font-extrabold text-3xl md:text-6xl md:max-w-[600px] 2xl:text-8xl 2xl:max-w-[1000px]">
-              Instalando o futuro da mobilidade elétrica.
+              Conecte-se à mobilidade elétrica.
             </h1>
           </motion.div>
           <div>

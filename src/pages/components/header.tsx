@@ -61,14 +61,14 @@ export default function Header({ menuType, buttonVisible, menuVisible }: HeaderP
   }, [menuOpen]);
 
   return (
-    <div className="flex flex-row items-center justify-between bg-black h-16 md:pr-6 pl-6 w-screen fixed top-0 z-20">
+    <div className="flex flex-row items-center justify-between bg-black h-16 md:pr-6 pl-6 w-screen fixed top-0 z-20 gap-3">
       {/* Logo e Menu em telas maiores */}
       <div className="flex items-center gap-16">
         <div
           className="font-bold text-2xl text-white md:ml-4 cursor-pointer"
           onClick={handleGoToHome}
         >
-          <img src={ImgLogo} alt="Logo" className="w-44 h-10" />
+          <img src={ImgLogo} alt="Logo" className="w-52 h-8" />
         </div>
         <ul className="hidden md:flex md:flex-row md:gap-8 font-light text-white">
           {filteredMenu &&
@@ -103,7 +103,7 @@ export default function Header({ menuType, buttonVisible, menuVisible }: HeaderP
 
         {buttonVisible && (
           <button
-            className="bg-white text-black w-24 h-full md:h-8 md:rounded-lg hover:bg-gray-200 hover:cursor-pointer md:mr-4"
+            className="bg-white text-black px-3 h-full md:h-8 md:rounded-lg hover:bg-gray-200 hover:cursor-pointer md:mr-4"
             onClick={() => {
               // Rastrear evento no GA4
               ReactGA.event({

@@ -10,13 +10,13 @@ export default function HeaderDashboard() {
   }
 
   return (
-    <header className="w-full h-16 fixed top-0 left-0 bg-black text-white z-50 flex items-center justify-between px-4 md:px-6 shadow-md">
+    <header className="w-full h-16 fixed top-0 left-0 bg-black text-white z-50 flex items-center justify-between px-4 md:px-6 shadow-md gap-3">
       {/* Logo */}
       <div
         onClick={() => navigate("/")}
         className="text-2xl font-bold cursor-pointer"
       >
-        <img src={ImgLogo} alt="Logo" className="w-44 h-10" />
+        <img src={ImgLogo} alt="Logo" className="w-52 h-8" />
         
       </div>
 
