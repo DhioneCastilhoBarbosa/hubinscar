@@ -41,9 +41,15 @@ export default function Footer() {
       <div className="flex flex-col items-center md:items-start justify-center gap-4 text-center md:text-left">
         <img src={ImgLogo} alt="Logo" className="w-52 h-8 mb-4" />
         <div className="flex flex-row items-center justify-center gap-4">
-          <img src={ImgFacebook} alt="Facebook" className="w-6 h-6" />
-          <img src={ImgInstagram} alt="Instagram" className="w-6 h-6" />
-          <img src={ImgWhatsApp} alt="WhatsApp" className="w-6 h-6" />
+          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+            <img src={ImgFacebook} alt="Facebook" className="w-6 h-6 hover:opacity-80 transition-opacity" />
+          </a>
+          <a href="https://www.instagram.com/eletrihub?igsh=Nmd0NzRjaXVlcXZk" target="_blank" rel="noopener noreferrer">
+            <img src={ImgInstagram} alt="Instagram" className="w-6 h-6 hover:opacity-80 transition-opacity" />
+          </a>
+          <a href="https://wa.me" target="_blank" rel="noopener noreferrer">
+            <img src={ImgWhatsApp} alt="WhatsApp" className="w-6 h-6 hover:opacity-80 transition-opacity" />
+          </a>
         </div>
       </div>
 

@@ -23,10 +23,7 @@ export default function Service() {
             className='flex flex-col md:mt-16 mt-8 bg-gray-100 p-4 rounded-lg w-full max-w-xs md:max-w-[370px] h-60 shadow-2xl shadow-gray-500'
             >
               <img src={ImgTool} alt="ferramentas" className='w-8 mb-4'/>
-              <span className='text-black'>Instalação de carregador para 
-              veículos elétricos</span>
-
-              <p className='text-gray-400'>Instalação de carregadores para veículos elétricos, oferecendo soluções de recarga lenta, rápida e ultra-rápida, com equipamentos de diversas marcas e modelos.</p>
+              <p className='text-gray-600'>Instalação de carregadores para veículos elétricos, oferecendo soluções de recarga lenta, rápida e ultra-rápida, com equipamentos de diversas marcas e modelos.</p>
             </motion.div>
             <motion.div
              whileHover={{ scale: 1.1 }}
@@ -34,8 +31,7 @@ export default function Service() {
              className='flex flex-col md:mt-16 mt-8 bg-gray-100 p-4 rounded-lg w-full max-w-xs md:max-w-[370px] h-60 shadow-2xl shadow-gray-500'
             >
               <img src={ImgMaintenance} alt="ferramentas" className='w-8 mb-4'/>
-              <span className='text-black'>Manutenção</span>
-              <p className='text-gray-400'>Manutenção preventiva e corretiva para equipamentos de recarga.</p>
+              <p className='text-gray-600'>Manutenção preventiva e corretiva para equipamentos de recarga.</p>
             </motion.div>
           </div>
         </div>
@@ -48,34 +44,34 @@ export default function Service() {
           {[
             {
               step: "1",
-              title: "Escolha o serviço",
-              desc: "Escolha o serviço que você precisa",
+              title: "Escolha o serviço.",
+              desc: "",
             },
             {
               step: "2",
-              title: "Escolha o instalador",
-              desc: "Escolha um instalador da sua região.",
+              title: "Escolha o instalador.",
+              desc: "",
             },
             {
               step: "3",
-              title: "Fale com Instalador",
-              desc: "Combine com o instalador o valor e data do serviço.",
+              title: "Combine preço e data.",
+              desc: "",
             },
             {
               step: "4",
-              title: "Pagamento",
-              desc: "Realize o pagamento para que o serviço seja confirmado. O valor ficará retido e só será repassado ao instalador após a confirmação da realização do serviço ou por até 30 dias.",
+              title: "Pagamento seguro.",
+              desc: "",
             },
             {
               step: "5",
-              title: "Execução do serviço",
-              desc: "Após o pagamento, o instalador vai até o local na data combinada para realizar o serviço.",
+              title: "Execução do serviço.",
+              desc: "",
             },
           ].map(({ step, title, desc }, index) => (
             <div key={index} className="w-full md:max-w-[15rem]">
-              <div className="flex items-center bg-gray-300 py-1 px-2 rounded-lg gap-2 mb-4">
-                <span className="bg-gray-600 px-3 py-1 rounded-full text-white">{step}</span>
-                <span className="font-medium text-lg">{title}</span>
+              <div className="flex items-center bg-gray-300 py-8 px-2 rounded-lg gap-2 mb-4">
+                <span className="bg-gray-700 px-3 py-1 rounded-full text-white">{step}</span>
+                <span className="font-medium text-lg text-gray-700">{title}</span>
               </div>
               <span className="text-gray-500 break-words text-pretty leading-relaxed">{desc}</span>
             </div>
