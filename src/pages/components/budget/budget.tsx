@@ -105,8 +105,7 @@ export default function Budget() {
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function calcularNotaFinal(instalador: {
+  /*function calcularNotaFinal(instalador: {
     average_rating: number;
     total_services_accepted: number;
     services_not_executed: number;
@@ -128,7 +127,7 @@ export default function Budget() {
       (peso_avaliacao + peso_execucao);
 
     return nota_final.toFixed(2);
-  }
+  }*/
 
   const maskedCep = (() => {
     const d = cleanCep(cep).slice(0, 8);
