@@ -5,68 +5,63 @@ import {
   FileText,
   HardHat,
   Headset,
- MessageCircle,
- // MessageCircle,
+  MessageCircle,
+  // MessageCircle,
   User,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import ImgAvatar from "../../../../assets/avatar.jpeg"
+import ImgAvatar from "../../../../assets/avatar.jpeg";
 
 interface SidebarProps {
   onSelectMenuItem: (item: string) => void;
 }
 
-
-export default function Sidebar({onSelectMenuItem}: SidebarProps) {
+export default function Sidebar({ onSelectMenuItem }: SidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState({
     name: "",
     avatar: "",
-    
   });
 
   const person = localStorage.getItem("person");
 
-const menuItems = [
-  { icon: <FileText className="w-5 h-5" />, label: "Meus orçamentos" },
-  ...(person ==="cliente"
-  ?[{ icon: <HardHat className="w-5 h-5" />, label: "Instaladores" }]
-  : []),
-  ...(person !== "cliente"
-    ? [{ icon: <DollarSign className="w-5 h-5" />, label: "Financeiro" }]
-    : []),
-  { icon: <MessageCircle className="w-5 h-5" />, label: "Chat" },
-  { icon: <User className="w-5 h-5" />, label: "Minha conta" },
-  { icon: <Headset className="w-5 h-5" />, label: "Suporte" },
-];
-
-
-  
+  const menuItems = [
+    { icon: <FileText className="w-5 h-5" />, label: "Meus orçamentos" },
+    ...(person === "cliente"
+      ? [{ icon: <HardHat className="w-5 h-5" />, label: "Instaladores" }]
+      : []),
+    ...(person !== "cliente"
+      ? [{ icon: <DollarSign className="w-5 h-5" />, label: "Financeiro" }]
+      : []),
+    { icon: <MessageCircle className="w-5 h-5" />, label: "Chat" },
+    { icon: <User className="w-5 h-5" />, label: "Minha conta" },
+    { icon: <Headset className="w-5 h-5" />, label: "Suporte" },
+  ];
 
   useEffect(() => {
     //console.log("useEffect montado: escutando evento photoUpdated");
-  
+
     const updatePhoto = () => {
       //console.log("Evento photoUpdated disparado");
-      const name = localStorage.getItem("name");
-      const photo = localStorage.getItem("photo");
-      if (name) {
-        setUser({ name, avatar: photo || ""});
+      const name = (localStorage.getItem("name") || "").trim();
+      const company = (localStorage.getItem("company") || "").trim();
+      const photo = (localStorage.getItem("photo") || "").trim();
+
+      const displayName = name || company || "Usuário";
+      if (displayName) {
+        setUser({ name: displayName, avatar: photo });
       }
     };
-  
+
     window.addEventListener("photoUpdated", updatePhoto);
-  
+
     // Carrega dados inicialmente
     updatePhoto();
-  
+
     return () => {
       window.removeEventListener("photoUpdated", updatePhoto);
     };
   }, []);
-  
-
-  
 
   return (
     <div

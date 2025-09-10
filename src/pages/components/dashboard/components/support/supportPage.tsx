@@ -15,8 +15,19 @@ export default function Support() {
   const [isSending, setIsSending] = useState(false);
   const [erro, setErro] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const guessFirstFromEmail = (email: string) =>
+    (email?.split("@")[0] || "").replace(/[._-]/g, " ").trim() || "Cliente";
+
+  const splitName = (nome: string) => {
+    const parts = (nome || "").trim().split(/\s+/).filter(Boolean);
+    return {
+      first: parts[0] || "",
+      last: parts.length > 1 ? parts.slice(1).join(" ") : "",
+    };
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,9 +36,10 @@ export default function Support() {
     setErro("");
     setMensagemSucesso("");
 
-    const nomeSeparado = formData.nome.trim().split(" ");
-    const first_name = nomeSeparado[0];
-    const last_name = nomeSeparado.slice(1).join(" ") || "";
+    // sempre garantir nomes válidos
+    const { first, last } = splitName(formData.nome);
+    const first_name = first || guessFirstFromEmail(formData.email);
+    const last_name = last || "";
 
     const payload = {
       first_name,
@@ -39,8 +51,13 @@ export default function Support() {
     };
 
     try {
-      await axios.post("https://mail.api-castilho.com.br/send-email-support", payload);
-      setMensagemSucesso("Mensagem enviada com sucesso! Entraremos em contato em breve.");
+      await axios.post(
+        "https://mail.api-castilho.com.br/send-email-support",
+        payload
+      );
+      setMensagemSucesso(
+        "Mensagem enviada com sucesso! Entraremos em contato em breve."
+      );
       setFormData({ nome: "", email: "", telefone: "", mensagem: "" });
     } catch (error) {
       console.error("Erro ao enviar mensagem:", error);
@@ -57,13 +74,22 @@ export default function Support() {
 
       try {
         const response = await api.get(`/user/list?id=${userId}`);
-        const user = response.data[0];
-        if (user && user.username && user.email) {
+        const user = response.data?.[0];
+        if (user) {
+          const nomePreferido =
+            user.username || user.name || user.company_name || ""; // pode vir vazio
+          const email = user.email || "";
+          const telefone = user.phone || "";
+
+          // se não houver nome, deduz do email para preencher a UI
+          const nomeFinal =
+            nomePreferido || (email ? guessFirstFromEmail(email) : "");
+
           setFormData((prev) => ({
             ...prev,
-            nome: user.username,
-            email: user.email,
-            telefone: user.phone || "",
+            nome: nomeFinal,
+            email,
+            telefone,
           }));
         }
       } catch (error) {
@@ -74,6 +100,8 @@ export default function Support() {
     fetchUserInfo();
   }, []);
 
+  const isNomeLocked = !!formData.nome; // permite digitar se vier vazio
+
   return (
     <div className="bg-zinc-900 text-white rounded-xl p-6 shadow-lg max-w-3xl mx-auto mt-10 space-y-6 border border-zinc-700">
       <h2 className="text-2xl font-bold flex items-center gap-2">
@@ -82,14 +110,19 @@ export default function Support() {
       </h2>
 
       <p className="text-gray-400 text-sm">
-        Precisa de ajuda? Preencha o formulário abaixo e nossa equipe de suporte entrará em contato.
+        Precisa de ajuda? Preencha o formulário abaixo e nossa equipe de suporte
+        entrará em contato.
       </p>
 
       {mensagemSucesso && (
-        <div className="bg-green-600 text-white p-3 rounded-lg text-sm">{mensagemSucesso}</div>
+        <div className="bg-green-600 text-white p-3 rounded-lg text-sm">
+          {mensagemSucesso}
+        </div>
       )}
       {erro && (
-        <div className="bg-red-600 text-white p-3 rounded-lg text-sm">{erro}</div>
+        <div className="bg-red-600 text-white p-3 rounded-lg text-sm">
+          {erro}
+        </div>
       )}
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4">
@@ -103,9 +136,14 @@ export default function Support() {
             value={formData.nome}
             onChange={handleChange}
             className="bg-zinc-800 text-white border border-zinc-600 rounded-lg p-2"
-            required
-            readOnly
+            placeholder="Opcional. Se vazio, usaremos seu email."
+            readOnly={isNomeLocked} // libera edição se estiver vazio
           />
+          {!formData.nome && (
+            <span className="text-xs text-gray-500 mt-1">
+              Dica: se deixar vazio, usamos a parte antes do @ do seu email.
+            </span>
+          )}
         </div>
 
         <div className="flex flex-col">
@@ -119,7 +157,7 @@ export default function Support() {
             onChange={handleChange}
             className="bg-zinc-800 text-white border border-zinc-600 rounded-lg p-2"
             required
-            readOnly
+            readOnly={!!formData.email} // editável só se não vier preenchido
           />
         </div>
 
@@ -138,7 +176,9 @@ export default function Support() {
         </div>
 
         <div className="flex flex-col">
-          <label className="text-sm text-gray-400 mb-1">Descreva seu problema</label>
+          <label className="text-sm text-gray-400 mb-1">
+            Descreva seu problema
+          </label>
           <textarea
             name="mensagem"
             rows={5}
@@ -153,7 +193,7 @@ export default function Support() {
         <button
           type="submit"
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition"
-          disabled={isSending}
+          disabled={isSending || !formData.email || !formData.mensagem}
         >
           {isSending ? "Enviando..." : "Enviar solicitação"}
         </button>
