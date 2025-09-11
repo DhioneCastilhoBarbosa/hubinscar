@@ -7,7 +7,8 @@ import ImgAvatar from "../../../../../assets/avatar.jpeg";
 
 interface Conversation {
   id: string; // Ex: `${budgetId}-${receiverId}`
-  name: string;
+  name?: string;
+  company_name?: string;
   avatar: string;
   budgetId: number;
   receiverId: string;
@@ -51,36 +52,55 @@ export default function Chats() {
 
         interface DataItem {
           cliente: { id: string; username: string; photo?: string };
-          instalador: { id: string; username: string; photo?: string };
+          instalador: {
+            id: string;
+            username: string;
+            photo?: string;
+            company_name?: string;
+          };
           budget_id: number;
         }
 
         const mapped: Conversation[] = (data as DataItem[])
-  .map((item) => {
-    const user = tipo.toLowerCase() === "instalador" ? item.cliente : item.instalador;
+          .map((item) => {
+            const user =
+              tipo.toLowerCase() === "instalador"
+                ? item.cliente
+                : item.instalador;
 
-    if (!user?.id) {
-      console.warn("⚠️ Ignorando conversa sem user.id", item);
-      return null;
-    }
+            if (!user?.id) {
+              console.warn("⚠️ Ignorando conversa sem user.id", item);
+              return null;
+            }
 
-    return {
-      id: `${item.budget_id}-${user.id}`,
-      name: user.username || "Desconhecido",
-      avatar: user.photo || ImgAvatar,
-      budgetId: item.budget_id,
-      receiverId: user.id,
-    };
-  })
-  .filter(Boolean) as Conversation[];
-
+            return {
+              id: `${item.budget_id}-${user.id}`,
+              name:
+                user.username ||
+                (item.instalador.company_name ?? "Desconhecido"),
+              avatar: user.photo || ImgAvatar,
+              budgetId: item.budget_id,
+              receiverId: user.id,
+            };
+          })
+          .filter(Boolean) as Conversation[];
 
         console.log("📊 Conversas mapeadas:", mapped);
         setConversations(mapped);
       } catch (error: unknown) {
-        if (typeof error === "object" && error !== null && "response" in error) {
-          const err = error as { response?: { status?: number; data?: unknown } };
-          console.error("❌ Erro ao buscar conversas:", err.response?.status, err.response?.data);
+        if (
+          typeof error === "object" &&
+          error !== null &&
+          "response" in error
+        ) {
+          const err = error as {
+            response?: { status?: number; data?: unknown };
+          };
+          console.error(
+            "❌ Erro ao buscar conversas:",
+            err.response?.status,
+            err.response?.data
+          );
         } else {
           console.error("❌ Erro ao buscar conversas:", error);
         }
@@ -111,8 +131,10 @@ export default function Chats() {
       console.log("💬 Histórico recebido:", data);
 
       const sorted = Array.isArray(data)
-        ? data.sort((a: Message, b: Message) =>
-            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        ? data.sort(
+            (a: Message, b: Message) =>
+              new Date(a.created_at).getTime() -
+              new Date(b.created_at).getTime()
           )
         : [];
 
@@ -140,7 +162,7 @@ export default function Chats() {
           <Sidebar
             chats={conversations.map((c) => ({
               id: c.budgetId,
-              name: c.name,
+              name: c.name ?? "Desconhecido",
               avatar: c.avatar,
               budgetId: c.budgetId,
             }))}
@@ -153,7 +175,10 @@ export default function Chats() {
       {selectedChat && (
         <div className="w-full md:w-2/3">
           <Chat
-            chat={selectedChat}
+            chat={{
+              ...selectedChat,
+              name: selectedChat.name ?? "Desconhecido",
+            }}
             messages={messages}
             onBack={() => {
               setSelectedId(null);

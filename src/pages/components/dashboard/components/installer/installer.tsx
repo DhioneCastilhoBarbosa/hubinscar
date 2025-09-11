@@ -1,11 +1,11 @@
-import { Search, Star } from 'lucide-react'
-import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { Search, Star } from "lucide-react";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
-import RequestQuoteModal from "./components/requestBudget"
-import api from '../../../../../services/api'
-import ImgAvatar from  "../../../../../assets/avatar.jpeg"
-import { toast } from 'sonner'
+import RequestQuoteModal from "./components/requestBudget";
+import api from "../../../../../services/api";
+import ImgAvatar from "../../../../../assets/avatar.jpeg";
+import { toast } from "sonner";
 
 interface Installer {
   id: string;
@@ -22,14 +22,19 @@ interface Installer {
 export default function Installer() {
   const [isOpen, setIsOpen] = useState(false);
   const [installers, setInstallers] = useState<Installer[]>([]);
-  const [cep, setCep] = useState('');
+  const [cep, setCep] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedInstaller, setSelectedInstaller] = useState<Installer | null>(null);
+  const [selectedInstaller, setSelectedInstaller] = useState<Installer | null>(
+    null
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 20;
 
   const totalPages = Math.ceil(installers.length / itemsPerPage);
-  const displayedInstallers = installers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const displayedInstallers = installers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const handleOpenModal = (installer: Installer) => {
     setSelectedInstaller(installer);
@@ -49,7 +54,9 @@ export default function Installer() {
       const enderecoCompleto = `${data.logradouro} ${data.bairro} ${data.localidade} ${data.uf} ${cep}`;
       const locationIqKey = import.meta.env.VITE_LOCATIONIQ_API_KEY;
       const geoRes = await fetch(
-        `https://us1.locationiq.com/v1/search.php?key=${locationIqKey}&q=${encodeURIComponent(enderecoCompleto)}&country=Brazil&format=json`
+        `https://us1.locationiq.com/v1/search.php?key=${locationIqKey}&q=${encodeURIComponent(
+          enderecoCompleto
+        )}&country=Brazil&format=json`
       );
       const geoData = await geoRes.json();
       if (!geoData.length) {
@@ -59,7 +66,9 @@ export default function Installer() {
       }
       const lat = geoData[0].lat;
       const lon = geoData[0].lon;
-      const installersRes = await api.get(`/user/public/installers/nearby?lat=${lat}&lng=${lon}`);
+      const installersRes = await api.get(
+        `/user/public/installers/nearby?lat=${lat}&lng=${lon}`
+      );
       if (Array.isArray(installersRes.data)) {
         setInstallers(installersRes.data);
         setCurrentPage(1);
@@ -74,7 +83,7 @@ export default function Installer() {
     }
   };
 
-  function calcularNotaFinal(instalador: Installer) {
+  /*function calcularNotaFinal(instalador: Installer) {
     const { average_rating, total_services_accepted, services_not_executed } = instalador;
     const peso_avaliacao = 0.7;
     const peso_execucao = 0.3;
@@ -84,19 +93,19 @@ export default function Installer() {
     }
     const nota_final = (average_rating * peso_avaliacao + taxa_execucao * 5 * peso_execucao) / (peso_avaliacao + peso_execucao);
     return nota_final.toFixed(2);
-  }
+  }*/
 
   useEffect(() => {
     const fetchInstallers = async () => {
       try {
-        const response = await api.get('/user/public/installers');
+        const response = await api.get("/user/public/installers");
         if (Array.isArray(response.data)) {
           setInstallers(response.data);
         } else {
           setInstallers([]);
         }
       } catch (error) {
-        console.error('Erro ao buscar instaladores:', error);
+        console.error("Erro ao buscar instaladores:", error);
         setInstallers([]);
       }
     };
@@ -112,8 +121,12 @@ export default function Installer() {
         transition={{ duration: 1 }}
         className="w-full max-w-6xl mx-auto px-4 py-6"
       >
-        <h1 className="text-2xl md:text-3xl font-bold text-center mb-2">Encontre um profissional</h1>
-        <p className="text-gray-400 text-center mb-4 text-sm">Digite o CEP para localizar os instaladores mais próximos</p>
+        <h1 className="text-2xl md:text-3xl font-bold text-center mb-2">
+          Encontre um profissional
+        </h1>
+        <p className="text-gray-400 text-center mb-4 text-sm">
+          Digite o CEP para localizar os instaladores mais próximos
+        </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-lg mx-auto mb-6 w-full">
           <input
@@ -140,39 +153,46 @@ export default function Installer() {
                 <th className="py-2 px-3 text-left">Profissional</th>
                 <th className="py-2 px-3 text-left">Função</th>
                 <th className="py-2 px-3 text-left">Estado</th>
-                <th className="py-2 px-3 text-left">Serviços</th>
                 <th className="py-2 px-3 text-left">Nota</th>
                 <th className="py-2 px-3 text-left">Ação</th>
               </tr>
             </thead>
             <tbody>
-              {displayedInstallers.length > 0 ? displayedInstallers.map(installer => (
-                <tr key={installer.id} className="border-t border-zinc-700">
-                  <td className="py-2 px-3">
-                    <div className="flex items-center gap-2">
-                      <img src={installer.photo || ImgAvatar} alt="Avatar" className="w-8 h-8 rounded-full" />
-                      <span>{installer.username || installer.company_name}</span>
-                    </div>
-                  </td>
-                  <td className="py-2 px-3">{installer.role}</td>
-                  <td className='py-2 px-3'>{installer.state}</td>
-                  <td className="py-2 px-3">{installer.total_services_accepted}</td>
-                  <td className="py-2 px-3">
-                    <div className="flex items-center gap-1">
-                      <Star className="text-yellow-400" size={16} />
-                      {calcularNotaFinal(installer)}
-                    </div>
-                  </td>
-                  <td className="py-2 px-3">
-                    <button
-                      onClick={() => handleOpenModal(installer)}
-                      className="bg-sky-600 hover:bg-sky-500 text-white px-3 py-1 rounded-md text-xs"
-                    >
-                      Solicitar orçamento
-                    </button>
-                  </td>
-                </tr>
-              )) : (
+              {displayedInstallers.length > 0 ? (
+                displayedInstallers.map((installer) => (
+                  <tr key={installer.id} className="border-t border-zinc-700">
+                    <td className="py-2 px-3">
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={installer.photo || ImgAvatar}
+                          alt="Avatar"
+                          className="w-8 h-8 rounded-full"
+                        />
+                        <span>
+                          {installer.username || installer.company_name}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-2 px-3">{installer.role}</td>
+                    <td className="py-2 px-3">{installer.state}</td>
+
+                    <td className="py-2 px-3">
+                      <div className="flex items-center gap-1">
+                        <Star className="text-yellow-400" size={16} />
+                        5.0
+                      </div>
+                    </td>
+                    <td className="py-2 px-3">
+                      <button
+                        onClick={() => handleOpenModal(installer)}
+                        className="bg-sky-600 hover:bg-sky-500 text-white px-3 py-1 rounded-md text-xs"
+                      >
+                        Solicitar orçamento
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
                 <tr>
                   <td colSpan={5} className="text-center py-6 text-gray-400">
                     Nenhum profissional encontrado.
@@ -196,7 +216,9 @@ export default function Installer() {
               Página {currentPage} de {totalPages} — Total: {installers.length}
             </span>
             <button
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
               disabled={currentPage === totalPages}
               className="bg-zinc-700 px-3 py-1 rounded disabled:opacity-40"
             >
@@ -212,5 +234,5 @@ export default function Installer() {
         installer={selectedInstaller}
       />
     </div>
-  )
+  );
 }
