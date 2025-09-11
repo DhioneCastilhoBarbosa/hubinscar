@@ -33,10 +33,10 @@ export default function Chats() {
       const id = localStorage.getItem("ID");
       const tipo = localStorage.getItem("person");
 
-      console.log("🔍 id:", id, "tipo:", tipo);
+      //console.log("🔍 id:", id, "tipo:", tipo);
 
       if (!id || !tipo) {
-        console.warn("ID ou tipo não encontrado");
+        //console.warn("ID ou tipo não encontrado");
         return;
       }
 
@@ -45,8 +45,8 @@ export default function Chats() {
           params: { id, tipo },
         });
 
-        console.log("✅ Status:", response.status);
-        console.log("📦 Dados recebidos:", response.data);
+        //console.log("✅ Status:", response.status);
+        //console.log("📦 Dados recebidos:", response.data);
 
         const data = response.data;
 
@@ -85,7 +85,7 @@ export default function Chats() {
           })
           .filter(Boolean) as Conversation[];
 
-        console.log("📊 Conversas mapeadas:", mapped);
+        //console.log("📊 Conversas mapeadas:", mapped);
         setConversations(mapped);
       } catch (error: unknown) {
         if (
@@ -114,7 +114,7 @@ export default function Chats() {
     setSelectedId(id);
 
     const chat = conversations.find((c) => c.budgetId === id);
-    console.log("📞 Selecionando chat:", chat);
+    //console.log("📞 Selecionando chat:", chat);
 
     const senderId = localStorage.getItem("ID");
     if (!chat || !senderId) return;
@@ -128,7 +128,7 @@ export default function Chats() {
       });
 
       const data = response.data;
-      console.log("💬 Histórico recebido:", data);
+      //console.log("💬 Histórico recebido:", data);
 
       const sorted = Array.isArray(data)
         ? data.sort(
